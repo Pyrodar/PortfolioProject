@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf612a5d7d9819043996e4c7d7724f40, type: 3}
+  m_Name: AMS Turret01
+  m_EditorClassIdentifier: 
+  turretType: 0
+  turretRange: 65
+  bulletspread: 1
+  turretSpeed: 12
+  cooldown: 0.1
+  missleSpace: 0
+  ejectSpeed: 0
+  missleData: {fileID: 0}
+  bulletData: {fileID: 11400000, guid: c9346d8db8067ab4ba8a85d3a15577b9, type: 2}

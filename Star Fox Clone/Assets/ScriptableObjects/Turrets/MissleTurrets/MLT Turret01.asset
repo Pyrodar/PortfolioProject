@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf612a5d7d9819043996e4c7d7724f40, type: 3}
+  m_Name: MLT Turret01
+  m_EditorClassIdentifier: 
+  turretType: 2
+  turretRange: 0
+  bulletspread: 0
+  turretSpeed: 0
+  cooldown: 8
+  missleSpace: 3
+  ejectSpeed: 12
+  missleData: {fileID: 11400000, guid: 1ca4862083e939b44bc008871859aaf8, type: 2}
+  bulletData: {fileID: 0}

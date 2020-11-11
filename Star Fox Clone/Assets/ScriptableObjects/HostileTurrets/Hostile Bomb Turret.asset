@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1663cc259d425548a086330ed7e3699, type: 3}
+  m_Name: Hostile Bomb Turret
+  m_EditorClassIdentifier: 
+  turretType: 0
+  turretRange: 150
+  bulletspread: 0
+  turretSpeed: 0
+  cooldown: 10
+  bulletsPerSalvo: 0
+  ejectSpeed: 0
+  missleData: {fileID: 0}
+  bulletData: {fileID: 0}
+  bombData: {fileID: 11400000, guid: cfe62b0001734044cabcd5c9160fbff9, type: 2}
