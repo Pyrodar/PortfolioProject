@@ -43,6 +43,11 @@ public class FollowTrack : MonoBehaviour
         }
     }
 
+    public void StartGame()
+    {
+        Go = true;
+    }
+
     void moveAlongPath()
     {
         rigid.velocity = transform.forward * speed;

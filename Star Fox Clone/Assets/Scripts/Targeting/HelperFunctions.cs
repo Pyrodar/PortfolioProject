@@ -3,7 +3,7 @@ using UnityEngine;
 
 public  class HelperFunctions
 {
-	#region singleton
+    /*#region singleton
 	public static HelperFunctions instance;
 
 	private void Awake()
@@ -16,11 +16,13 @@ public  class HelperFunctions
 		instance = this;
 	}
 	#endregion
+	*/
 
-	public static Vector3 Intercept
+    #region intercept
+    public static Vector3 Intercept
 	(
 		Vector3 shooterPosition,
-		Vector3 shooterVelocity,
+		Vector3 shooterVelocity, //used for rockets and bombs but not for bullets, since they don't retain their parents momentum
 		float shotSpeed,
 		Vector3 targetPosition,
 		Vector3 targetVelocity
@@ -36,6 +38,7 @@ public  class HelperFunctions
 		);
 		return targetPosition + t * (targetRelativeVelocity);
 	}
+
 	//first-order intercept using relative target position
 	public static float FirstOrderInterceptTime
 	(
@@ -88,7 +91,10 @@ public  class HelperFunctions
 			return Mathf.Max(-b / (2f * a), 0f); //don't shoot back in time
 	}
 
-	public static void LookAt(Transform self, Vector3 target, float rotationSpeed, Vector3 up)
+    #endregion
+
+    #region LookAt
+    public static void LookAt(Transform self, Vector3 target, float rotationSpeed, Vector3 up)
 	{
 		Vector3 lookPos = target - self.position;
 		Quaternion rotation = Quaternion.LookRotation(lookPos, up);
@@ -100,9 +106,10 @@ public  class HelperFunctions
 		Quaternion rotation = Quaternion.LookRotation(lookPos);
 		self.rotation = Quaternion.Slerp(self.rotation, rotation, Time.deltaTime * rotationSpeed);
 	}
+    #endregion
 
-
-	public static Collider[] SpawnExplosion(GameObject explosionObject, float radius, Vector3 position)
+    #region explosions
+    public static Collider[] SpawnExplosion(GameObject explosionObject, float radius, Vector3 position)
     {
 		//Debug.Log("Boom");
 		//Spawn explosion Visuals
@@ -118,4 +125,5 @@ public  class HelperFunctions
 		Collider[] colliders = Physics.OverlapSphere(position, radius);
 		return colliders;
 	}
+    #endregion
 }

@@ -5,10 +5,16 @@ public class Turret : MonoBehaviour
     protected TurretMount myMount;
 
     [SerializeField]protected TurretData data;
+    public TurretData Data
+    {
+        //get { return data; }
+        set { data = value; }
+    }
+
     public TurretType TurretType
     {
         get { return data.turretType; }
-    }    
+    }
 
     protected float cooldownEnd = 0f;
 

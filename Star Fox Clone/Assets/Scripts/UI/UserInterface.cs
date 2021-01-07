@@ -22,6 +22,7 @@ public class UserInterface : MonoBehaviour
         instance = this;
     }
     #endregion
+    //TODO: remove singleton, add to MapLayoutInfo
 
     [SerializeField] VerticalBar healthbar;
     public VerticalBar Healthbar

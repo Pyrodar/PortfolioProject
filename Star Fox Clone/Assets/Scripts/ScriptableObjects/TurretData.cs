@@ -4,6 +4,7 @@ using UnityEngine;
 public class TurretData : ScriptableObject
 {
     public TurretType turretType;
+    public GameObject emptyTurretMesh;
 
     public float turretRange;
     public float bulletspread;

@@ -4,27 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour , IVehicle
 {
-    #region singleton
-    static Player instance;
-
-    public static Player Instance
-    {
-        get { return instance; }
-    }
-
-    private void Awake()
-    {
-        if (Player.instance != null)
-        {
-            Debug.LogWarning("More than one instance of Player");
-            return;
-        }
-        instance = this;
-        DontDestroyOnLoad(this.gameObject);
-    }
-    #endregion
-
-#region SetOnLevelLoaded
+    #region SetOnLevelLoaded
     [SerializeField]GameplayPlane plane;
     public GameplayPlane Plane
     {
@@ -41,19 +21,26 @@ public class Player : MonoBehaviour , IVehicle
     {
         set { gameStarted = value; }
     }
-#endregion
+    #endregion
 
-#region SetManuallyInEditor
+    #region SetManuallyInEditor
+    [SerializeField] TurretMount[] turretMounts;
+    public TurretMount[] TurretMounts
+    {
+        get { return turretMounts; }
+    }
+
     [SerializeField] Transform playerVisuals;
     [SerializeField] Transform playerRotationVisuals;
     [SerializeField] Transform lookAtThis;
     [SerializeField] Transform smallCrossHair;
     [SerializeField] Transform largeCrossHair;
+    public Transform LargeCrosshair { get { return largeCrossHair; } }
     [SerializeField] GameObject crashExplosion;
     Rigidbody myRigid;
-#endregion
+    #endregion
 
-#region Movement
+    #region Movement
     [SerializeField] float moveSpeed = 2.6f;
     [SerializeField] float rotationSpeed = 0.7f;
 
@@ -73,7 +60,7 @@ public class Player : MonoBehaviour , IVehicle
     [SerializeField] Vector3 crosshairoffset;
     #endregion
 
-#region Combat
+    #region Combat
     [SerializeField] float maxHealth = 100;
     float currentHealth;
     public float CurrentHealth
@@ -82,24 +69,25 @@ public class Player : MonoBehaviour , IVehicle
     }
 
     #region Targets and Turrets
-    [SerializeField] List<TurretMount> ATGTurrets = new List<TurretMount>();
-    [SerializeField] List<TurretMount> AMSTurrets = new List<TurretMount>();
-    [SerializeField] List<MissleTurret> MissleTurrets = new List<MissleTurret>();
+
+    List<TurretMount> ATGTurrets = new List<TurretMount>();
+    List<TurretMount> AMSTurrets = new List<TurretMount>();
+    List<MissleTurret> MissleTurrets = new List<MissleTurret>();
     int lastTurret = 0;
 
-    [SerializeField] List<AquiredTarget> Targets = new List<AquiredTarget>();
-    [SerializeField] List<AquiredTarget> incomingMissles = new List<AquiredTarget>();
+    List<AquiredTarget> Targets = new List<AquiredTarget>();
+    List<AquiredTarget> incomingMissles = new List<AquiredTarget>();
     private int maxTargets = 3;
     [SerializeField] Transform[] TargetMarker;
     #endregion
 
     #endregion
 
-#region UI
+    #region UI
     VerticalBar healthbar;
     #endregion
 
-# region Debugging
+    #region Debugging
     bool DPadBool = true;
 
     private void OnMouseDown()
@@ -108,11 +96,9 @@ public class Player : MonoBehaviour , IVehicle
     }
     #endregion
 
-
-    public void StartGame(GameplayPlane _plane, Camera _cam)
+    public void StartGame(GameplayPlane _plane)
     {
         plane = _plane;
-        cam = _cam;
 
         #region Health
         Debug.Log("Setting Health");
@@ -135,11 +121,11 @@ public class Player : MonoBehaviour , IVehicle
         #endregion
 
         #region Turrets
-        Debug.Log("Finding Turrets");
+        Debug.Log("Listing Turrets");
 
         TurretIconList list = UserInterface.Instance.TurretIconList;
 
-        foreach (var tur in GetComponentsInChildren<TurretMount>())
+        foreach (var tur in turretMounts)
         {
             list.AddTurretToList(tur);
             if (tur.MyTurretType == TurretType.AntiGround) ATGTurrets.Add(tur);
@@ -204,7 +190,7 @@ public class Player : MonoBehaviour , IVehicle
 
     void checkBoundaries()
     {
-        //setting velocity to 0 so enemy Missles and AA don't get confused
+        //setting velocity to 0 when hitting boundries so enemy Missles and AA don't get confused
         float x = cam.transform.localPosition.x;
         if (transform.localPosition.x >= Plane.MaxWidth + x) myRigid.velocity = new Vector3(0, myRigid.velocity.y, myRigid.velocity.z);
         if (transform.localPosition.x <= -Plane.MaxWidth + x) myRigid.velocity = new Vector3(0, myRigid.velocity.y, myRigid.velocity.z);

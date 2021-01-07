@@ -24,14 +24,25 @@ public class StationaryWeapon : MonoBehaviour
         }
     }
 
+    #region targeting
     private void Start()
     {
-        myTarget = Player.Instance;
+        myTarget = GameStateConnection.Instance.getFrontlinePlayer();
         if (RotationParent == null)
         {
             RotationParent = transform.parent;
         }
+        GameStateConnection.Instance.switchingPlayers += changeTarget;
+        Debug.Log("Added object: " + name + " to list of switch player delegate");
     }
+
+    void changeTarget()
+    {
+        myTarget = GameStateConnection.Instance.getFrontlinePlayer();
+    }
+    #endregion
+
+    #region attacking
     /// <summary>
     /// has to be overwriten for each subtype
     /// </summary>
@@ -75,6 +86,8 @@ public class StationaryWeapon : MonoBehaviour
 
     protected bool isInRange()
     {
+        if (myTarget == null) { changeTarget(); return false; }
+
         float distance = Vector3.Distance(myTarget.transform.position, transform.position);
         if (distance > data.turretRange || myTarget.Plane.relativeZposition(transform.position) < 20) return false;
         return true;
@@ -91,4 +104,14 @@ public class StationaryWeapon : MonoBehaviour
 
         impactMarker.transform.position = pos;
     }
+    #endregion
+
+    #region destruction
+    public virtual void destroySelf()
+    {
+        GameStateConnection.Instance.switchingPlayers -= changeTarget;
+        Debug.Log("Removed object: " + name + " to list of switch player delegate");
+        Destroy(this.gameObject);
+    }
+    #endregion
 }

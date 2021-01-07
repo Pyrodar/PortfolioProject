@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: MLT Turret01
   m_EditorClassIdentifier: 
   turretType: 2
+  emptyTurretMesh: {fileID: 0}
   turretRange: 0
   bulletspread: 0
   turretSpeed: 0

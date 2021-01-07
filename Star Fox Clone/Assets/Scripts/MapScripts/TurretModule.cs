@@ -25,14 +25,37 @@ public class TurretModule : MonoBehaviour
     }
 
     /// <summary>
-    /// creates the Turret as child of this transform based on a prefab given to it
+    /// creates the Turret as child of this transform based on a scriptableObject of type TurretData given to it
     /// </summary>
-    /// <param name="turret">Is a prefab containing the 3D object and the right Turret script (AMS, ATG or MSS)</param>
-    public void AddTurret(GameObject turret)
+    /// <param name="turret">Is a reference to the turretType via a TurretData script that is used to create the new turret </param>
+    public void AddTurret(TurretData turret)
     {
+        #region set Mesh
         clearTurret();
-        GameObject T = Instantiate(turret);
+        
+        GameObject T = Instantiate(turret.emptyTurretMesh);
         T.transform.parent = transform;
+        #endregion
+
+        #region set Script
+        Turret TurretScript;
+        
+        switch (turret.turretType)
+        {
+            case TurretType.AMS:
+                TurretScript = T.AddComponent<AMSTurret>();
+                TurretScript.Data = turret;
+                break;
+            case TurretType.AntiGround:
+                TurretScript = T.AddComponent<AntiGroundTurret>();
+                TurretScript.Data = turret;
+                break;
+            case TurretType.Missiles:
+                TurretScript = T.AddComponent<MissleTurret>();
+                TurretScript.Data = turret;
+                break;
+        }
+        #endregion
     }
 
     /// <summary>

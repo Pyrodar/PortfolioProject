@@ -7,11 +7,11 @@ public class TrackTrigger : MonoBehaviour
     [SerializeField] List<FollowTrack> connectedPlanes;
     [SerializeField] float relativeZStartingDistance;
 
-    Player player;
+    GameplayPlane plane;
     bool active = false;
     void Start()
     {
-        player = Player.Instance;
+        plane = GameStateConnection.Instance.Plane;
     }
 
     void Update()
@@ -24,7 +24,7 @@ public class TrackTrigger : MonoBehaviour
 
     bool inPositionToStart()
     {
-        return relativeZStartingDistance > player.Plane.relativeZposition(transform.position) && player.Plane.relativeZposition(transform.position) > (relativeZStartingDistance - 5);
+        return relativeZStartingDistance > plane.relativeZposition(transform.position) && plane.relativeZposition(transform.position) > (relativeZStartingDistance - 5);
     }
 
     void activate()

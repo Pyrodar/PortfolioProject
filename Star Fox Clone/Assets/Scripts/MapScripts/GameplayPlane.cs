@@ -6,7 +6,13 @@ public class GameplayPlane : MonoBehaviour
     [SerializeField] int maxWidth = 10;
     [SerializeField] int maxHeight = 6;
     Rigidbody rigid;
-    
+
+    [SerializeField] Transform[] playerpositions;
+    public Transform[] Playerpositions
+    {
+        get { return playerpositions; }
+    }
+
     public int MaxWidth
     {
         get { return maxWidth; }
@@ -15,7 +21,6 @@ public class GameplayPlane : MonoBehaviour
     {
         get { return maxHeight; }
     }
-
 
     private void Start()
     {
@@ -31,5 +36,10 @@ public class GameplayPlane : MonoBehaviour
     internal Vector3 getVelocity()
     {
         return rigid.velocity;
+    }
+
+    public void switchPlayerPositions(int playerNumber)
+    {
+        Debug.Log("Switch Player positions to " + playerNumber + " in front");
     }
 }

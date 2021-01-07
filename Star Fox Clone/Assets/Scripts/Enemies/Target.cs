@@ -26,13 +26,28 @@ public class Target : MonoBehaviour , IVehicle
 
     protected virtual void Start()
     {
-        myTarget = Player.Instance;
+        myTarget = GameStateConnection.Instance.getFrontlinePlayer();
         currentHealth = maxHealth;
         rigid = GetComponent<Rigidbody>();
+
+        GameStateConnection.Instance.switchingPlayers += changeTarget;
+        Debug.Log("Added object: " + name + " to list of switch player delegate");
+    }
+
+    protected void changeTarget()
+    {
+        myTarget = GameStateConnection.Instance.getFrontlinePlayer();
     }
 
     public virtual void destroySelf()
     {
+        GameStateConnection.Instance.switchingPlayers += changeTarget;
+        Debug.Log("Removed object: " + name + " to list of switch player delegate");
+        foreach (StationaryWeapon SW in GetComponentsInChildren<StationaryWeapon>())
+        {
+            SW.destroySelf();
+        }
+
         if (type != TargetType.missle) myTarget.removeMarkedTarget(this);
         Destroy(this.gameObject);
     }

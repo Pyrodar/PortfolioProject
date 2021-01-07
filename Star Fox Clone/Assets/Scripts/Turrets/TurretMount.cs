@@ -50,6 +50,7 @@ public class TurretMount : MonoBehaviour, IVehicle
 
     public UnityEvent InformUIAboutDestruction;
 
+    #region GeneralSetup
     private void Awake()
     {
         if (upperRight) quarters.Add(0);
@@ -71,8 +72,9 @@ public class TurretMount : MonoBehaviour, IVehicle
     {
         myTurret = t;
     }
+    #endregion
 
-    //Anti Ground
+    #region Anti Ground
     public void AddTarget(AquiredTarget t)
     {
         if (t == null) return;
@@ -91,8 +93,9 @@ public class TurretMount : MonoBehaviour, IVehicle
         if (Targets.Count == 0) return null;
         return Targets[0];
     }
+    #endregion
 
-    //AMS
+    #region AMS
     public void AddMissle(AquiredTarget t)
     {
         if (t == null) return;
@@ -127,11 +130,16 @@ public class TurretMount : MonoBehaviour, IVehicle
         return priorityTarget;
     }
 
+    #endregion
+
+    #region MissleTurret
     public MissleTurret getMissleTurret()
     {
         if(myTurret.TurretType != TurretType.Missiles) return null;
         return myTurret.GetComponent<MissleTurret>();
     }
+    #endregion
+
     #region destruction
 
     public void takeDamage(float dmg)

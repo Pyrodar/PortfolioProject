@@ -8,9 +8,9 @@ public class CameraScript : MonoBehaviour
 {
     public GameplayPlane plane;
     public Player player;
-    public Transform bigCrossHair;
-    public Transform debugTarget;
-    public Transform debugMarker;
+    public Transform largeCrossHair;
+    [SerializeField] Transform debugTarget;
+    [SerializeField] Transform debugMarker;
 
     public Vector2 offset = new Vector2(0, 3);
 
@@ -19,8 +19,15 @@ public class CameraScript : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (player == null) return;
         followPlayer();
         ClampPosition();
+    }
+
+    public void setPlayer(Player p)
+    {
+        player = p;
+        largeCrossHair = p.LargeCrosshair;
     }
 
     void followPlayer()
@@ -42,12 +49,12 @@ public class CameraScript : MonoBehaviour
         int retVal = 0;
 
         //sending raycast to target and aquiring position when at around same height as crosshair:
-        float range = Vector3.Distance(transform.position, bigCrossHair.position);
+        float range = Vector3.Distance(transform.position, largeCrossHair.position);
         Camera cam = GetComponent<Camera>();
         Vector3 screenPoint = cam.WorldToScreenPoint(target.position);
         Ray ray = cam.ScreenPointToRay(screenPoint);
         Vector3 placeToCheck = transform.position + ray.direction * range;
-        Vector3 placeConverted = bigCrossHair.InverseTransformPoint(placeToCheck);
+        Vector3 placeConverted = largeCrossHair.InverseTransformPoint(placeToCheck);
 
         //Debugging:
         /*
