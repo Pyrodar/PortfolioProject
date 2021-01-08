@@ -33,7 +33,7 @@ public class StationaryWeapon : MonoBehaviour
             RotationParent = transform.parent;
         }
         GameStateConnection.Instance.switchingPlayers += changeTarget;
-        Debug.Log("Added object: " + name + " to list of switch player delegate");
+        //Debug.Log("Added object: " + name + " to list of switch player delegate");
     }
 
     void changeTarget()
@@ -110,7 +110,7 @@ public class StationaryWeapon : MonoBehaviour
     public virtual void destroySelf()
     {
         GameStateConnection.Instance.switchingPlayers -= changeTarget;
-        Debug.Log("Removed object: " + name + " to list of switch player delegate");
+        //Debug.Log("Removed object: " + name + " to list of switch player delegate");
         Destroy(this.gameObject);
     }
     #endregion

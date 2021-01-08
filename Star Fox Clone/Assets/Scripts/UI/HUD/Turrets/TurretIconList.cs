@@ -19,7 +19,7 @@ public class TurretIconList : MonoBehaviour
         Sprite sprite = generateSprite(mount.MyTurretType);
 
         icon.Initiate(mount, sprite);
-        icon.transform.parent = transform;
+        icon.transform.SetParent(transform);
     }
 
     Sprite generateSprite(TurretType type)

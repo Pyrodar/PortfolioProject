@@ -2598,6 +2598,7 @@ MonoBehaviour:
   gravityAlsoLift: 0.4
   crosshairoffset: {x: 0, y: 1.5, z: 0}
   maxHealth: 100
+  ATGTurrets: []
   TargetMarker:
   - {fileID: 0}
   - {fileID: 0}
@@ -3643,6 +3644,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7748306175878101487}
     m_Modifications:
+    - target: {fileID: 526542315354408176, guid: 8a7aad1894b38e044bc9717bbe707cf8,
+        type: 3}
+      propertyPath: lowerLeft
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 526542315354408177, guid: 8a7aad1894b38e044bc9717bbe707cf8,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3730,6 +3736,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7748306175878101487}
     m_Modifications:
+    - target: {fileID: 526542315354408176, guid: 8a7aad1894b38e044bc9717bbe707cf8,
+        type: 3}
+      propertyPath: lowerRight
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 526542315354408177, guid: 8a7aad1894b38e044bc9717bbe707cf8,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3817,6 +3828,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7748306175878101487}
     m_Modifications:
+    - target: {fileID: 526542315354408176, guid: 8a7aad1894b38e044bc9717bbe707cf8,
+        type: 3}
+      propertyPath: lowerLeft
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 526542315354408177, guid: 8a7aad1894b38e044bc9717bbe707cf8,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4175,6 +4191,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7748306175878101487}
     m_Modifications:
+    - target: {fileID: 526542315354408176, guid: 8a7aad1894b38e044bc9717bbe707cf8,
+        type: 3}
+      propertyPath: lowerRight
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 526542315354408177, guid: 8a7aad1894b38e044bc9717bbe707cf8,
         type: 3}
       propertyPath: m_LocalPosition.x

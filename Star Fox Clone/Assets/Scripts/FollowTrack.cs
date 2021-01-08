@@ -43,9 +43,10 @@ public class FollowTrack : MonoBehaviour
         }
     }
 
-    public void StartGame()
+    public void StartFollow()
     {
         Go = true;
+        gameObject.SetActive(true);
     }
 
     void moveAlongPath()

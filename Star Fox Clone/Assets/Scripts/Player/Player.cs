@@ -21,6 +21,12 @@ public class Player : MonoBehaviour , IVehicle
     {
         set { gameStarted = value; }
     }
+    UserInterface hud;
+    public UserInterface HUD
+    {
+        set { hud = value; }
+    }
+
     #endregion
 
     #region SetManuallyInEditor
@@ -83,7 +89,7 @@ public class Player : MonoBehaviour , IVehicle
 
     #endregion
 
-    #region UI
+    #region HUD
     VerticalBar healthbar;
     #endregion
 
@@ -96,16 +102,33 @@ public class Player : MonoBehaviour , IVehicle
     }
     #endregion
 
+
+    /// <summary>
+    /// Setting some values required for the game to funktion.
+    /// currently too split between here and GameStateConnection
+    /// </summary>
+    /// <param name="_plane"></param>
     public void StartGame(GameplayPlane _plane)
     {
+        #region Plane
         plane = _plane;
+        #endregion
 
-        #region Health
-        Debug.Log("Setting Health");
+        #region HUD
+        Debug.Log("Setting HUD");
 
         currentHealth = maxHealth;
-        healthbar = UserInterface.Instance.Healthbar;
+        healthbar = hud.Healthbar;
         healthbar.Initialize(maxHealth);
+
+
+        TurretIconList list = hud.TurretIconList;
+
+
+        for (int i = 0; i < 3; i++)
+        {
+            TargetMarker[i] = hud.TargetMarkers[i];
+        }
         #endregion
 
         #region Rigidbody
@@ -123,7 +146,6 @@ public class Player : MonoBehaviour , IVehicle
         #region Turrets
         Debug.Log("Listing Turrets");
 
-        TurretIconList list = UserInterface.Instance.TurretIconList;
 
         foreach (var tur in turretMounts)
         {
@@ -275,6 +297,7 @@ public class Player : MonoBehaviour , IVehicle
 
     #region combat
 
+    #region Inputs
     void combatInputs()
     {
         if (Input.GetButton("Mark")) scanCrosshairForTarget();
@@ -304,7 +327,9 @@ public class Player : MonoBehaviour , IVehicle
         }
         return retVal;
     }
+    #endregion
 
+    #region health and death
     public void takeDamage(float damage)
     {
         if (currentHealth <= 0) return;
@@ -346,6 +371,8 @@ public class Player : MonoBehaviour , IVehicle
         HelperFunctions.SpawnExplosion(crashExplosion, 5, transform.position);
         Destroy(gameObject);
     }
+
+    #endregion
 
     #region Targets
     LayerMask layermask = 1536;

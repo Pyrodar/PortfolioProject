@@ -20,25 +20,38 @@ public class MapLayoutInfo : MonoBehaviour
             return;
         }
         instance = this;
-        DontDestroyOnLoad(this.gameObject);
     }
     #endregion
 
+    #region LoadoutMap
     [SerializeField] Transform[] loadoutMapPlayerPositions;
     public Transform[] LoadoutMapPlayerPositions
     {
         get { return loadoutMapPlayerPositions; }
     }
+    #endregion
 
+
+    #region GameMap
     [SerializeField] GameplayPlane plane;
     public GameplayPlane Plane
     {
         get { return plane; }
     }
 
+
     [SerializeField] Camera[] cameras;
     public Camera[] Cameras
     {
         get { return cameras; }
     }
+
+
+    [SerializeField] UserInterface[] hud;
+    public UserInterface[] HUD
+    {
+        get { return hud; }
+    }
+
+    #endregion
 }

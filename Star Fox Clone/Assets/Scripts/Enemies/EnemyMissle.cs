@@ -56,7 +56,7 @@ public class EnemyMissle : Target
     {
         lostTarget = true;
         rigid.useGravity = true;
-        Invoke("getDestroyed", 2f);
+        Invoke("destroySelf", 2f);
     }
 
     bool isInRange()
@@ -67,9 +67,19 @@ public class EnemyMissle : Target
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag != "Enemy")
+        if (other.tag != "Enemy" && other.tag != "PlayerBullet")
         {
             Debug.Log("Missle hit something");
+            //slowed down detonation to retain the impact of the missle
+            Invoke("detonate", 0.05f);
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag != "Enemy")
+        {
+            Debug.Log("Missle collided with something");
             //slowed down detonation to retain the impact of the missle
             Invoke("detonate", 0.05f);
         }

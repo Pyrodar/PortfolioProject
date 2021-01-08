@@ -32,6 +32,7 @@ public class GameStateConnection : MonoBehaviour
 
     Player[] players;
 
+
     Player frontlinePlayer;
     GameplayPlane gameplayPlane;
     public GameplayPlane Plane
@@ -44,6 +45,12 @@ public class GameStateConnection : MonoBehaviour
     #region Loading maps
     //#######################################
     //Debugging
+    [SerializeField]Player[] playerprefabs;
+    public Player[] Playerprefabs
+    {
+        get { return playerprefabs; }
+    }
+
     private void Start()
     {
         LoadGameMap();
@@ -85,15 +92,16 @@ public class GameStateConnection : MonoBehaviour
         {
             if (players[i] == null)
             {
-                Debug.Log("Player " + i + " had to be loaded but should already exist");
+                Debug.LogWarning("Player " + i + " had to be loaded but should already exist");
                 players[i] = Instantiate(gameStateInfo.PlayerObjects[i]);
             }
 
             //Set player connections
-            players[i].transform.parent = gameplayPlane.Playerpositions[i];
+            players[i].transform.SetParent(gameplayPlane.Playerpositions[i]);
             players[i].transform.position = gameplayPlane.Playerpositions[i].position;
             players[i].Plane = gameplayPlane;
             players[i].Cam = mapLayoutInfo.Cameras[i];
+            players[i].HUD = mapLayoutInfo.HUD[i];
             //set camera connections
             mapLayoutInfo.Cameras[i].GetComponent<CameraScript>().setPlayer(players[i]);
         }
@@ -110,7 +118,7 @@ public class GameStateConnection : MonoBehaviour
         {
             players[i].StartGame(gameplayPlane);
         }
-        gameplayPlane.GetComponent<FollowTrack>().StartGame();
+        gameplayPlane.GetComponent<FollowTrack>().StartFollow();
     }
 
     #endregion
@@ -200,8 +208,8 @@ class GameStateInfo
         playerNumber = 1;
 
         playerObjects = new Player[2];
-        playerObjects[0] = Resources.Load("Player 1") as Player;
-        playerObjects[1] = Resources.Load("Player 1") as Player;
+        playerObjects[0] = GameStateConnection.Instance.Playerprefabs[0];
+        playerObjects[1] = GameStateConnection.Instance.Playerprefabs[0];
         //#################
     }
 }

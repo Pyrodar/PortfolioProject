@@ -2042,6 +2042,8 @@ MonoBehaviour:
   cameras:
   - {fileID: 1052626522}
   - {fileID: 269898189591206140}
+  hud:
+  - {fileID: 734356630}
 --- !u!1 &243773969
 GameObject:
   m_ObjectHideFlags: 0
@@ -4476,6 +4478,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &734356630 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3212747278172850642, guid: 6e07e8a9948cc4f46b217b7ac43ebdcc,
+    type: 3}
+  m_PrefabInstance: {fileID: 3212747277690150411}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 997e993ee4c00504da874bcdc91b10d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &735487425
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6498,6 +6512,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6189026944260776685, guid: 6c115fcc8523f00459b2cc79d5fa6ebd,
+        type: 3}
+      propertyPath: playerprefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6189026944260776685, guid: 6c115fcc8523f00459b2cc79d5fa6ebd,
+        type: 3}
+      propertyPath: playerprefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 7748306175967555314, guid: 936bc5c1754c3dd4da685b71615b8664,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c115fcc8523f00459b2cc79d5fa6ebd, type: 3}
 --- !u!1 &1129912323

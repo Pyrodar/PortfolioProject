@@ -31,7 +31,7 @@ public class Target : MonoBehaviour , IVehicle
         rigid = GetComponent<Rigidbody>();
 
         GameStateConnection.Instance.switchingPlayers += changeTarget;
-        Debug.Log("Added object: " + name + " to list of switch player delegate");
+        //Debug.Log("Added object: " + name + " to list of switch player delegate");
     }
 
     protected void changeTarget()
@@ -41,13 +41,14 @@ public class Target : MonoBehaviour , IVehicle
 
     public virtual void destroySelf()
     {
-        GameStateConnection.Instance.switchingPlayers += changeTarget;
-        Debug.Log("Removed object: " + name + " to list of switch player delegate");
+        GameStateConnection.Instance.switchingPlayers -= changeTarget;
+        //Debug.Log("Removed object: " + name + " to list of switch player delegate");
         foreach (StationaryWeapon SW in GetComponentsInChildren<StationaryWeapon>())
         {
             SW.destroySelf();
         }
 
+        changeTarget();
         if (type != TargetType.missle) myTarget.removeMarkedTarget(this);
         Destroy(this.gameObject);
     }

@@ -4,26 +4,7 @@ using UnityEngine;
 
 public class UserInterface : MonoBehaviour
 {
-    #region singleton
-    static UserInterface instance;
-
-    public static UserInterface Instance
-    {
-        get { return instance; }
-    }
-
-    private void Awake()
-    {
-        if (UserInterface.instance != null)
-        {
-            Debug.LogWarning("More than one instance of Player");
-            return;
-        }
-        instance = this;
-    }
-    #endregion
-    //TODO: remove singleton, add to MapLayoutInfo
-
+    #region HUD
     [SerializeField] VerticalBar healthbar;
     public VerticalBar Healthbar
     {
@@ -37,10 +18,21 @@ public class UserInterface : MonoBehaviour
         get { return turretIconList; }
     }
 
+    [SerializeField] Transform[] targetMarkers;
+    public Transform[] TargetMarkers
+    {
+        get { return targetMarkers; }
+    }
 
+    #endregion
+
+
+    #region LoadoutMenu
     [SerializeField] TurretMenu turretMenu;
     public TurretMenu TurretMenu
     {
         get { return turretMenu; }
     }
+
+    #endregion
 }

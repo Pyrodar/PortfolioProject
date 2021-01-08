@@ -32,7 +32,7 @@ public class TrackTrigger : MonoBehaviour
         active = true;
         foreach (var plane in connectedPlanes)
         {
-            plane.Go = true;
+            plane.StartFollow();
         }
     }
 }

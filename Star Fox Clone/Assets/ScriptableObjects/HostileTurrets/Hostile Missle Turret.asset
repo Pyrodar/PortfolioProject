@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Hostile Missle Turret
   m_EditorClassIdentifier: 
   turretType: 2
-  turretRange: 200
+  turretRange: 300
   bulletspread: 1
   turretSpeed: 12
   cooldown: 11
