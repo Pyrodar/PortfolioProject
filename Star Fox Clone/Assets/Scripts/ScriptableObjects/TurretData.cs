@@ -11,6 +11,8 @@ public class TurretData : ScriptableObject
     public float turretSpeed;
     public float cooldown;
 
+    public bool firingDiscipline;
+
     public int missleSpace;
     public float ejectSpeed;
 
@@ -43,6 +45,15 @@ public class TurretDataEditor : Editor
             t.missleSpace = EditorGUILayout.IntField("Missle Space", t.missleSpace);
             t.cooldown = EditorGUILayout.FloatField("Missle Reload Time", t.cooldown);
             t.ejectSpeed = EditorGUILayout.FloatField("Missle Eject Speed", t.ejectSpeed);
+        }
+        else if(t.turretType == TurretType.AntiGround)
+        {
+            t.bulletData = EditorGUILayout.ObjectField("BulletData", t.bulletData, typeof(BulletData), true) as BulletData;
+            t.turretRange = EditorGUILayout.FloatField("Turret Range", t.turretRange);
+            t.bulletspread = EditorGUILayout.FloatField("Bullet Spread", t.bulletspread);
+            t.turretSpeed = EditorGUILayout.FloatField("Turret Speed", t.turretSpeed);
+            t.cooldown = EditorGUILayout.FloatField("Reload Time", t.cooldown);
+            t.firingDiscipline = EditorGUILayout.Toggle("Firing Discipline", t.firingDiscipline);
         }
         else
         {

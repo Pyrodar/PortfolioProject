@@ -41,9 +41,19 @@ public class EnemyMissle : Target
 
     void followPlayer()
     {
-        //calculating missle course with double player Velocity for better tracking
-        Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, getVelocity(), data.speed, myTarget.transform.position, myTarget.getVelocity() * 2);
-        HelperFunctions.LookAt(transform, interceptCourse, data.turnSpeed);
+        if (isInArmedRange())
+        {
+            //calculating missle course with double player Velocity for better tracking
+            Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, getVelocity(), data.speed, myTarget.transform.position, myTarget.getVelocity() * 2);
+            HelperFunctions.LookAt(transform, interceptCourse, data.turnSpeed);
+        }
+        else
+        {
+            //Aiming Above the player first for better AMS coverage
+            Vector3 AMSArea = new Vector3(0, 10, 0);
+            Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, getVelocity(), data.speed, myTarget.transform.position + AMSArea, myTarget.getVelocity() * 2);
+            HelperFunctions.LookAt(transform, interceptCourse, data.turnSpeed);
+        }
     }
 
     private bool isBehindPlayer()
@@ -62,6 +72,12 @@ public class EnemyMissle : Target
     bool isInRange()
     {
         if(Vector3.Distance(transform.position, myTarget.transform.position) > data.detectionRange || Time.time < timeWhenArmed) return false;
+        return true;
+    }
+    
+    bool isInArmedRange()
+    {
+        if(Vector3.Distance(transform.position, myTarget.transform.position) > data.detectionRange / 2 || Time.time < timeWhenArmed) return false;
         return true;
     }
 

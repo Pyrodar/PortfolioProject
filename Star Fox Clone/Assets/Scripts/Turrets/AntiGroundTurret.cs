@@ -8,7 +8,16 @@ public class AntiGroundTurret : Turret
     {
         aim(aquireTarget());
 
-        if(hasTarget) Fire();
+        if (data.firingDiscipline)
+        {
+            //Checks if line of sight lines up before firing
+            if(hasTarget && checkSights()) Fire();
+        }
+        else
+        {
+            //fires regardles of what the turret aims at
+            if (hasTarget) Fire();
+        }
     }
 
     AquiredTarget aquireTarget()
@@ -25,6 +34,10 @@ public class AntiGroundTurret : Turret
             if (hasTarget) hasTarget = false;
             return;
         }
+        else if (!hasTarget && data.firingDiscipline)
+        {
+            hasTarget = true;
+        }
         else if (!hasTarget)
         {
             hasTarget = true;
@@ -32,8 +45,17 @@ public class AntiGroundTurret : Turret
         }
         #endregion
 
-        Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, Vector3.zero, data.bulletData.speed, t.transform.position, t.velocity);
+            Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, Vector3.zero, data.bulletData.speed, t.transform.position, t.velocity);
         LookAt(interceptCourse);
+    }
+
+    bool checkSights()
+    {
+        Collider objInSights = HelperFunctions.GetObjectInSights(transform.position, transform.forward, data.turretRange);
+
+        if(objInSights == null) return false;
+        if (objInSights.tag == "Enemy") return true;
+        return false;
     }
 
     public override void Fire()

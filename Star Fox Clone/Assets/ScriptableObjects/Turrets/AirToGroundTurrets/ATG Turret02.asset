@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: ATG Turret02
   m_EditorClassIdentifier: 
   turretType: 1
+  emptyTurretMesh: {fileID: 0}
   turretRange: 200
   bulletspread: 2
   turretSpeed: 10
   cooldown: 0.75
+  firingDiscipline: 0
   missleSpace: 0
   ejectSpeed: 0
   missleData: {fileID: 0}

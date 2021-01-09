@@ -106,10 +106,54 @@ public  class HelperFunctions
 		Quaternion rotation = Quaternion.LookRotation(lookPos);
 		self.rotation = Quaternion.Slerp(self.rotation, rotation, Time.deltaTime * rotationSpeed);
 	}
-    #endregion
+	#endregion
 
-    #region explosions
-    public static Collider[] SpawnExplosion(GameObject explosionObject, float radius, Vector3 position)
+	#region LineOfSight
+
+	public static Collider GetObjectInSights(Vector3 start, Vector3 direction)
+    {
+		return GetObjectInSights(start, direction, 5000f, new LayerMask());
+    }
+	
+	public static Collider GetObjectInSights(Vector3 start, Vector3 direction, float range)
+    {
+		return GetObjectInSights(start, direction, range, new LayerMask());
+    }
+
+	public static Collider GetObjectInSights(Vector3 start, Vector3 direction, LayerMask ignoreLayer)
+	{
+		return GetObjectInSights(start, direction, 5000f, ignoreLayer);
+	}
+	
+	public static Collider GetObjectInSights(Vector3 start, Vector3 direction, float range, LayerMask ignoreLayer)
+    {
+		RaycastHit raycastHit;
+		Ray ray = new Ray(start, direction);
+		Physics.Raycast(ray, out raycastHit, range, ~ignoreLayer);
+
+		return raycastHit.collider;
+    }
+
+	public static bool FreeLOS(Vector3 start, Vector3 end)
+	{
+		return FreeLOS(start, end, 5000f, new LayerMask());
+	}
+	public static bool FreeLOS(Vector3 start, Vector3 end, float range)
+	{
+		return FreeLOS(start, end, range, new LayerMask());
+	}
+
+	public static bool FreeLOS(Vector3 start, Vector3 end, float range, LayerMask ignoreLayer)
+    {
+		Collider obj = GetObjectInSights(start, (end - start), range, ignoreLayer);
+
+		if (obj == null) return true;
+		return false;
+    }
+	#endregion
+
+	#region explosions
+	public static Collider[] SpawnExplosion(GameObject explosionObject, float radius, Vector3 position)
     {
 		//Debug.Log("Boom");
 		//Spawn explosion Visuals

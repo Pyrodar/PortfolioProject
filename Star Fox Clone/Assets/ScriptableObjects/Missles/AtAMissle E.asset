@@ -17,7 +17,7 @@ MonoBehaviour:
   turnSpeed: 3
   drag: 1.4
   timeBeforeArmed: 1.5
-  detectionRange: 125
+  detectionRange: 150
   missleSize: 1
   visuals: {fileID: 6973579219364520940, guid: 6ba3673e0d563f144835200980c18dc3, type: 3}
   explosionVisuals: {fileID: 1052516232856190482, guid: e05b4336b86382d418ca0e722347244e,
