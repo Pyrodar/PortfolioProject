@@ -51,8 +51,8 @@ public class EnemyMissle : Target
         {
             //Aiming Above the player first for better AMS coverage
             Vector3 AMSArea = myTarget.transform.position + new Vector3(0, 10, 0);
-            //Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, getVelocity(), data.speed, AMSArea, myTarget.getVelocity() * 2);
-            HelperFunctions.LookAt(transform, AMSArea, data.turnSpeed);//interceptCourse, data.turnSpeed);
+            Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, getVelocity(), data.speed, AMSArea, myTarget.getVelocity());
+            HelperFunctions.LookAt(transform, interceptCourse, data.turnSpeed);
         }
     }
 

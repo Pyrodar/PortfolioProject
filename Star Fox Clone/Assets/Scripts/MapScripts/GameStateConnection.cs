@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameStateConnection : MonoBehaviour
 {
@@ -25,11 +26,18 @@ public class GameStateConnection : MonoBehaviour
     }
     #endregion
 
+    #region Variables
+
+    #region Delegates
     public delegate void SwitchingPlayers();
     public SwitchingPlayers switchingPlayers;
+    #endregion
 
+    #region SaveFile
     GameStateInfo gameStateInfo;
+    #endregion
 
+    #region Players
     Player[] players;
 
 
@@ -39,7 +47,17 @@ public class GameStateConnection : MonoBehaviour
     {
         get { return gameplayPlane; }
     }
+    #endregion
 
+    #region LoadingLevel
+    LevelData levelData;
+    public LevelData LevelData { get { return levelData; } }
+
+    int levelToLoad;
+    public int LevelToLoad { get { return levelToLoad; } }
+    #endregion
+
+    #endregion
 
 
     #region Loading maps
@@ -50,14 +68,50 @@ public class GameStateConnection : MonoBehaviour
     {
         get { return playerprefabs; }
     }
-
-    private void Start()
-    {
-        LoadGameMap();
-    }
     //#######################################
+
+    private void OnLevelWasLoaded(int level)
+    {
+        if (level == 0) return;     //skipping loading screen
+
+        Debug.Log("Done Loading");
+        DoneLoading();
+    }
+
+    public void DoneLoading()
+    {
+        switch (levelToLoad)
+        {
+            case 0:                                     //Loading Screen
+                break;
+            case 1:                                     //Loaded Main Menu
+                break;
+            case 2:                                     //Loaded Loadout Map
+                    Invoke("StartLoadoutMap", 0.2f);
+                break;
+            default:                                    //Loaded actual level
+                    Invoke("StartGameMap", 0.2f);
+                break;
+        }
+    }
+
+
+    #region LoadoutMap
+    public void LevelSelectedAndStartPressed(LevelData ld)
+    {
+        levelData = ld;
+        LoadLoadoutMap();
+    }
+    
     void LoadLoadoutMap()
     {
+        levelToLoad = 2;
+        SceneManager.LoadScene(0);
+    }
+
+    void StartLoadoutMap()
+    {
+        Debug.Log("Starting up Loadout map");
         MapLayoutInfo mapLayoutInfo = MapLayoutInfo.Instance;
         if (mapLayoutInfo == null)
         {
@@ -73,10 +127,21 @@ public class GameStateConnection : MonoBehaviour
             players[i].transform.position = mapLayoutInfo.LoadoutMapPlayerPositions[i].position;
             DontDestroyOnLoad(players[i]);
         }
+
+    }
+    #endregion
+
+    #region GameMap
+    public void LoadGameMap()
+    {
+        levelToLoad = levelData.LevelToLoad.handle;
+        SceneManager.LoadScene(0);
     }
 
-    void LoadGameMap()
+    void StartGameMap()
     {
+        Debug.Log($"Starting up {levelData.LevelName}");
+        
         MapLayoutInfo mapLayoutInfo = MapLayoutInfo.Instance;
         if (mapLayoutInfo == null)
         {
@@ -109,10 +174,10 @@ public class GameStateConnection : MonoBehaviour
         //resetting frontlinePlayer
         frontlinePlayer = players[0];
 
-        Invoke("StartGameMap", 1f);
+        Invoke("StartGame", 0.2f);
     }
 
-    void StartGameMap()
+    void StartGame()
     {
         for (int i = 0; i < gameStateInfo.PlayerNumber; i++)
         {
@@ -120,6 +185,7 @@ public class GameStateConnection : MonoBehaviour
         }
         gameplayPlane.GetComponent<FollowTrack>().StartFollow();
     }
+    #endregion
 
     #endregion
 
@@ -133,7 +199,8 @@ public class GameStateConnection : MonoBehaviour
 
         gameplayPlane = null;
 
-        //Load Menu
+        levelToLoad = 1;
+        SceneManager.LoadScene(0);
     }
     #endregion
 
@@ -206,6 +273,7 @@ public class GameStateConnection : MonoBehaviour
 
 class GameStateInfo
 {
+    #region Player
     int playerNumber;
     public int PlayerNumber
     {
@@ -219,11 +287,14 @@ class GameStateInfo
         get { return playerObjects; }
         set { playerObjects = value; }
     }
+    #endregion
 
+    #region saveFile
     public GameStateInfo(string filename)
     {
         LoadSaveFile(filename);
     }
+    #endregion
 
     void LoadSaveFile(string file)
     {

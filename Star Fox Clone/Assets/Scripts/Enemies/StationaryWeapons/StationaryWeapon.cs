@@ -8,6 +8,7 @@ public class StationaryWeapon : MonoBehaviour
     [SerializeField] protected HostileTurretData data;
 
     [SerializeField] protected Sprite impactMarkersprite;
+
     protected GameObject impactMarker;
 
     protected Player myTarget;

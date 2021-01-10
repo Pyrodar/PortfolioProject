@@ -29,8 +29,13 @@ public class MapLayoutInfo : MonoBehaviour
     {
         get { return loadoutMapPlayerPositions; }
     }
-    #endregion
 
+
+    public void StartGame()
+    {
+        GameStateConnection.Instance.LoadGameMap();
+    }
+    #endregion
 
     #region GameMap
     [SerializeField] GameplayPlane plane;
@@ -52,6 +57,13 @@ public class MapLayoutInfo : MonoBehaviour
     {
         get { return hud; }
     }
+
+    #region Score
+
+    int targetsDestroyed;
+    float damageTaken;
+
+    #endregion
 
     #endregion
 }
