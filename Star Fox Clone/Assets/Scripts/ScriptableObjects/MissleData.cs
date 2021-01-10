@@ -10,6 +10,7 @@ public class MissleData : ScriptableObject
     [Tooltip("how long until the missle starts following the Target")]
     public float timeBeforeArmed;
     public float detectionRange;
+    public float armingRange;
     [Range(0.2f, 6)]
     public float missleSize;
     public GameObject visuals;

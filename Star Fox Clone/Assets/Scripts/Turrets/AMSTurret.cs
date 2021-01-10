@@ -4,10 +4,10 @@ public class AMSTurret : Turret
 {
     void Update()
     {
-        AquiredTarget aq = aquireTargets();
-        if (aq != null)
+        AquiredTarget at = aquireTargets();
+        if (at != null)
         {
-            aim(aq);
+            aim(at);
             Fire();
         }
     }
@@ -17,14 +17,19 @@ public class AMSTurret : Turret
         //Check for targets
         AquiredTarget M = myMount.getClosestMissle();
         if (M == null) return null;
+
         //Check Target Distance
         float distance = Vector3.Distance(M.transform.position, transform.position);
         if (distance > data.turretRange) return null;
+
+        //aquire target
+        M.gunsPointing += 1;
         return M;
     }
 
     void aim(AquiredTarget M)
     {
+        M.UpdateVelocity();
         Vector3 targetInterception = HelperFunctions.Intercept(transform.position, Vector3.zero, data.bulletData.speed, M.transform.position, M.transform.GetComponent<EnemyMissle>().getVelocity());
         LookAt(targetInterception);
     }

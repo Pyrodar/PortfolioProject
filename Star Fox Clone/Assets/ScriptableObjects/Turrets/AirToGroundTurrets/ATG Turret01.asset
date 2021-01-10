@@ -16,7 +16,7 @@ MonoBehaviour:
   emptyTurretMesh: {fileID: 0}
   turretRange: 200
   bulletspread: 0
-  turretSpeed: 9
+  turretSpeed: 6
   cooldown: 2
   firingDiscipline: 1
   missleSpace: 0

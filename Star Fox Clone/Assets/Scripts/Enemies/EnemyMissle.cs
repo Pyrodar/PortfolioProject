@@ -29,7 +29,7 @@ public class EnemyMissle : Target
 
         addForwardMomentum();
 
-        if (isInRange()) followPlayer();
+        if (isInDetectionRange()) followPlayer();
 
         if (isBehindPlayer()) looseTarget();
     }
@@ -41,7 +41,7 @@ public class EnemyMissle : Target
 
     void followPlayer()
     {
-        if (isInArmedRange())
+        if (isInArmingRange())
         {
             //calculating missle course with double player Velocity for better tracking
             Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, getVelocity(), data.speed, myTarget.transform.position, myTarget.getVelocity() * 2);
@@ -50,9 +50,9 @@ public class EnemyMissle : Target
         else
         {
             //Aiming Above the player first for better AMS coverage
-            Vector3 AMSArea = new Vector3(0, 10, 0);
-            Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, getVelocity(), data.speed, myTarget.transform.position + AMSArea, myTarget.getVelocity() * 2);
-            HelperFunctions.LookAt(transform, interceptCourse, data.turnSpeed);
+            Vector3 AMSArea = myTarget.transform.position + new Vector3(0, 10, 0);
+            //Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, getVelocity(), data.speed, AMSArea, myTarget.getVelocity() * 2);
+            HelperFunctions.LookAt(transform, AMSArea, data.turnSpeed);//interceptCourse, data.turnSpeed);
         }
     }
 
@@ -69,15 +69,15 @@ public class EnemyMissle : Target
         Invoke("destroySelf", 2f);
     }
 
-    bool isInRange()
+    bool isInDetectionRange()
     {
         if(Vector3.Distance(transform.position, myTarget.transform.position) > data.detectionRange || Time.time < timeWhenArmed) return false;
         return true;
     }
     
-    bool isInArmedRange()
+    bool isInArmingRange()
     {
-        if(Vector3.Distance(transform.position, myTarget.transform.position) > data.detectionRange / 2 || Time.time < timeWhenArmed) return false;
+        if(Vector3.Distance(transform.position, myTarget.transform.position) > data.armingRange || Time.time < timeWhenArmed) return false;
         return true;
     }
 
@@ -85,7 +85,7 @@ public class EnemyMissle : Target
     {
         if (other.tag != "Enemy" && other.tag != "PlayerBullet")
         {
-            Debug.Log("Missle hit something");
+            //Debug.Log("Missle hit something");
             //slowed down detonation to retain the impact of the missle
             Invoke("detonate", 0.05f);
         }
@@ -95,7 +95,7 @@ public class EnemyMissle : Target
     {
         if (collision.gameObject.tag != "Enemy")
         {
-            Debug.Log("Missle collided with something");
+            //Debug.Log("Missle collided with something");
             //slowed down detonation to retain the impact of the missle
             Invoke("detonate", 0.05f);
         }

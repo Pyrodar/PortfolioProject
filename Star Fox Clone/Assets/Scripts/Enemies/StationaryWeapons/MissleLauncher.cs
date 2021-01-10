@@ -5,7 +5,7 @@ public class MissleLauncher : StationaryWeapon
 {
     protected override void aim()
     {
-        Vector3 offset = new Vector3(0, 15, 0);
+        Vector3 offset = new Vector3(0, 5, 0);
 
         Vector3 InterceptPoint = getInterceptPoint();
         if (InterceptPoint.magnitude == 0) return;

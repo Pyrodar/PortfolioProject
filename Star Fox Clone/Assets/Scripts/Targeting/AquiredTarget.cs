@@ -5,6 +5,7 @@ public class AquiredTarget
     public Transform transform;
     public Vector3 velocity;
     public int currentQuarter;
+    public int gunsPointing;
     public TargetType type;
     
     public AquiredTarget(Transform t, Vector3 _velocity, int quarter, TargetType _type)
@@ -15,6 +16,10 @@ public class AquiredTarget
         type = _type;
     }
 
+    public void UpdateVelocity()
+    {
+        velocity = transform.GetComponent<Target>().getVelocity();
+    }
 }
 
 public enum TargetType

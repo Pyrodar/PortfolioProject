@@ -171,6 +171,37 @@ public class GameStateConnection : MonoBehaviour
         switchingPlayers();
     }
     #endregion
+
+    #region GameOver
+    public void loosePlayer(Player P)
+    {
+        Debug.Log("Lost Player");
+
+        if (players.Length > 1 || frontlinePlayer == P)
+        {
+            switchingPlayers();
+        }
+
+
+        bool stillInGame = false;
+        foreach (Player p in players)
+        {
+            if (p == null) continue;
+
+            if (p.IsInGame)
+            {
+                stillInGame = true;
+            }
+        }
+
+        if (!stillInGame) GameOver();
+    }
+
+    public void GameOver()
+    {
+        Debug.LogWarning("GAME OVER BOYS");
+    }
+    #endregion
 }
 
 class GameStateInfo

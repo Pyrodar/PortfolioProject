@@ -45,7 +45,8 @@ public class AntiGroundTurret : Turret
         }
         #endregion
 
-            Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, Vector3.zero, data.bulletData.speed, t.transform.position, t.velocity);
+        t.UpdateVelocity();
+        Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, Vector3.zero, data.bulletData.speed, t.transform.position, t.velocity);
         LookAt(interceptCourse);
     }
 

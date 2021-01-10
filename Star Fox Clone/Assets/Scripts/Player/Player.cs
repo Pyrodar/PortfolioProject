@@ -16,10 +16,11 @@ public class Player : MonoBehaviour , IVehicle
     {
         set { cam = value; }
     }
-    bool gameStarted;
-    public bool GameStarted
+    bool inGame;
+    public bool IsInGame
     {
-        set { gameStarted = value; }
+        get { return inGame; }
+        set { inGame = value; }
     }
     UserInterface hud;
     public UserInterface HUD
@@ -156,12 +157,12 @@ public class Player : MonoBehaviour , IVehicle
         }
         #endregion
 
-        gameStarted = true;
+        inGame = true;
     }
 
     void Update()
     {
-        if (!gameStarted) return;
+        if (!inGame) return;
         //Movement
         applyMovement(inputMovement());
 
@@ -348,8 +349,18 @@ public class Player : MonoBehaviour , IVehicle
 
     void crash()
     {
+        foreach (TurretMount tur in turretMounts)
+        {
+            tur.destroySelf();
+        }
+
+        currentHealth = 0;
+        UpdateHealthbar();
+
+        inGame = false;
         Invoke("destroySelf", 5);
-        gameStarted = false;
+        GameStateConnection.Instance.loosePlayer(this);
+
         myRigid.drag = 0;
         myRigid.AddForce(transform.forward * 12, ForceMode.Impulse);
         myRigid.useGravity = true;
@@ -369,12 +380,13 @@ public class Player : MonoBehaviour , IVehicle
     public void destroySelf()
     {
         HelperFunctions.SpawnExplosion(crashExplosion, 5, transform.position);
-        Destroy(gameObject);
+        gameObject.SetActive(false);
+        //Destroy(gameObject);
     }
 
     #endregion
 
-    #region Targets
+    #region Non-AMS-Targets
     LayerMask layermask = 1536;
     void scanCrosshairForTarget()
     {
@@ -509,6 +521,7 @@ public class Player : MonoBehaviour , IVehicle
         foreach (var Mount in AMSTurrets)
         {
             Mount.clearMissles();
+
             foreach (var missle in incomingMissles)
             {
                 if (Mount.Quarters.Contains(missle.currentQuarter)) Mount.AddMissle(missle);
@@ -531,6 +544,7 @@ public class Player : MonoBehaviour , IVehicle
         //Adds target to list 
         AquiredTarget target = new AquiredTarget(M.transform, M.getVelocity(), camera.giveLocationRelativeToCrosshair(M.transform), M.type);
         incomingMissles.Add(target);
+        MisslesChanged();
     }
 
     public void removeIncomingMissle(Target M)
