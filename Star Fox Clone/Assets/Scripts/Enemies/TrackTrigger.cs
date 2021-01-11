@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class TrackTrigger : MonoBehaviour
@@ -16,6 +15,8 @@ public class TrackTrigger : MonoBehaviour
 
     void Update()
     {
+        if (plane == null) { Start(); return; }
+
         if (!active)
         {
             if (inPositionToStart()) activate();

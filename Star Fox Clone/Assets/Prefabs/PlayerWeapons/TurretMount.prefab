@@ -11,8 +11,7 @@ GameObject:
   - component: {fileID: 526542315354408177}
   - component: {fileID: 526542315354408176}
   - component: {fileID: 5528767610459532205}
-  - component: {fileID: 2272032699995372589}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: TurretMount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,17 +69,3 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2272032699995372589
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 526542315354408178}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 545a74155f7687c4983c96a589e28d7a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  clickableAreaMarker: {fileID: 7633910134016911743, guid: 098c7d3bf447eb54c8be80e3ea35e927,
-    type: 3}

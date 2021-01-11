@@ -133,8 +133,9 @@ GameObject:
   - component: {fileID: 111232058}
   - component: {fileID: 111232057}
   - component: {fileID: 111232056}
+  - component: {fileID: 111232060}
   m_Layer: 5
-  m_Name: UI Canvas
+  m_Name: LoadoutHUD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -221,6 +222,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &111232060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 111232055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d3a17c4f8cbaa440a7f3db1d23a258d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turretMenu: {fileID: 0}
 --- !u!1 &111979143
 GameObject:
   m_ObjectHideFlags: 0
@@ -666,6 +680,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5af18bb20f314a47b56e3048f1c3aac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  axes: 0
+  sensitivityX: 5
+  sensitivityY: 5
+  minimumX: -360
+  maximumX: 360
+  minimumY: -75
+  maximumY: 75
+  frameCounter: 20
 --- !u!1 &1849534519
 GameObject:
   m_ObjectHideFlags: 0
@@ -830,6 +852,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: MapLayoutObject
       objectReference: {fileID: 0}
+    - target: {fileID: 5094483135677587278, guid: bf46a4256dc68f64d8a3b54d795fdb19,
+        type: 3}
+      propertyPath: hud.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5094483135677587278, guid: bf46a4256dc68f64d8a3b54d795fdb19,
+        type: 3}
+      propertyPath: hud.Array.data[0]
+      value: 
+      objectReference: {fileID: 111232060}
     - target: {fileID: 5094483135677587279, guid: bf46a4256dc68f64d8a3b54d795fdb19,
         type: 3}
       propertyPath: m_LocalPosition.x

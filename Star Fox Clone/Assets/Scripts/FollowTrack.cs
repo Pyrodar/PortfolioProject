@@ -3,25 +3,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class FollowTrack : MonoBehaviour
 {
     [SerializeField] float speed;
-    public bool Go = false;
-
     [SerializeField] CinemachineDollyCart cart;
+    public bool Go = false;
     Transform cartTransform;
     Rigidbody rigid;
 
-    /*
-    public void Initialize(CinemachineDollyCart _cart, float _speed)
-    {
-        cart = _cart;
-        speed = _speed;
-        Go = true;
-        Awake();
-    }
-    */
+
+    public TrackEndEvent trackEnded;
+
 
     private void Awake()
     {
@@ -39,7 +33,8 @@ public class FollowTrack : MonoBehaviour
 
         if (IsEndReached())
         {
-            GetComponent<IVehicle>().destroySelf();
+            Go = false;
+            trackEnded.Invoke();
         }
     }
 
@@ -70,3 +65,7 @@ public class FollowTrack : MonoBehaviour
         return cart.m_Position == cart.m_Path.PathLength;
     }
 }
+
+
+[Serializable]
+public class TrackEndEvent : UnityEvent { }

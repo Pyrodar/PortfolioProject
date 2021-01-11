@@ -42,4 +42,14 @@ public class GameplayPlane : MonoBehaviour
     {
         Debug.Log("Switch Player positions to " + playerNumber + " in front");
     }
+
+    public void PathEnded()
+    {
+        Debug.Log("Track Has Reached Its End");
+        foreach (InGameHUD UI in MapLayoutInfo.Instance.HUD)
+        {
+            if (UI == null) continue;
+            UI.Victory();
+        }
+    }
 }

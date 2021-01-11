@@ -22,8 +22,8 @@ public class Player : MonoBehaviour , IVehicle
         get { return inGame; }
         set { inGame = value; }
     }
-    UserInterface hud;
-    public UserInterface HUD
+    InGameHUD hud;
+    public InGameHUD HUD
     {
         set { hud = value; }
     }
@@ -109,15 +109,9 @@ public class Player : MonoBehaviour , IVehicle
     /// currently too split between here and GameStateConnection
     /// </summary>
     /// <param name="_plane"></param>
-    public void StartGame(GameplayPlane _plane)
+    public void StartGame()
     {
-        #region Plane
-        plane = _plane;
-        #endregion
-
         #region HUD
-        Debug.Log("Setting HUD");
-
         currentHealth = maxHealth;
         healthbar = hud.Healthbar;
         healthbar.Initialize(maxHealth);
@@ -612,4 +606,26 @@ public class Player : MonoBehaviour , IVehicle
 
     #endregion
 
+    #region Loadout
+    public void AddTurretModules()
+    {
+        foreach (TurretMount tm in turretMounts)
+        {
+            TurretModule mod = tm.gameObject.AddComponent<TurretModule>();
+            mod.Instantiate();
+        }
+    }
+    
+    public void RemoveTurretModules()
+    {
+        foreach (TurretMount tm in turretMounts)
+        {
+            if (tm.GetComponent<TurretModule>() != null)
+            {
+                tm.GetComponent<TurretModule>().startGame();
+            }
+        }
+    }
+
+    #endregion
 }

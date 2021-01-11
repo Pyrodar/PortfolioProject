@@ -3,26 +3,61 @@
 public class TurretModule : MonoBehaviour
 {
     //Empty sphere Object to mark where to click
-    [SerializeField] GameObject clickableAreaMarker;
-    GameObject AM;
+    //[SerializeField] GameObject clickableAreaMarker;
+    GameObject areaMarker;
+    SphereCollider coll;
 
-    private void Awake()
+    LoadoutHUD HUD;
+
+    public void Instantiate()
     {
-        AM = Instantiate(clickableAreaMarker);
-        AM.transform.position = transform.position;
+        //TODO: get 
+        HUD = (LoadoutHUD)MapLayoutInfo.Instance.HUD[0];
+
+        areaMarker = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        areaMarker.transform.position = transform.position;
+        areaMarker.GetComponent<MeshRenderer>().materials[0] = Resources.Load("KlickableAreaMarkerMat.mat") as Material;
+
+        //Making turret clickable
+        areaMarker.gameObject.layer = 2;    //IgnoreRaycastLayer
+        gameObject.layer = 0;               //DefaultLayer
+        coll = gameObject.AddComponent<SphereCollider>();
+        coll.radius = 0.5f;
     }
 
-    //Debugging
-    private void Start()
-    {
-        startGame();
-    }
+    #region MouseInteractions
 
     private void OnMouseDown()
     {
-        Debug.Log("Klicked on: " + name);
+        Debug.Log($"Klicked on: {name}");
+
         //Open Turret Menu
+        HUD.selectModule(this);
     }
+
+    private void OnMouseEnter()
+    {
+        Debug.Log($"Hovering on: {name}");
+        //areaMarker.GetComponent<MeshRenderer>().materials[0] = ;
+    }
+
+    private void OnMouseExit()
+    {
+        Debug.Log($"No longer hovering on: {name}");
+        //areaMarker.GetComponent<MeshRenderer>().materials[0] = ;
+    }
+
+    public void SelectModule()
+    {
+        Debug.Log($"Selected turret: {name}");
+    }
+
+    public void DeselectModule()
+    {
+        Debug.Log($"Deselected turret: {name}");
+    }
+
+    #endregion
 
     /// <summary>
     /// creates the Turret as child of this transform based on a scriptableObject of type TurretData given to it
@@ -74,8 +109,9 @@ public class TurretModule : MonoBehaviour
     /// </summary>
     public void startGame()
     {
-        Destroy(AM);
-        gameObject.layer = 2;
+        Destroy(areaMarker);
+        Destroy(coll);
+        gameObject.layer = 2;       //IgnoreRaycastLayer
         Destroy(this);
     }
 }

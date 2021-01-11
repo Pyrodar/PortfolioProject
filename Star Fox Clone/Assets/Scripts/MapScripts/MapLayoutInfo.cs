@@ -52,8 +52,8 @@ public class MapLayoutInfo : MonoBehaviour
     }
 
 
-    [SerializeField] UserInterface[] hud;
-    public UserInterface[] HUD
+    [SerializeField] UIBaseClass[] hud;
+    public UIBaseClass[] HUD
     {
         get { return hud; }
     }

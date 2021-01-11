@@ -195,7 +195,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7748306175353126453}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: PlayerVisuals
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -954,7 +954,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7748306175878101487}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Turrets
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -2533,7 +2533,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7748306176762918354}
   - component: {fileID: 7748306175967555314}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -3287,7 +3287,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7748306177027821726}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: PlayerVisualsZRotation
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -3708,6 +3708,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: lowerLeftTurret 1
       objectReference: {fileID: 0}
+    - target: {fileID: 526542315354408178, guid: 8a7aad1894b38e044bc9717bbe707cf8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a7aad1894b38e044bc9717bbe707cf8, type: 3}
 --- !u!114 &551063792073219121 stripped
@@ -3800,6 +3805,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: lowerRightTurret 1
       objectReference: {fileID: 0}
+    - target: {fileID: 526542315354408178, guid: 8a7aad1894b38e044bc9717bbe707cf8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a7aad1894b38e044bc9717bbe707cf8, type: 3}
 --- !u!114 &2212457493108291708 stripped
@@ -3891,6 +3901,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: lowerLeftTurret 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 526542315354408178, guid: 8a7aad1894b38e044bc9717bbe707cf8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a7aad1894b38e044bc9717bbe707cf8, type: 3}
@@ -3989,6 +4004,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: upperLeftTurret
       objectReference: {fileID: 0}
+    - target: {fileID: 526542315354408178, guid: 8a7aad1894b38e044bc9717bbe707cf8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a7aad1894b38e044bc9717bbe707cf8, type: 3}
 --- !u!4 &4037707366317828491 stripped
@@ -4076,6 +4096,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: RightMissleTurret
       objectReference: {fileID: 0}
+    - target: {fileID: 526542315354408178, guid: 8a7aad1894b38e044bc9717bbe707cf8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a7aad1894b38e044bc9717bbe707cf8, type: 3}
 --- !u!114 &5970000580619549425 stripped
@@ -4162,6 +4187,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: LeftMissleTurret
+      objectReference: {fileID: 0}
+    - target: {fileID: 526542315354408178, guid: 8a7aad1894b38e044bc9717bbe707cf8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a7aad1894b38e044bc9717bbe707cf8, type: 3}
@@ -4254,6 +4284,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: lowerRightTurret 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 526542315354408178, guid: 8a7aad1894b38e044bc9717bbe707cf8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a7aad1894b38e044bc9717bbe707cf8, type: 3}
@@ -4351,6 +4386,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: upperRightTurret
+      objectReference: {fileID: 0}
+    - target: {fileID: 526542315354408178, guid: 8a7aad1894b38e044bc9717bbe707cf8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a7aad1894b38e044bc9717bbe707cf8, type: 3}

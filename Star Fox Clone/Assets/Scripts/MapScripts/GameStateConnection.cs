@@ -70,6 +70,11 @@ public class GameStateConnection : MonoBehaviour
     }
     //#######################################
 
+    void StartLoadingScreen()
+    {
+        SceneManager.LoadScene(0);
+    }
+
     private void OnLevelWasLoaded(int level)
     {
         if (level == 0) return;     //skipping loading screen
@@ -106,7 +111,7 @@ public class GameStateConnection : MonoBehaviour
     void LoadLoadoutMap()
     {
         levelToLoad = 2;
-        SceneManager.LoadScene(0);
+        StartLoadingScreen();
     }
 
     void StartLoadoutMap()
@@ -119,13 +124,14 @@ public class GameStateConnection : MonoBehaviour
             return;
         }
 
-        players = new Player[2];
+        players = new Player[gameStateInfo.PlayerNumber];
 
         for (int i = 0; i < gameStateInfo.PlayerNumber; i++)
         {
             players[i] = Instantiate(gameStateInfo.PlayerObjects[i]);
             players[i].transform.position = mapLayoutInfo.LoadoutMapPlayerPositions[i].position;
             DontDestroyOnLoad(players[i]);
+            players[i].AddTurretModules();
         }
 
     }
@@ -135,7 +141,7 @@ public class GameStateConnection : MonoBehaviour
     public void LoadGameMap()
     {
         levelToLoad = levelData.LevelToLoad.handle;
-        SceneManager.LoadScene(0);
+        StartLoadingScreen();
     }
 
     void StartGameMap()
@@ -160,15 +166,17 @@ public class GameStateConnection : MonoBehaviour
                 Debug.LogWarning("Player " + i + " had to be loaded but should already exist");
                 players[i] = Instantiate(gameStateInfo.PlayerObjects[i]);
             }
-
+            Debug.Log("Setting HUD " + i);
             //Set player connections
             players[i].transform.SetParent(gameplayPlane.Playerpositions[i]);
             players[i].transform.position = gameplayPlane.Playerpositions[i].position;
             players[i].Plane = gameplayPlane;
             players[i].Cam = mapLayoutInfo.Cameras[i];
-            players[i].HUD = mapLayoutInfo.HUD[i];
+            players[i].HUD = (InGameHUD)mapLayoutInfo.HUD[i];
             //set camera connections
             mapLayoutInfo.Cameras[i].GetComponent<CameraScript>().setPlayer(players[i]);
+            //remove Layout funktions
+            players[i].RemoveTurretModules();
         }
 
         //resetting frontlinePlayer
@@ -181,26 +189,37 @@ public class GameStateConnection : MonoBehaviour
     {
         for (int i = 0; i < gameStateInfo.PlayerNumber; i++)
         {
-            players[i].StartGame(gameplayPlane);
+            players[i].StartGame();
         }
         gameplayPlane.GetComponent<FollowTrack>().StartFollow();
     }
     #endregion
 
+    #region RestartMap
+
+    public void RestartMap()
+    {
+        Debug.Log("Reset Players pls");
+        StartLoadingScreen();
+    }
+
+    #endregion
+
     #endregion
 
     #region menus
-    void returnToMenu()
+    public void ReturnToMenu()
     {
-        for (int i = 0; i < gameStateInfo.PlayerNumber; i++)
+        foreach (Player player in players)
         {
-            Destroy(players[i]);
+            Destroy(player);
         }
 
         gameplayPlane = null;
-
+        players = null;
+       
         levelToLoad = 1;
-        SceneManager.LoadScene(0);
+        StartLoadingScreen();
     }
     #endregion
 
