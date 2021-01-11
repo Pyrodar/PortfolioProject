@@ -18,6 +18,9 @@ public class TurretData : ScriptableObject
 
     public MissleData missleData;
     public BulletData bulletData;
+
+    public Sprite Icon;
+    public string Description = "No description currently available";
 }
 
 public enum TurretType
@@ -66,5 +69,6 @@ public class TurretDataEditor : Editor
             t.turretSpeed = EditorGUILayout.FloatField("Turret Speed", t.turretSpeed);
             t.cooldown = EditorGUILayout.FloatField("Reload Time", t.cooldown);
         }
+        t.Description = EditorGUILayout.TextArea(t.Description);
     } 
 }

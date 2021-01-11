@@ -8,6 +8,8 @@ public class TurretModule : MonoBehaviour
     SphereCollider coll;
 
     LoadoutHUD HUD;
+    TurretData currentTurret;
+    public TurretData CurrentTurret { get { return currentTurret; } }
 
     public void Instantiate()
     {
@@ -23,6 +25,13 @@ public class TurretModule : MonoBehaviour
         gameObject.layer = 0;               //DefaultLayer
         coll = gameObject.AddComponent<SphereCollider>();
         coll.radius = 0.5f;
+
+        refreshTurret();
+    }
+
+    void refreshTurret()
+    {
+        currentTurret = gameObject.GetComponent<TurretMount>().GetTurretData();
     }
 
     #region MouseInteractions
@@ -91,6 +100,8 @@ public class TurretModule : MonoBehaviour
                 break;
         }
         #endregion
+
+        refreshTurret();
     }
 
     /// <summary>
@@ -100,8 +111,10 @@ public class TurretModule : MonoBehaviour
     {
         foreach (Transform child in transform)
         {
-            Destroy(child);
+            GameObject.Destroy(child.gameObject);
         }
+
+        refreshTurret();
     }
 
     /// <summary>

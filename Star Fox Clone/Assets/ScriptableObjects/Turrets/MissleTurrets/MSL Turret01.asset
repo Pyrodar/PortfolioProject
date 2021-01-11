@@ -10,14 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf612a5d7d9819043996e4c7d7724f40, type: 3}
-  m_Name: MLT Turret02
+  m_Name: MSL Turret01
   m_EditorClassIdentifier: 
   turretType: 2
+  emptyTurretMesh: {fileID: 0}
   turretRange: 0
   bulletspread: 0
   turretSpeed: 0
-  cooldown: 12
-  missleSpace: 6
+  cooldown: 8
+  firingDiscipline: 0
+  missleSpace: 3
   ejectSpeed: 12
-  missleData: {fileID: 11400000, guid: aa829b692f0e9db47905c80ec7f6dba0, type: 2}
+  missleData: {fileID: 11400000, guid: 1ca4862083e939b44bc008871859aaf8, type: 2}
   bulletData: {fileID: 0}
+  Icon: {fileID: 0}
+  Description: No description currently available

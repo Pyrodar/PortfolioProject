@@ -75,6 +75,15 @@ public class TurretMount : MonoBehaviour, IVehicle
     {
         myTurret = t;
     }
+
+    public TurretData GetTurretData()
+    {
+        TurretData retVal = null;
+
+        if(myTurret != null) retVal = myTurret.Data;
+
+        return retVal;
+    }
     #endregion
 
     #region Anti Ground

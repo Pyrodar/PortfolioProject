@@ -23,3 +23,4 @@ MonoBehaviour:
   ejectSpeed: 0
   missleData: {fileID: 0}
   bulletData: {fileID: 11400000, guid: 1d66fd42ce2dd4d4cb5fdadb6c1e93d5, type: 2}
+  Icon: {fileID: 0}

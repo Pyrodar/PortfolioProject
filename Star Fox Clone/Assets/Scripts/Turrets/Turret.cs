@@ -7,7 +7,7 @@ public class Turret : MonoBehaviour
     [SerializeField]protected TurretData data;
     public TurretData Data
     {
-        //get { return data; }
+        get { return data; }
         set { data = value; }
     }
 
