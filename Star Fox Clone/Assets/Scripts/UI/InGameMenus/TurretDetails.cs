@@ -11,12 +11,18 @@ public class TurretDetails : MonoBehaviour
     [SerializeField] Text turretName;
     [SerializeField] Text typeName;
     [SerializeField] Text ammoType;
-    [SerializeField] Text firingSpeed;
-    //Last stat can be either firing speed or missle capacity
-    [SerializeField] Text LastStat;
+    [SerializeField] Text SpeedAndCapacity;
+    [SerializeField] Text AccuracyAndReloadtime;
+    //Last two stat can be either firing speed or missle capacity
+    [SerializeField] Text Stat4Name;
+    [SerializeField] Text Stat5Name;
     //General Description of the turret
     [SerializeField] Text Description;
 
+    //Quadrant Markers
+    [SerializeField] Image[] Quadrants;
+
+    //TurretType Icons
     [SerializeField] Sprite IconATG;
     [SerializeField] Sprite IconAMS;
     [SerializeField] Sprite IconMSL;
@@ -57,14 +63,22 @@ public class TurretDetails : MonoBehaviour
         switch (data.turretType)
         {
             case TurretType.Missiles:
-                LastStat.text = "Missle Capacity";
-                firingSpeed.text = data.missleSpace.ToString();
                 ammoType.text = data.missleData.name;
+                
+                Stat4Name.text = "Missle Capacity:";
+                SpeedAndCapacity.text = data.missleSpace.ToString();
+                
+                Stat5Name.text = "Reload Time:";
+                AccuracyAndReloadtime.text = data.cooldown.ToString();
                 break;
             default:
-                LastStat.text = "Firing Speed";
-                firingSpeed.text = data.turretSpeed.ToString();
                 ammoType.text = data.bulletData.name;
+                
+                Stat4Name.text = "Firing Speed:";
+                SpeedAndCapacity.text = data.turretSpeed.ToString();
+
+                Stat5Name.text = "Bullet Spread:";
+                AccuracyAndReloadtime.text = data.bulletSpread.ToString();
                 break;
         }
 
@@ -81,10 +95,26 @@ public class TurretDetails : MonoBehaviour
         turretName.text = "/na";
         ammoType.text = "/na";
 
-        LastStat.text = "Firing Speed";
-        firingSpeed.text = "/na";
+        Stat4Name.text = "Firing Speed:";
+        SpeedAndCapacity.text = "/na";
+
+        Stat5Name.text = "Accuracy:";
+        AccuracyAndReloadtime.text = "/na";
 
         Description.text = "/na";
     }
 
+
+    public void SetQuadrants(TurretMount t)
+    {
+        foreach (Image q in Quadrants)
+        {
+            q.gameObject.SetActive(false);
+        }
+
+        foreach (int i in t.Quarters)
+        {
+            Quadrants[i].gameObject.SetActive(true);
+        }
+    }
 }

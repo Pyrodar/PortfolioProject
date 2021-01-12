@@ -145,6 +145,7 @@ public class LoadoutHUD : UIBaseClass
         CurrentTurret.gameObject.SetActive(true);
 
         CurrentTurret.SetDescription(tm.CurrentTurret);
+        CurrentTurret.SetQuadrants(tm.GetComponent<TurretMount>()); ;
 
         //Unmark Turret in UI
         if(selectedModule != null) selectedModule.DeselectModule();

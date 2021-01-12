@@ -11,20 +11,31 @@ public class TurretModule : MonoBehaviour
     TurretData currentTurret;
     public TurretData CurrentTurret { get { return currentTurret; } }
 
+    Material RegularAM;
+    Material HoveredAM;
+    Material SelectedAM;
+
     public void Instantiate()
     {
         //TODO: get 
         HUD = (LoadoutHUD)MapLayoutInfo.Instance.HUD[0];
 
+        //Materials
+        RegularAM = Resources.Load("RegularAM") as Material;
+        HoveredAM = Resources.Load("HoveredAM") as Material;
+        SelectedAM = Resources.Load("SelectedAM") as Material;
+
+        //UI Markers
         areaMarker = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         areaMarker.transform.position = transform.position;
-        areaMarker.GetComponent<MeshRenderer>().materials[0] = Resources.Load("KlickableAreaMarkerMat.mat") as Material;
+        areaMarker.transform.localScale = new Vector3(0.65f,0.65f,0.65f);
+        areaMarker.GetComponent<MeshRenderer>().material = RegularAM;
 
         //Making turret clickable
         areaMarker.gameObject.layer = 2;    //IgnoreRaycastLayer
         gameObject.layer = 0;               //DefaultLayer
         coll = gameObject.AddComponent<SphereCollider>();
-        coll.radius = 0.5f;
+        coll.radius = 0.325f;
 
         refreshTurret();
     }
@@ -36,34 +47,44 @@ public class TurretModule : MonoBehaviour
 
     #region MouseInteractions
 
+    bool selected;
+
     private void OnMouseDown()
     {
         //Debug.Log($"Klicked on: {name}");
-
         //Opening Turret Menu
         HUD.selectModule(this);
     }
 
     private void OnMouseEnter()
     {
+        if (selected) return;
+
         //Debug.Log($"Hovering on: {name}");
-        //areaMarker.GetComponent<MeshRenderer>().materials[0] = ;
+        areaMarker.GetComponent<MeshRenderer>().material = HoveredAM;
     }
 
     private void OnMouseExit()
     {
+        if (selected) return;
+
         //Debug.Log($"No longer hovering on: {name}");
-        //areaMarker.GetComponent<MeshRenderer>().materials[0] = ;
+        areaMarker.GetComponent<MeshRenderer>().material = RegularAM;
     }
 
     public void SelectModule()
     {
         Debug.Log($"Selected turret: {name}");
+        selected = true;
+        areaMarker.GetComponent<MeshRenderer>().material = SelectedAM;
+
     }
 
     public void DeselectModule()
     {
         Debug.Log($"Deselected turret: {name}");
+        selected = false;
+        areaMarker.GetComponent<MeshRenderer>().material = RegularAM;
     }
 
     #endregion
