@@ -4,7 +4,7 @@ using UnityEngine;
 public class TurretData : ScriptableObject
 {
     public TurretType turretType;
-    public GameObject emptyTurretMesh;
+    public GameObject TurretMesh;
 
     public float turretRange;
     public float bulletspread;
@@ -42,6 +42,7 @@ public class TurretDataEditor : Editor
     {
         var t = target as TurretData;
         t.turretType = (TurretType)EditorGUILayout.EnumPopup("Turret Type", t.turretType);
+        t.TurretMesh = EditorGUILayout.ObjectField("Mesh", t.TurretMesh, typeof(GameObject), true) as GameObject;
         if (t.turretType == TurretType.Missiles)
         {
             t.missleData = EditorGUILayout.ObjectField("MissleData", t.missleData, typeof(MissleData), true) as MissleData;

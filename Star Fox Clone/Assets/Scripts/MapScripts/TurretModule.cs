@@ -38,21 +38,21 @@ public class TurretModule : MonoBehaviour
 
     private void OnMouseDown()
     {
-        Debug.Log($"Klicked on: {name}");
+        //Debug.Log($"Klicked on: {name}");
 
-        //Open Turret Menu
+        //Opening Turret Menu
         HUD.selectModule(this);
     }
 
     private void OnMouseEnter()
     {
-        Debug.Log($"Hovering on: {name}");
+        //Debug.Log($"Hovering on: {name}");
         //areaMarker.GetComponent<MeshRenderer>().materials[0] = ;
     }
 
     private void OnMouseExit()
     {
-        Debug.Log($"No longer hovering on: {name}");
+        //Debug.Log($"No longer hovering on: {name}");
         //areaMarker.GetComponent<MeshRenderer>().materials[0] = ;
     }
 
@@ -77,8 +77,11 @@ public class TurretModule : MonoBehaviour
         #region set Mesh
         clearTurret();
         
-        GameObject T = Instantiate(turret.emptyTurretMesh);
+        GameObject T = Instantiate(turret.TurretMesh);
         T.transform.parent = transform;
+        T.transform.position = transform.position;
+        T.transform.rotation = transform.rotation;
+        Destroy(T.GetComponent<Turret>());
         #endregion
 
         #region set Script

@@ -15,9 +15,12 @@ public class TurretMenuButton : MonoBehaviour
     [SerializeField] Sprite TypeMSL;
 
     TurretData data;
+    LoadoutHUD HUD;
 
     public void Initialize(TurretData td)
     {
+        //TODO: Implement for second player
+        HUD = (LoadoutHUD)MapLayoutInfo.Instance.HUD[0];
         data = td;
         Icon.sprite = data.Icon;
         turretName.text = data.name;
@@ -41,5 +44,6 @@ public class TurretMenuButton : MonoBehaviour
     public void TurretButtonClicked()
     {
         Debug.Log($"Clicked on button for turret: {data.name}");
+        HUD.SwitchTurret(data);
     }
 }

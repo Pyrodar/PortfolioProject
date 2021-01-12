@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: ATG Turret02
   m_EditorClassIdentifier: 
   turretType: 1
-  emptyTurretMesh: {fileID: 0}
+  TurretMesh: {fileID: 5529101393252604927, guid: b4a4635a800667d4e80eb137e73aebcc,
+    type: 3}
   turretRange: 200
   bulletspread: 2
   turretSpeed: 10
@@ -24,3 +25,4 @@ MonoBehaviour:
   missleData: {fileID: 0}
   bulletData: {fileID: 11400000, guid: 1d66fd42ce2dd4d4cb5fdadb6c1e93d5, type: 2}
   Icon: {fileID: 0}
+  Description: No description currently available

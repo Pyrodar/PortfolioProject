@@ -2,7 +2,7 @@
 
 public class Turret : MonoBehaviour
 {
-    protected TurretMount myMount;
+    [SerializeField]protected TurretMount myMount;
 
     [SerializeField]protected TurretData data;
     public TurretData Data

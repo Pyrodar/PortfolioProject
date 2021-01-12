@@ -170,4 +170,14 @@ public class LoadoutHUD : UIBaseClass
     }
 
     #endregion
+
+    #region SwitchTurret
+    
+    public void SwitchTurret(TurretData td)
+    {
+        selectedModule.AddTurret(td);
+        CurrentTurret.SetDescription(selectedModule.CurrentTurret);
+    }
+
+    #endregion
 }
