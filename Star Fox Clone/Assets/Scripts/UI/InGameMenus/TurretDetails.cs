@@ -43,12 +43,15 @@ public class TurretDetails : MonoBehaviour
         switch (data.turretType)
         {
             case TurretType.AMS:
+                typeName.text = "Anti Missle System";
                 Type.sprite = IconAMS;
                 break;
             case TurretType.AntiGround:
+                typeName.text = "Air to Ground";
                 Type.sprite = IconATG;
                 break;
             case TurretType.Missiles:
+                typeName.text = "Missles";
                 Type.sprite = IconMSL;
                 break;
             default:
@@ -69,13 +72,13 @@ public class TurretDetails : MonoBehaviour
                 SpeedAndCapacity.text = data.missleSpace.ToString();
                 
                 Stat5Name.text = "Reload Time:";
-                AccuracyAndReloadtime.text = data.cooldown.ToString();
+                AccuracyAndReloadtime.text = $"{data.cooldown} sec";
                 break;
             default:
                 ammoType.text = data.bulletData.name;
                 
-                Stat4Name.text = "Firing Speed:";
-                SpeedAndCapacity.text = data.turretSpeed.ToString();
+                Stat4Name.text = "Firing Rate:";
+                SpeedAndCapacity.text = $"{60 * (1 / data.cooldown)} rpm";
 
                 Stat5Name.text = "Bullet Spread:";
                 AccuracyAndReloadtime.text = data.bulletSpread.ToString();

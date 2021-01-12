@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf612a5d7d9819043996e4c7d7724f40, type: 3}
-  m_Name: ATG Turret01
+  m_Name: AMS Turret02
   m_EditorClassIdentifier: 
-  turretType: 1
-  TurretMesh: {fileID: 5529101393252604927, guid: b4a4635a800667d4e80eb137e73aebcc,
+  turretType: 0
+  TurretMesh: {fileID: 8347921153622649651, guid: 35738fafe129bbe40a583e84c2751b27,
     type: 3}
-  turretRange: 200
-  bulletSpread: 0.05
-  turretSpeed: 6
-  cooldown: 2
-  firingDiscipline: 1
+  turretRange: 60
+  bulletSpread: 0.8
+  turretSpeed: 18
+  cooldown: 0.03
+  firingDiscipline: 0
   missleSpace: 0
   ejectSpeed: 0
   missleData: {fileID: 0}
-  bulletData: {fileID: 11400000, guid: a540e21f03a57fc40ba2f26b4a20a30a, type: 2}
+  bulletData: {fileID: 11400000, guid: c9346d8db8067ab4ba8a85d3a15577b9, type: 2}
   Icon: {fileID: 0}
   Description: No description currently available

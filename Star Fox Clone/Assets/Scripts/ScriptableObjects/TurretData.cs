@@ -53,9 +53,9 @@ public class TurretDataEditor : Editor
         else if(t.turretType == TurretType.AntiGround)
         {
             t.bulletData = EditorGUILayout.ObjectField("BulletData", t.bulletData, typeof(BulletData), true) as BulletData;
-            t.bulletSpread = EditorGUILayout.FloatField("Bullet Spread", t.bulletSpread);
-            t.turretSpeed = EditorGUILayout.FloatField("Turret Speed", t.turretSpeed);
-            t.cooldown = EditorGUILayout.FloatField("Reload Time", t.cooldown);
+            t.bulletSpread = EditorGUILayout.Slider("Bullet Spread", t.bulletSpread, 0f, 1f);
+            t.turretSpeed = EditorGUILayout.Slider("Turret Speed", t.turretSpeed, 1f, 20f);
+            t.cooldown = EditorGUILayout.Slider("Reload Time", t.cooldown, 0f, 3f);
             t.firingDiscipline = EditorGUILayout.Toggle("Firing Discipline", t.firingDiscipline);
             if (t.firingDiscipline)
             {
@@ -66,10 +66,10 @@ public class TurretDataEditor : Editor
         {
             t.bulletData = EditorGUILayout.ObjectField("BulletData", t.bulletData, typeof(BulletData), true) as BulletData;
             t.turretRange = EditorGUILayout.FloatField("Turret Range", t.turretRange);
-            t.bulletSpread = EditorGUILayout.FloatField("Bullet Spread", t.bulletSpread);
-            t.turretSpeed = EditorGUILayout.FloatField("Turret Speed", t.turretSpeed);
-            t.cooldown = EditorGUILayout.FloatField("Reload Time", t.cooldown);
+            t.bulletSpread = EditorGUILayout.Slider("Bullet Spread", t.bulletSpread, 0f, 1f);
+            t.turretSpeed = EditorGUILayout.Slider("Turret Speed", t.turretSpeed, 1f, 20f);
+            t.cooldown = EditorGUILayout.Slider("Reload Time", t.cooldown, 0f, 3f);
         }
-        t.Description = EditorGUILayout.TextArea(t.Description);
+        t.Description = EditorGUILayout.TextField("Description:", t.Description);
     } 
 }

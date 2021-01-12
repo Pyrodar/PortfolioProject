@@ -7,10 +7,10 @@ public class InGameHUD : UIBaseClass
     private void Awake() { uiType = UIType.InGame; }
 
     #region HUD
-    [SerializeField] VerticalBar healthbar;
-    public VerticalBar Healthbar
+    [SerializeField] VerticalBar[] healthbars;
+    public VerticalBar[] Healthbars
     {
-        get { return healthbar; }
+        get { return healthbars; }
     }
 
 

@@ -48,7 +48,8 @@ public class TurretMount : MonoBehaviour, IVehicle
     List<AquiredTarget> Missles = new List<AquiredTarget>();
 
 
-    public UnityEvent InformUIAboutDestruction;
+    public delegate void InformUI();
+    public InformUI TurretDestroyed;
 
     #region GeneralSetup
     private void Awake()
@@ -169,7 +170,7 @@ public class TurretMount : MonoBehaviour, IVehicle
         myTurret.gameObject.SetActive(false);
         timeOfRespawn = Time.time + RespawnTime;
         recharging = true;
-        InformUIAboutDestruction.Invoke();
+        TurretDestroyed.Invoke();
     }
 
     void reactivate()

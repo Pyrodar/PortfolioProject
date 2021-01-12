@@ -71,7 +71,7 @@ public class AntiGroundTurret : Turret
             b.transform.rotation = transform.rotation;
 
             Bullet bullet = b.AddComponent<Bullet>();
-            bullet.Initialize(data.bulletData);
+            bullet.Initialize(data.bulletData, data.bulletSpread);
         }
     }
 

@@ -17,6 +17,7 @@ public class MissleTurret : Turret
         loadMissles();
     }
 
+    #region firing missle
     public void Fire(AquiredTarget target)
     {
         if (myMount.Recharging) return;
@@ -29,18 +30,20 @@ public class MissleTurret : Turret
         M.transform.rotation = transform.rotation;
 
         Vector3 spread = new Vector3(Random.Range(-2, 2), Random.Range(-2, 2), Random.Range(-2, 2));
-        M.GetComponent<Rigidbody>().AddForce(transform.forward * data.ejectSpeed + spread, ForceMode.Impulse);
+        M.GetComponent<Rigidbody>().AddForce(transform.GetChild(0).forward * data.ejectSpeed + spread, ForceMode.Impulse);
 
         startReloading();
     }
+    #endregion
 
+    #region loading missles
     void loadMissles()
     {
         if (currentMissles < maxMissles && Time.time > cooldownEnd)
         {
-            //Debug.Log("Loaded new Missle");
             currentMissles += 1;
             if (currentMissles < maxMissles) cooldownEnd = Time.time + data.cooldown;
+            //Debug.Log("Loaded new Missle");
         }
     }
 
@@ -58,4 +61,5 @@ public class MissleTurret : Turret
         if (currentMissles < 1) return false;
         return true;
     }
+    #endregion
 }

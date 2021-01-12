@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   turretType: 1
   turretRange: 200
-  bulletspread: 1
+  bulletspread: 0.2
   turretSpeed: 12
   cooldown: 8
   bulletsPerSalvo: 2
-  ejectSpeed: 0
+  ejectSpeed: 0.1
   missleData: {fileID: 0}
   bulletData: {fileID: 11400000, guid: 96feaea53835baf4bbb162bcfbc7d7fb, type: 2}
   bombData: {fileID: 0}

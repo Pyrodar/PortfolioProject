@@ -16,6 +16,7 @@ public class Turret : MonoBehaviour
         get { return data.turretType; }
     }
 
+    protected TurretIcon myHudIcon;
     protected float cooldownEnd = 0f;
 
     private void Awake()
@@ -33,6 +34,12 @@ public class Turret : MonoBehaviour
     public virtual void Fire()
     {
         //Debug.Log("Firing");
+    }
+
+    public virtual void ConnectToUI(TurretIcon icon)
+    {
+        myHudIcon = icon;
+        Debug.Log($"Connected {name} to UI");
     }
 }
 

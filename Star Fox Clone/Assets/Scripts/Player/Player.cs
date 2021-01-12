@@ -91,7 +91,7 @@ public class Player : MonoBehaviour , IVehicle
     #endregion
 
     #region HUD
-    VerticalBar healthbar;
+    VerticalBar[] healthbars;
     #endregion
 
     #region Debugging
@@ -113,8 +113,12 @@ public class Player : MonoBehaviour , IVehicle
     {
         #region HUD
         currentHealth = maxHealth;
-        healthbar = hud.Healthbar;
-        healthbar.Initialize(maxHealth);
+        healthbars = hud.Healthbars;
+
+        foreach (VerticalBar item in healthbars)
+        {
+            item.Initialize(maxHealth);
+        }
 
 
         TurretIconList list = hud.TurretIconList;
@@ -338,7 +342,10 @@ public class Player : MonoBehaviour , IVehicle
 
     void UpdateHealthbar()
     {
-        healthbar.CurrentValue = currentHealth;
+        foreach (VerticalBar item in healthbars)
+        {
+            item.CurrentValue = currentHealth;
+        }
     }
 
     void crash()

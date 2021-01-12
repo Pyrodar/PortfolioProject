@@ -5060,8 +5060,6 @@ MonoBehaviour:
     roll: 0
   - position: {x: -13.559433, y: 18.04277, z: 573.0682}
     roll: 0
-  - position: {x: 0, y: 0, z: 762.3329}
-    roll: 0
 --- !u!1 &860914953
 GameObject:
   m_ObjectHideFlags: 0
@@ -5503,8 +5501,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 922985542}
-  m_LocalRotation: {x: -0.036268253, y: 0.022354763, z: 0.00081150536, w: 0.9990917}
-  m_LocalPosition: {x: -8.951432, y: -8.233672, z: -156.53566}
+  m_LocalRotation: {x: -0.03605283, y: 0.022523679, z: 0.0008127774, w: 0.99909574}
+  m_LocalPosition: {x: -8.95106, y: -8.23404, z: -156.5348}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 121965169}
@@ -12063,16 +12061,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3212747278038278114, guid: 6e07e8a9948cc4f46b217b7ac43ebdcc,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 106
-      objectReference: {fileID: 0}
-    - target: {fileID: 3212747278038278114, guid: 6e07e8a9948cc4f46b217b7ac43ebdcc,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 106
       objectReference: {fileID: 0}
     - target: {fileID: 3212747278172850643, guid: 6e07e8a9948cc4f46b217b7ac43ebdcc,
         type: 3}

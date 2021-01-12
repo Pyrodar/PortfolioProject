@@ -26,9 +26,9 @@ public class AntiAirGun : StationaryWeapon
             b.layer = 11;
 
             Bullet bullet = b.AddComponent<Bullet>();
-            bullet.Initialize(data.bulletData);
+            bullet.Initialize(data.bulletData, data.bulletspread);
 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(data.ejectSpeed);
         }
     }
 }

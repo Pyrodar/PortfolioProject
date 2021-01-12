@@ -50,9 +50,10 @@ public class HostileTurretDataEditor : Editor
             t.bulletData = EditorGUILayout.ObjectField("BulletData", t.bulletData, typeof(BulletData), true) as BulletData;
             t.bulletsPerSalvo = EditorGUILayout.IntField("Bullets per Salvo", t.bulletsPerSalvo);
             t.turretRange = EditorGUILayout.FloatField("Turret Range", t.turretRange);
-            t.bulletspread = EditorGUILayout.FloatField("Bullet Spread", t.bulletspread);
+            t.bulletspread = EditorGUILayout.Slider("Bullet Spread", t.bulletspread, 0f, 2f);
             t.turretSpeed = EditorGUILayout.FloatField("Turret Speed", t.turretSpeed);
             t.cooldown = EditorGUILayout.FloatField("Reload Time", t.cooldown);
+            t.ejectSpeed = EditorGUILayout.Slider("RateOfFire", t.ejectSpeed, 0.01f, 0.5f);
         }
         else if(t.turretType == HostileTurretType.Bombs)
         {

@@ -2,6 +2,15 @@
 
 public class AMSTurret : Turret
 {
+    float maximumHeat = 100;
+    float currentHeat = 0;
+
+    float heatBuildup = 1f;
+    float heatDissipation = 5f;
+
+    bool overheated = false;
+
+
     void Update()
     {
         AquiredTarget at = aquireTargets();
@@ -10,7 +19,11 @@ public class AMSTurret : Turret
             aim(at);
             Fire();
         }
+        coolWeapon();
     }
+
+
+    #region Targets
 
     AquiredTarget aquireTargets()
     {
@@ -27,6 +40,10 @@ public class AMSTurret : Turret
         return M;
     }
 
+    #endregion
+
+    #region shoot
+
     void aim(AquiredTarget M)
     {
         M.UpdateVelocity();
@@ -36,7 +53,7 @@ public class AMSTurret : Turret
 
     public override void Fire()
     {
-        if (Time.time > cooldownEnd)
+        if (Time.time > cooldownEnd && !overheated)
         {
             //Vector3 scatter = new Vector3(Random.Range(-data.bulletspread, data.bulletspread), Random.Range(-data.bulletspread, data.bulletspread));
             //TODO: add bulletSpread
@@ -48,7 +65,9 @@ public class AMSTurret : Turret
             b.transform.rotation = transform.rotation;
 
             Bullet bullet = b.AddComponent<Bullet>();
-            bullet.Initialize(data.bulletData);
+            bullet.Initialize(data.bulletData, data.bulletSpread);
+
+            applyHeat();
         }
     }
 
@@ -59,4 +78,41 @@ public class AMSTurret : Turret
 
         cooldownEnd = Time.time + t;
     }
+
+    #endregion
+
+    #region Heat
+
+    void applyHeat()
+    {
+        currentHeat += heatBuildup;
+        if (currentHeat > maximumHeat)
+        {
+            overheat(true);
+        }
+    }
+
+    void coolWeapon()
+    {
+        if (currentHeat <= 0) return;
+
+        currentHeat -= Time.deltaTime * heatDissipation;
+
+        if (overheated && currentHeat < maximumHeat / 2)
+        {
+            overheat(false);
+        }
+
+        Debug.Log($"{name} current Heat is at: {currentHeat}");
+    }
+
+    void overheat(bool value)
+    {
+        overheated = value;
+        //TODO: Tell UI
+        Debug.Log($"Weapon is overheated: {value}");
+    }
+
+    #endregion
+
 }

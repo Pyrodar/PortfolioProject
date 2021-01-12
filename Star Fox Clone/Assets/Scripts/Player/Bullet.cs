@@ -5,12 +5,14 @@ public class Bullet : MonoBehaviour
     [SerializeField] private BulletData data;
     private float lifetimeEnd;
 
-    public void Initialize(BulletData _data)
+    public void Initialize(BulletData _data, float bulletSpread)
     {
         data = _data;
         lifetimeEnd = Time.time + data.lifetime;
         Rigidbody r = GetComponent<Rigidbody>();
-        r.AddForce(transform.forward * data.speed, ForceMode.Impulse);
+
+        Vector3 spread = new Vector3(Random.Range(-bulletSpread, bulletSpread), Random.Range(-bulletSpread, bulletSpread), Random.Range(-bulletSpread, bulletSpread));
+        r.AddForce(transform.forward * data.speed + spread, ForceMode.Impulse);
     }
 
     private void Update()
