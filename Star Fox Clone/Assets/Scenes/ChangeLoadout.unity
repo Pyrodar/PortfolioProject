@@ -238,12 +238,14 @@ MonoBehaviour:
   availableTurretsATG:
   - {fileID: 11400000, guid: 2d685853f9605794bbef9312fb401c3f, type: 2}
   - {fileID: 11400000, guid: 3f975a5db2170f84d8ac42d5634abc3e, type: 2}
+  - {fileID: 11400000, guid: a451d6e41690d3c46b4725672dbfca95, type: 2}
   availableTurretsAMS:
   - {fileID: 11400000, guid: ec73a79f9ea60df4d87eaeb485f505f8, type: 2}
   - {fileID: 11400000, guid: 8ff69c36748906d40b15a6db5f134143, type: 2}
   availableTurretsMSL:
   - {fileID: 11400000, guid: af787b3c70523744992a1c8f0a831bfa, type: 2}
   - {fileID: 11400000, guid: 4671a9939308bf34386526342763bebe, type: 2}
+  - {fileID: 11400000, guid: 8c38661b8ed53d843ac7e5fd11ef31fd, type: 2}
   TurretListPrefabs: {fileID: 2345448557638287486, guid: 476d88f6366ad8441be15c0a3e5dbad9,
     type: 3}
   turretListParent: {fileID: 1786230359}

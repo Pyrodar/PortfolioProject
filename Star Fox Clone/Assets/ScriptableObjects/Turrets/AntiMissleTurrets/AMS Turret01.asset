@@ -25,4 +25,6 @@ MonoBehaviour:
   missleData: {fileID: 0}
   bulletData: {fileID: 11400000, guid: c9346d8db8067ab4ba8a85d3a15577b9, type: 2}
   Icon: {fileID: 0}
-  Description: No description currently available
+  Description: 'The most basic and reliable form of anti-missle defence. Rarely overheats
+    and has an impressive range for its size. Lackluster rate of fire and low caliber
+    cause issues against more advanced projectiles '

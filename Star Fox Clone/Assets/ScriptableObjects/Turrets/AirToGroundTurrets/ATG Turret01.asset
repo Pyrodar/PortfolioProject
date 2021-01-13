@@ -25,4 +25,6 @@ MonoBehaviour:
   missleData: {fileID: 0}
   bulletData: {fileID: 11400000, guid: a540e21f03a57fc40ba2f26b4a20a30a, type: 2}
   Icon: {fileID: 0}
-  Description: No description currently available
+  Description: Heavy duty Air to Ground Turret, capable of annihilating most stationary
+    Targets. Has an advanced targeting system that only fires when a hit is almost
+    guaranteed. Has enormous trouble when trying to hit moving Targets.

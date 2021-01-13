@@ -263,7 +263,7 @@ public class GameStateConnection : MonoBehaviour
     {
         Debug.Log("Lost Player");
 
-        if (players.Length > 1 || frontlinePlayer == P)
+        if (players.Length > 1 && frontlinePlayer == P)
         {
             switchingPlayers();
         }
@@ -272,7 +272,7 @@ public class GameStateConnection : MonoBehaviour
         bool stillInGame = false;
         foreach (Player p in players)
         {
-            if (p == null) continue;
+            //if (p == null) continue;
 
             if (p.IsInGame)
             {

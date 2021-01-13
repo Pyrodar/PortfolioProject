@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,13 +9,15 @@ public class TurretIcon : MonoBehaviour
     [SerializeField] Image fill;
     [SerializeField] Image full;
 
+    [SerializeField] Transform HeatWarning;
+
     float respawnTime;
     //float timeLeft;
 
     public void Initiate(TurretMount turretMount, Sprite sprite)
     {
         LinkToTurretMount(turretMount);
-        //linkToTurret(turretMount.MyTurret);
+        linkToTurret(turretMount.MyTurret);
         
         //HP Icon
         bg.sprite = sprite;
@@ -52,6 +55,44 @@ public class TurretIcon : MonoBehaviour
         full.gameObject.SetActive(false);
     }
 
+    #region Heat
+    
+    public void ShowHeatShutdown(bool value)
+    {
+        StopCoroutine("BlinkingLights");
+        warningActive = value;
+        HeatWarning.gameObject.SetActive(value);
+    }
+
+    bool warningActive;
+
+    public void ShowHeatWarning()
+    {
+        if (warningActive) return;
+        warningActive = true;
+        StartCoroutine("BlinkingLights");
+    }
+
+    IEnumerator BlinkingLights()
+    {
+
+        HeatWarning.gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.3f);
+        HeatWarning.gameObject.SetActive(false);
+        yield return new WaitForSeconds(0.3f);
+        HeatWarning.gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.3f);
+        HeatWarning.gameObject.SetActive(false);
+        yield return new WaitForSeconds(0.3f);
+        HeatWarning.gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.3f);
+        HeatWarning.gameObject.SetActive(false);
+        yield return new WaitForSeconds(0.3f);
+        warningActive = false;
+    }
+
+    #endregion
+
     #region missles
     /*
     public void AddMisslesToHUD(int maxMissles)
@@ -81,4 +122,6 @@ public class TurretIcon : MonoBehaviour
     }
     */
     #endregion
+
+
 }

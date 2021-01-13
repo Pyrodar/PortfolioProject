@@ -80,15 +80,24 @@ public class PlayerMissle : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<Target>() != null)
-        {
-            other.GetComponent<Target>().takeDamage(data.damage);
-        }
+        //if (other.GetComponent<Target>() != null)
+        //{
+        //    other.GetComponent<Target>().takeDamage(data.damage);
+        //}
         OnHit();
     }
     void OnHit()
     {
         Debug.Log("EXPLOSION!");
+
+        Collider[] expHhit = HelperFunctions.SpawnExplosion(data.explosionVisuals, data.explosionRadius, transform.position);
+        foreach (var other in expHhit)
+        {
+            if (other.GetComponent<Target>() != null)
+            {
+                other.GetComponent<Target>().takeDamage(data.damage);
+            }
+        }
 
         Destroy(gameObject);
     }

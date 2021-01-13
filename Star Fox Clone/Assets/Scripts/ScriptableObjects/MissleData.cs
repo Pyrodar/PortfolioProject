@@ -15,4 +15,5 @@ public class MissleData : ScriptableObject
     public float missleSize;
     public GameObject visuals;
     public GameObject explosionVisuals;
+    public float explosionRadius;
 }

@@ -23,3 +23,4 @@ MonoBehaviour:
   visuals: {fileID: 6973579219364520940, guid: 93174485c018aba4482130492817c683, type: 3}
   explosionVisuals: {fileID: 1052516232856190482, guid: e05b4336b86382d418ca0e722347244e,
     type: 3}
+  explosionRadius: 0.5

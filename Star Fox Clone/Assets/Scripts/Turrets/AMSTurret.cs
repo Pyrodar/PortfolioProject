@@ -86,31 +86,31 @@ public class AMSTurret : Turret
     void applyHeat()
     {
         currentHeat += heatBuildup;
-        if (currentHeat > maximumHeat)
-        {
-            overheat(true);
-        }
+        if (currentHeat > maximumHeat * .6f) myHudIcon.ShowHeatWarning();
+        if (currentHeat > maximumHeat) overheat(true);
     }
 
     void coolWeapon()
     {
         if (currentHeat <= 0) return;
 
-        currentHeat -= Time.deltaTime * heatDissipation;
+        if(overheated) currentHeat -= Time.deltaTime * heatDissipation * 3f;
+        else currentHeat -= Time.deltaTime * heatDissipation;
 
-        if (overheated && currentHeat < maximumHeat / 2)
+        if (overheated && currentHeat < maximumHeat / 4)
         {
             overheat(false);
         }
 
-        Debug.Log($"{name} current Heat is at: {currentHeat}");
+        //Debug.Log($"{name} current Heat is at: {currentHeat}");
     }
 
     void overheat(bool value)
     {
         overheated = value;
-        //TODO: Tell UI
-        Debug.Log($"Weapon is overheated: {value}");
+        myHudIcon.ShowHeatShutdown(value);
+        
+        //Debug.Log($"Weapon is overheated: {value}");
     }
 
     #endregion
