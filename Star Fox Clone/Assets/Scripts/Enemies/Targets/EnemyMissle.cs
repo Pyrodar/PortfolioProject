@@ -10,6 +10,10 @@ public class EnemyMissle : Target
     public void Initialize(MissleData data)
     {
         this.data = data;
+
+        maxHealth = data.hitpoints;
+        currentHealth = maxHealth;
+
         collisionDamage = data.damage;
         rigid = GetComponent<Rigidbody>();
         rigid.drag = data.drag; 
@@ -50,7 +54,7 @@ public class EnemyMissle : Target
         else
         {
             //Aiming Above the player first for better AMS coverage
-            Vector3 AMSArea = myTarget.transform.position + new Vector3(0, 10, 0);
+            Vector3 AMSArea = myTarget.transform.position + new Vector3(0, 5, 0);
             Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, getVelocity(), data.speed, AMSArea, myTarget.getVelocity());
             HelperFunctions.LookAt(transform, interceptCourse, data.turnSpeed);
         }
@@ -110,7 +114,7 @@ public class EnemyMissle : Target
             IVehicle t = hit.GetComponent<IVehicle>();
             if (t != null)
             {
-                t.takeDamage(data.damage);
+                t.takeDamage(data.damage, data.damageType);
             }
         }
 

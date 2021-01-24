@@ -17,13 +17,12 @@ public class TurretModule : MonoBehaviour
 
     public void Instantiate()
     {
-        //TODO: get 
         HUD = (LoadoutHUD)MapLayoutInfo.Instance.HUD[0];
 
         //Materials
-        RegularAM = Resources.Load("RegularAM") as Material;
-        HoveredAM = Resources.Load("HoveredAM") as Material;
-        SelectedAM = Resources.Load("SelectedAM") as Material;
+        RegularAM = Resources.Load("Materials/LoadoutHUD/RegularAM") as Material;
+        HoveredAM = Resources.Load("Materials/LoadoutHUD/HoveredAM") as Material;
+        SelectedAM = Resources.Load("Materials/LoadoutHUD/SelectedAM") as Material;
 
         //UI Markers
         areaMarker = GameObject.CreatePrimitive(PrimitiveType.Sphere);

@@ -59,6 +59,7 @@ public class TurretIcon : MonoBehaviour
     
     public void ShowHeatShutdown(bool value)
     {
+        //Play sound
         StopCoroutine("BlinkingLights");
         warningActive = value;
         HeatWarning.gameObject.SetActive(value);
@@ -75,19 +76,15 @@ public class TurretIcon : MonoBehaviour
 
     IEnumerator BlinkingLights()
     {
+        //Play sound
+        for (int i = 0; i < 20; i++)
+        {
+            HeatWarning.gameObject.SetActive(true);
+            yield return new WaitForSeconds(0.3f);
+            HeatWarning.gameObject.SetActive(false);
+            yield return new WaitForSeconds(0.3f);
+        }
 
-        HeatWarning.gameObject.SetActive(true);
-        yield return new WaitForSeconds(0.3f);
-        HeatWarning.gameObject.SetActive(false);
-        yield return new WaitForSeconds(0.3f);
-        HeatWarning.gameObject.SetActive(true);
-        yield return new WaitForSeconds(0.3f);
-        HeatWarning.gameObject.SetActive(false);
-        yield return new WaitForSeconds(0.3f);
-        HeatWarning.gameObject.SetActive(true);
-        yield return new WaitForSeconds(0.3f);
-        HeatWarning.gameObject.SetActive(false);
-        yield return new WaitForSeconds(0.3f);
         warningActive = false;
     }
 
@@ -122,6 +119,5 @@ public class TurretIcon : MonoBehaviour
     }
     */
     #endregion
-
-
+    
 }

@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class TurretMount : MonoBehaviour, IVehicle
 {
@@ -122,17 +120,49 @@ public class TurretMount : MonoBehaviour, IVehicle
         Missles.Clear();
     }
 
+    /// <summary>
+    /// gives a target to its AMS turret
+    /// TODO: ignore targets that are not in range
+    /// </summary>
+    /// <returns></returns>
     public AquiredTarget getClosestMissle()
+    {
+        if (Missles.Count == 0) return null;
+        //---->At least one Missle can be targeted
+
+        AquiredTarget priorityTarget = Missles[0];
+        float distance = 0;
+
+        foreach (AquiredTarget missle in Missles)
+        {
+            float distanceNew = Vector3.Distance(missle.transform.position, transform.position);
+            if (distance > distanceNew)
+            {
+                distance = distanceNew;
+                priorityTarget = missle;
+            }
+        }
+        return priorityTarget;
+    }
+
+    public AquiredTarget getClosestMissleFlak(float minRange)
     {
         if (Missles.Count == 0) return null;
 
         AquiredTarget priorityTarget = Missles[0];
         float distance = Vector3.Distance(priorityTarget.transform.position, transform.position);
 
+        if (distance < minRange)
+        {
+            priorityTarget = null;
+            distance = 1000;
+        }
 
         for (int i = 1; i < Missles.Count; i++)
         {
             float distanceNew = Vector3.Distance(Missles[i].transform.position, transform.position);
+            if (distanceNew < minRange) continue;
+
             if (distance > distanceNew)
             {
                 distance = distanceNew;
@@ -141,6 +171,12 @@ public class TurretMount : MonoBehaviour, IVehicle
         }
 
         return priorityTarget;
+    }
+
+    public void MisslesChanged()
+    {
+        AMSTurret tur = (AMSTurret)MyTurret;
+        tur.MisslesChanged();
     }
 
     #endregion
@@ -162,6 +198,18 @@ public class TurretMount : MonoBehaviour, IVehicle
         if (currentHP <= 0)
         {
             destroySelf();
+        }
+    }
+
+    public void takeDamage(float dmg, DamageType damageType)
+    {
+        switch (damageType)
+        {
+
+
+            default:
+                takeDamage(dmg);
+                break;
         }
     }
 

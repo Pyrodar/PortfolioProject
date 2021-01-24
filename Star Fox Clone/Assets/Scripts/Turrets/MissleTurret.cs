@@ -29,8 +29,15 @@ public class MissleTurret : Turret
         M.transform.position = transform.position;
         M.transform.rotation = transform.rotation;
 
-        Vector3 spread = new Vector3(Random.Range(-2, 2), Random.Range(-2, 2), Random.Range(-2, 2));
-        M.GetComponent<Rigidbody>().AddForce(transform.GetChild(0).forward * data.ejectSpeed + spread, ForceMode.Impulse);
+
+        float spreadF = data.ejectSpeed / 8;
+        Vector3 spread = new Vector3(Random.Range(-spreadF, spreadF), Random.Range(-spreadF, spreadF), Random.Range(-spreadF, spreadF));
+
+        //TODO: rotate through location of rockettubes
+        Transform tube = transform.GetChild(0);
+        //############################################
+
+        M.GetComponent<Rigidbody>().AddForce(tube.forward * data.ejectSpeed + spread, ForceMode.Impulse);
 
         startReloading();
     }

@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: AtGMissle
   m_EditorClassIdentifier: 
   damage: 100
+  hitpoints: 2
   speed: 20
   turnSpeed: 2
   drag: 1.2
-  timeBeforeArmed: 1.5
+  timeBeforeArmed: 1.2
   detectionRange: 200
   armingRange: 75
   missleSize: 1
@@ -24,3 +25,4 @@ MonoBehaviour:
   explosionVisuals: {fileID: 1052516232856190482, guid: e05b4336b86382d418ca0e722347244e,
     type: 3}
   explosionRadius: 1
+  damageType: 2

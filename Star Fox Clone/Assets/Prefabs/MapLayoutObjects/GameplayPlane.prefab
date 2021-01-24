@@ -251,11 +251,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   plane: {fileID: 269898189591589324}
   player: {fileID: 0}
-  bigCrossHair: {fileID: 0}
+  largeCrossHair: {fileID: 0}
   debugTarget: {fileID: 0}
   debugMarker: {fileID: 0}
   offset: {x: 0, y: 3}
-  smoothTime: 1
+  smoothTime: 0.6
 --- !u!1 &269898188975568877
 GameObject:
   m_ObjectHideFlags: 0
@@ -585,8 +585,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6ef0fcd7656a234e978f7d0f183cc21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxWidth: 10
-  maxHeight: 6
+  maxWidth: 8
+  maxHeight: 5
   playerpositions:
   - {fileID: 5698227413144915147}
   - {fileID: 3035778665887780469}
@@ -619,8 +619,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 8
-  Go: 0
   cart: {fileID: 0}
+  Go: 0
+  trackEnded:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &269898189596074392
 GameObject:
   m_ObjectHideFlags: 0
@@ -1129,8 +1132,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   plane: {fileID: 269898189591589324}
   player: {fileID: 0}
-  bigCrossHair: {fileID: 0}
+  largeCrossHair: {fileID: 0}
   debugTarget: {fileID: 0}
   debugMarker: {fileID: 0}
   offset: {x: 0, y: 3}
-  smoothTime: 1
+  smoothTime: 0.6

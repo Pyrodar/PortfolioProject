@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+
 public class EnemyBomb : Target
 {
     [SerializeField]BombData data;
@@ -53,7 +54,7 @@ public class EnemyBomb : Target
             IVehicle t = hit.GetComponent<IVehicle>();
             if (t != null)
             {
-                t.takeDamage(data.damage);
+                t.takeDamage(data.damage, data.damageType);
             }
         }
 

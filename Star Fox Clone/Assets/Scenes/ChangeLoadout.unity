@@ -242,6 +242,8 @@ MonoBehaviour:
   availableTurretsAMS:
   - {fileID: 11400000, guid: ec73a79f9ea60df4d87eaeb485f505f8, type: 2}
   - {fileID: 11400000, guid: 8ff69c36748906d40b15a6db5f134143, type: 2}
+  - {fileID: 11400000, guid: c1cdfb99442f05747892c645d4069bad, type: 2}
+  - {fileID: 11400000, guid: ee175835ec7dd334a946630d51c6bffc, type: 2}
   availableTurretsMSL:
   - {fileID: 11400000, guid: af787b3c70523744992a1c8f0a831bfa, type: 2}
   - {fileID: 11400000, guid: 4671a9939308bf34386526342763bebe, type: 2}

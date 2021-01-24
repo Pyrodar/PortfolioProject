@@ -5,20 +5,19 @@ public class AMSTurret : Turret
     float maximumHeat = 100;
     float currentHeat = 0;
 
-    float heatBuildup = 1f;
-    float heatDissipation = 5f;
-
     bool overheated = false;
+    AquiredTarget aquiredTarget;
+    AquiredTarget prevTarget = null;
 
+    float flakDelay;
 
     void Update()
     {
-        AquiredTarget at = aquireTargets();
-        if (at != null)
+        if (aquiredTarget != null && aim(aquiredTarget))
         {
-            aim(at);
             Fire();
         }
+        else MisslesChanged();
         coolWeapon();
     }
 
@@ -28,35 +27,58 @@ public class AMSTurret : Turret
     AquiredTarget aquireTargets()
     {
         //Check for targets
-        AquiredTarget M = myMount.getClosestMissle();
+        AquiredTarget M;
+
+        if(data.bulletData.damageType == DamageType.flak) M = myMount.getClosestMissleFlak(75); //minimum range
+        else M = myMount.getClosestMissle();
+
         if (M == null) return null;
 
-        //Check Target Distance
-        float distance = Vector3.Distance(M.transform.position, transform.position);
-        if (distance > data.turretRange) return null;
+        //pause shortly to switch targets
+        if (M != prevTarget)
+        {
+            prevTarget = M;
+            addCooldown(data.cooldown);
+        }
 
         //aquire target
-        M.gunsPointing += 1;
         return M;
+    }
+
+    public void MisslesChanged()
+    {
+        //retargeting
+        aquiredTarget = aquireTargets();
+    }
+
+    bool aim(AquiredTarget M)
+    {
+        //Play Sound
+
+        M.UpdateVelocity();
+        Vector3 targetInterception = HelperFunctions.Intercept(transform.position, Vector3.zero, data.bulletData.speed, M.transform.position, M.Velocity);
+        LookAt(targetInterception);//TODO: add rotation to Intercept funktion
+
+        //Check Target Distance
+        float distance = Vector3.Distance(transform.position, targetInterception);
+        if (data.bulletData.damageType == DamageType.flak)
+        {
+            flakDelay = distance / data.bulletData.speed;
+        }
+
+        if (distance > data.turretRange) return false;
+
+        return true;
     }
 
     #endregion
 
     #region shoot
-
-    void aim(AquiredTarget M)
-    {
-        M.UpdateVelocity();
-        Vector3 targetInterception = HelperFunctions.Intercept(transform.position, Vector3.zero, data.bulletData.speed, M.transform.position, M.transform.GetComponent<EnemyMissle>().getVelocity());
-        LookAt(targetInterception);
-    }
-
+    
     public override void Fire()
     {
         if (Time.time > cooldownEnd && !overheated)
         {
-            //Vector3 scatter = new Vector3(Random.Range(-data.bulletspread, data.bulletspread), Random.Range(-data.bulletspread, data.bulletspread));
-            //TODO: add bulletSpread
 
             addCooldown(data.cooldown);
 
@@ -65,7 +87,13 @@ public class AMSTurret : Turret
             b.transform.rotation = transform.rotation;
 
             Bullet bullet = b.AddComponent<Bullet>();
+            bullet.tag = "PlayerBullet";
             bullet.Initialize(data.bulletData, data.bulletSpread);
+
+            if (data.bulletData.damageType == DamageType.flak)
+            {
+                bullet.SetFlakTime(flakDelay);
+            }
 
             applyHeat();
         }
@@ -85,7 +113,7 @@ public class AMSTurret : Turret
 
     void applyHeat()
     {
-        currentHeat += heatBuildup;
+        currentHeat += data.heatBuildup;
         if (currentHeat > maximumHeat * .6f) myHudIcon.ShowHeatWarning();
         if (currentHeat > maximumHeat) overheat(true);
     }
@@ -94,8 +122,8 @@ public class AMSTurret : Turret
     {
         if (currentHeat <= 0) return;
 
-        if(overheated) currentHeat -= Time.deltaTime * heatDissipation * 3f;
-        else currentHeat -= Time.deltaTime * heatDissipation;
+        if(overheated) currentHeat -= Time.deltaTime * data.heatDissipation * 3f;
+        else currentHeat -= Time.deltaTime * data.heatDissipation;
 
         if (overheated && currentHeat < maximumHeat / 4)
         {

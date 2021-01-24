@@ -19,6 +19,8 @@ MonoBehaviour:
   bulletSpread: 0
   turretSpeed: 0
   cooldown: 12
+  heatBuildup: 0
+  heatDissipation: 0
   firingDiscipline: 0
   missleSpace: 6
   ejectSpeed: 12

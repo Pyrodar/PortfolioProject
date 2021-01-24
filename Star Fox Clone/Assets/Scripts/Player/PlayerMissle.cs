@@ -5,7 +5,6 @@ public class PlayerMissle : MonoBehaviour
     private MissleData data;
     private float timeWhenArmed = 0;
 
-
     public AquiredTarget target;
     bool lostTarget = false;
     float lastDistance = 100000;
@@ -40,11 +39,16 @@ public class PlayerMissle : MonoBehaviour
 
     void followTarget()
     {
-        //Starts homing in on the Target
-        Vector3 IntercepCourse = HelperFunctions.Intercept(transform.position, myRigid.velocity, data.speed, target.transform.position, target.velocity);
-        HelperFunctions.LookAt(transform, IntercepCourse, data.turnSpeed);
+        if (Time.time < timeWhenArmed) 
+        {
+            //Starts slowly homing in on the Target
+            HelperFunctions.LookAt(transform, target.transform.position, data.turnSpeed / 5);
+            return;
+        }
 
-        if (Time.time < timeWhenArmed) return;
+        //Starts homing in on the Target with regular speed
+        Vector3 IntercepCourse = HelperFunctions.Intercept(transform.position, myRigid.velocity, data.speed, target.transform.position, target.Velocity);
+        HelperFunctions.LookAt(transform, IntercepCourse, data.turnSpeed);
 
         //forward Momentum
         myRigid.AddForce(transform.TransformDirection(Vector3.forward) * data.speed);
@@ -56,7 +60,10 @@ public class PlayerMissle : MonoBehaviour
         //adding two seconds to the timer to gain some speed first
         if (Time.time < timeWhenArmed + 2f || lostTarget) return;
         float currentDistance = Vector3.Distance(transform.position, target.transform.position);
+
+        //Ignore if target is still far away
         if (currentDistance > 20) return;
+
         if (currentDistance > lastDistance) looseTarget();
         else lastDistance = currentDistance;
     }
@@ -80,22 +87,17 @@ public class PlayerMissle : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //if (other.GetComponent<Target>() != null)
-        //{
-        //    other.GetComponent<Target>().takeDamage(data.damage);
-        //}
         OnHit();
     }
+
     void OnHit()
     {
-        Debug.Log("EXPLOSION!");
-
         Collider[] expHhit = HelperFunctions.SpawnExplosion(data.explosionVisuals, data.explosionRadius, transform.position);
         foreach (var other in expHhit)
         {
             if (other.GetComponent<Target>() != null)
             {
-                other.GetComponent<Target>().takeDamage(data.damage);
+                other.GetComponent<Target>().takeDamage(data.damage, data.damageType);
             }
         }
 

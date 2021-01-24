@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerHitbox : MonoBehaviour , IVehicle
 {
@@ -17,13 +15,18 @@ public class PlayerHitbox : MonoBehaviour , IVehicle
         if (other.tag == "Environment")
         {
             Debug.Log("scratched the environment for " + collisionDamage + " damage");
-            takeDamage(collisionDamage);
+            takeDamage(collisionDamage, DamageType.collision);
         }
     }
-
+    /*
     public void takeDamage(float damage)
     {
         player.takeDamage(damage);
+    }
+    */
+    public void takeDamage(float damage, DamageType damageType)
+    {
+        player.takeDamage(damage, damageType);
     }
 
     public void destroySelf()

@@ -1756,16 +1756,17 @@ MonoBehaviour:
   largeCrossHair: {fileID: 7748306176197144771}
   crashExplosion: {fileID: 1052516232856190482, guid: e05b4336b86382d418ca0e722347244e,
     type: 3}
-  moveSpeed: 2.6
-  rotationSpeed: 0.7
+  moveSpeed: 2.25
+  rotationSpeed: 0.5
   lookAtThisRange: 2
-  lookAtThisSpeed: 0.04
-  lookAtThisDamping: 2
+  lookAtThisSpeed: 0.03
+  lookAtThisDamping: 3
   lookAtThisCenteringSpeed: 0.995
   lookAtThisCenteringTolerance: 0.3
   gravityAlsoLift: 0.4
   crosshairoffset: {x: 0, y: 1.5, z: 0}
   maxHealth: 100
+  invulnTime: 1
   TargetMarker:
   - {fileID: 0}
   - {fileID: 0}
@@ -2402,12 +2403,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7787991878300498128, guid: 94650f9b61a4a21468c2907f8a088cd2,
-        type: 3}
-      propertyPath: data
-      value: 
-      objectReference: {fileID: 11400000, guid: 4671a9939308bf34386526342763bebe,
-        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 94650f9b61a4a21468c2907f8a088cd2, type: 3}
 --- !u!1001 &1871981407911787660
@@ -3064,12 +3059,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7787991878300498128, guid: 94650f9b61a4a21468c2907f8a088cd2,
-        type: 3}
-      propertyPath: data
-      value: 
-      objectReference: {fileID: 11400000, guid: 4671a9939308bf34386526342763bebe,
-        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 94650f9b61a4a21468c2907f8a088cd2, type: 3}
 --- !u!1001 &8220686015890089397

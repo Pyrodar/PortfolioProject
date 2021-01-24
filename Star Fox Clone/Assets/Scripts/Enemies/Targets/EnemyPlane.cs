@@ -20,6 +20,7 @@ public class EnemyPlane : Target
 
         track = GetComponent<FollowTrack>();
         base.Start();
+        type = TargetType.plane;
     }
 
     void getCurrentWaypoint()

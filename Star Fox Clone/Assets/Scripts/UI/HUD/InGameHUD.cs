@@ -25,6 +25,12 @@ public class InGameHUD : UIBaseClass
     {
         get { return targetMarkers; }
     }
+    
+    [SerializeField] SelectedMissleIcon missleIcon;
+    public SelectedMissleIcon MissleIcon
+    {
+        get { return missleIcon; }
+    }
 
     #endregion
 

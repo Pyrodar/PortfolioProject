@@ -39,7 +39,7 @@ public class Player : MonoBehaviour , IVehicle
 
     [SerializeField] Transform playerVisuals;
     [SerializeField] Transform playerRotationVisuals;
-    [SerializeField] Transform lookAtThis;
+    [SerializeField] Transform shipFokusPoint;
     [SerializeField] Transform smallCrossHair;
     [SerializeField] Transform largeCrossHair;
     public Transform LargeCrosshair { get { return largeCrossHair; } }
@@ -51,20 +51,20 @@ public class Player : MonoBehaviour , IVehicle
     [SerializeField] float moveSpeed = 2.6f;
     [SerializeField] float rotationSpeed = 0.7f;
 
-    [SerializeField] float lookAtThisRange = 2f;
-    [SerializeField] float lookAtThisSpeed = 0.04f;
-    [SerializeField] float lookAtThisDamping = 2f; 
+    [SerializeField] float fokusPointRange = 2f;
+    [SerializeField] float fokusPointSpeed = 0.04f;
+    [SerializeField] float fokusPointDamping = 2f; 
     [SerializeField]
     [Tooltip("how fast the ship returns to looking straight forward again. fastest: 0.0 slowest: 1.0")]
     [Range(0f, 1f)]
-    float lookAtThisCenteringSpeed = 0.98f;
+    float fokusPointCenteringSpeed = 0.98f;
     [SerializeField]
     [Tooltip("how close to the ships front the crosshair returns after stopping the inputs")]
-    float lookAtThisCenteringTolerance = 0.01f;
+    float fokusPointCenteringTolerance = 0.01f;
 
-    [SerializeField] float gravityAlsoLift = 0.4f;
+    [SerializeField] float gravityAndLift = 0.4f;
 
-    [SerializeField] Vector3 crosshairoffset;
+    [SerializeField] Vector3 crosshairOffset;
     #endregion
 
     #region Combat
@@ -75,12 +75,18 @@ public class Player : MonoBehaviour , IVehicle
         get { return currentHealth; }
     }
 
+    [SerializeField] float invulnTime = 1;
+    float invulnTimeEnd = 1;
+
     #region Targets and Turrets
 
     List<TurretMount> ATGTurrets = new List<TurretMount>();
     List<TurretMount> AMSTurrets = new List<TurretMount>();
     List<MissleTurret> MissleTurrets = new List<MissleTurret>();
-    int lastTurret = 0;
+    int lastTurret = 0; //Used to cycle MissleTurrets
+
+    List<MissleData> misslesAvailable = new List<MissleData>();
+    MissleData currentMissles;
 
     List<AquiredTarget> Targets = new List<AquiredTarget>();
     List<AquiredTarget> incomingMissles = new List<AquiredTarget>();
@@ -94,9 +100,11 @@ public class Player : MonoBehaviour , IVehicle
     VerticalBar[] healthbars;
     #endregion
 
-    #region Debugging
+    #region InputManagement
     bool DPadBool = true;
+    #endregion 
 
+    #region Debugging
     private void OnMouseDown()
     {
         Debug.Log("Klicked on: " + name);
@@ -111,7 +119,7 @@ public class Player : MonoBehaviour , IVehicle
     /// <param name="_plane"></param>
     public void StartGame()
     {
-        #region HUD
+        #region HUD Setup
         currentHealth = maxHealth;
         healthbars = hud.Healthbars;
 
@@ -130,7 +138,7 @@ public class Player : MonoBehaviour , IVehicle
         }
         #endregion
 
-        #region Rigidbody
+        #region Rigidbody Setup
 
         Debug.Log("Adding RigidBody");
         //Rigidbody messes with the TurretColliders, therefore it's only added once the Game Starts
@@ -142,7 +150,7 @@ public class Player : MonoBehaviour , IVehicle
 
         #endregion
 
-        #region Turrets
+        #region Turrets Setup
         Debug.Log("Listing Turrets");
 
 
@@ -151,7 +159,18 @@ public class Player : MonoBehaviour , IVehicle
             list.AddTurretToList(tur);
             if (tur.MyTurretType == TurretType.AntiGround) ATGTurrets.Add(tur);
             if (tur.MyTurretType == TurretType.AMS) AMSTurrets.Add(tur);
-            if (tur.MyTurretType == TurretType.Missiles) MissleTurrets.Add(tur.getMissleTurret());
+            if (tur.MyTurretType == TurretType.Missiles)
+            {
+                MissleTurrets.Add(tur.getMissleTurret());
+
+                //Adding all available MissleTypes
+                if (!misslesAvailable.Contains(tur.getMissleTurret().Data.missleData))
+                {
+                    misslesAvailable.Add(tur.getMissleTurret().Data.missleData);
+                    currentMissles = misslesAvailable[0];
+                    UpdateSelectedMissle();
+                }
+            }
         }
         #endregion
 
@@ -168,12 +187,11 @@ public class Player : MonoBehaviour , IVehicle
 
         applyRotation(inputRotation());
 
-        HelperFunctions.LookAt(playerVisuals, lookAtThis.position, lookAtThisDamping);
-        //VisualsLookAt(lookAtThis);
+        HelperFunctions.LookAt(playerVisuals, shipFokusPoint.position, fokusPointDamping);
 
-        clampLookAtThis();
+        clampFokusPointPosition();
 
-        gravityAndLift();
+        gravityAndLiftEffect();
 
         //Combat
         combatInputs();
@@ -206,7 +224,7 @@ public class Player : MonoBehaviour , IVehicle
     void applyMovement(Vector3 input)
     {
         myRigid.AddForce(input * moveSpeed);
-        updateLookDirection(input);
+        updateFokusPoint(input);
     }
 
     void checkBoundaries()
@@ -241,20 +259,20 @@ public class Player : MonoBehaviour , IVehicle
         playerRotationVisuals.Rotate(Vector3.forward, addedRotation);
     }
 
-    void updateLookDirection(Vector3 input)
+    void updateFokusPoint(Vector3 input)
     {
         input.z = 0;
-        lookAtThis.localPosition += input * lookAtThisSpeed;
+        shipFokusPoint.localPosition += input * fokusPointSpeed;
 
 
         //moving back towards (0,0):
-        if (Mathf.Abs(lookAtThis.localPosition.x) > lookAtThisCenteringTolerance && input.x == 0)
+        if (Mathf.Abs(shipFokusPoint.localPosition.x) > fokusPointCenteringTolerance && input.x == 0)
         {
-            lookAtThis.localPosition = new Vector3(lookAtThis.localPosition.x * lookAtThisCenteringSpeed, lookAtThis.localPosition.y, lookAtThis.localPosition.z);
+            shipFokusPoint.localPosition = new Vector3(shipFokusPoint.localPosition.x * fokusPointCenteringSpeed, shipFokusPoint.localPosition.y, shipFokusPoint.localPosition.z);
         }
-        if (Mathf.Abs(lookAtThis.localPosition.y) > lookAtThisCenteringTolerance && input.y == 0)
+        if (Mathf.Abs(shipFokusPoint.localPosition.y) > fokusPointCenteringTolerance && input.y == 0)
         {
-            lookAtThis.localPosition = new Vector3(lookAtThis.localPosition.x, lookAtThis.localPosition.y * lookAtThisCenteringSpeed, lookAtThis.localPosition.z);
+            shipFokusPoint.localPosition = new Vector3(shipFokusPoint.localPosition.x, shipFokusPoint.localPosition.y * fokusPointCenteringSpeed, shipFokusPoint.localPosition.z);
         }
 
         updateCrosshairPositions();
@@ -262,8 +280,8 @@ public class Player : MonoBehaviour , IVehicle
 
     void updateCrosshairPositions()
     {
-        largeCrossHair.localPosition = lookAtThis.localPosition + crosshairoffset;
-        smallCrossHair.localPosition = lookAtThis.localPosition * 2 + crosshairoffset;
+        largeCrossHair.localPosition = shipFokusPoint.localPosition + crosshairOffset;
+        smallCrossHair.localPosition = shipFokusPoint.localPosition * 2 + crosshairOffset;
         /*smallCrossHair.localPosition += mouseInputs() * 0.1f;
 
         if (smallCrossHair.localPosition.x < -plane.maxWidth) smallCrossHair.localPosition = new Vector3(-plane.maxWidth, smallCrossHair.localPosition.y, smallCrossHair.localPosition.z);
@@ -273,17 +291,17 @@ public class Player : MonoBehaviour , IVehicle
         */
     }
 
-    private void clampLookAtThis()
+    private void clampFokusPointPosition()
     {
-        lookAtThis.localPosition = new Vector3(Mathf.Clamp(lookAtThis.localPosition.x, -lookAtThisRange, lookAtThisRange), Mathf.Clamp(lookAtThis.localPosition.y, -lookAtThisRange, lookAtThisRange), lookAtThis.localPosition.z);
+        shipFokusPoint.localPosition = new Vector3(Mathf.Clamp(shipFokusPoint.localPosition.x, -fokusPointRange, fokusPointRange), Mathf.Clamp(shipFokusPoint.localPosition.y, -fokusPointRange, fokusPointRange), shipFokusPoint.localPosition.z);
     }
 
-    void gravityAndLift()
+    void gravityAndLiftEffect()
     {
-        Vector3 gravity = Vector3.down * gravityAlsoLift;
+        Vector3 gravity = Vector3.down * gravityAndLift;
         applyMovement(gravity);
 
-        Vector3 lift = playerRotationVisuals.TransformDirection(Vector3.up) * gravityAlsoLift;
+        Vector3 lift = playerRotationVisuals.TransformDirection(Vector3.up) * gravityAndLift;
         applyMovement(lift);
     }
 
@@ -306,6 +324,7 @@ public class Player : MonoBehaviour , IVehicle
         if (Input.GetButtonDown("Missle1")) FireMissle(0);
         if (Input.GetButtonDown("Missle2")) FireMissle(1);
         if (Input.GetButtonDown("Missle3")) FireMissle(2);
+        if (Input.GetButtonDown("SwitchMissles")) switchSelectedMissle();
         //Dpad axis TODO: called every frame after pushing axis down
         if (Input.GetAxisRaw("DPad X") < -0.1) {if(DPadBool) FireMissle(0); DPadBool = false;}
         else if (Input.GetAxisRaw("DPad X") > 0.1) {if (DPadBool) FireMissle(1); DPadBool = false;}
@@ -331,20 +350,49 @@ public class Player : MonoBehaviour , IVehicle
     #region health and death
     public void takeDamage(float damage)
     {
-        if (currentHealth <= 0) return;
+        if (invulnTimeEnd > Time.time || currentHealth <= 0) return;
 
         currentHealth -= damage;
-        //Debug.Log("CurrentHealth = " + currentHealth);
         if (currentHealth <= 0) crash();
 
         UpdateHealthbar();
     }
 
-    void UpdateHealthbar()
+    public void gainHealth(float repairValue)
     {
-        foreach (VerticalBar item in healthbars)
+        currentHealth = Mathf.Clamp(currentHealth  + repairValue, 0, maxHealth);
+        UpdateHealthbar();
+    }
+
+    void becomeInvulnerable(float t)
+    {
+        //avoids shortening the current cooldown
+        if (invulnTimeEnd - Time.time > t) return;
+
+        invulnTimeEnd = Time.time + t;
+    }
+
+    public void takeDamage(float damage, DamageType damageType)
+    {
+        //Debug.Log(damageType);
+
+        switch (damageType)
         {
-            item.CurrentValue = currentHealth;
+            case DamageType.highExplosive:
+                takeDamage(damage);
+                becomeInvulnerable(invulnTime);
+                break;
+            case DamageType.collision:
+                takeDamage(damage);
+                becomeInvulnerable(invulnTime);
+                break;
+            case DamageType.repairs:
+                gainHealth(damage);
+                break;
+
+            default:
+                takeDamage(damage);
+                break;
         }
     }
 
@@ -397,9 +445,8 @@ public class Player : MonoBehaviour , IVehicle
         RaycastHit hit;
         if (Physics.SphereCast(ray, sphereCastRadius, out hit, 1000, layermask))
         {
-            Target t = hit.collider.gameObject.GetComponent<Target>();
-            if (t == null) return;
-            aquireTarget(t);
+            Target t = hit.collider.GetComponent<Target>();
+            if (t != null) aquireTarget(t);
         }
     }
 
@@ -416,7 +463,7 @@ public class Player : MonoBehaviour , IVehicle
     public void aquireTarget(Target T)
     {
         //Missles are aquired automatically
-        if (T.type == TargetType.missle) return;
+        if (T.Type == TargetType.missle) return;
         CameraScript camera = cam.GetComponent<CameraScript>();
 
         //Checks if target is already in List
@@ -426,7 +473,7 @@ public class Player : MonoBehaviour , IVehicle
         }
 
         //Adds target to list 
-        AquiredTarget target = new AquiredTarget(T.transform, T.getVelocity(), camera.giveLocationRelativeToCrosshair(T.transform), T.type);
+        AquiredTarget target = new AquiredTarget(T.transform, T.getVelocity(), camera.giveLocationRelativeToCrosshair(T.transform), T.Type);
         Targets.Add(target);
 
         //removes oldest Target when max target count is met 
@@ -451,9 +498,9 @@ public class Player : MonoBehaviour , IVehicle
                 return;//Targets List was modified, continuing next frame
             }
 
-            if (target.currentQuarter != camera.giveLocationRelativeToCrosshair(target.transform))
+            if (target.CurrentQuarter != camera.giveLocationRelativeToCrosshair(target.transform))
             {
-                target.currentQuarter = camera.giveLocationRelativeToCrosshair(target.transform);
+                target.CurrentQuarter = camera.giveLocationRelativeToCrosshair(target.transform);
                 TargetsChanged();
             }
         }
@@ -469,7 +516,7 @@ public class Player : MonoBehaviour , IVehicle
             Mount.clearTargets();
             foreach (var target in Targets)
             {
-                if (Mount.Quarters.Contains(target.currentQuarter)) Mount.AddTarget(target);
+                if (Mount.Quarters.Contains(target.CurrentQuarter)) Mount.AddTarget(target);
             }
         }
         if(Targets.Count != amtOfTrgts)resetMarkings();
@@ -490,7 +537,7 @@ public class Player : MonoBehaviour , IVehicle
     }
     #endregion
 
-    #region Missles
+    #region Hostile Missles
     void designateMissles()
     {
         if (incomingMissles.Count == 0) return;
@@ -508,9 +555,9 @@ public class Player : MonoBehaviour , IVehicle
                 return;//Targets List was modified, continuing next frame
             }
 
-            if (missle.currentQuarter != camera.giveLocationRelativeToCrosshair(missle.transform))
+            if (missle.CurrentQuarter != camera.giveLocationRelativeToCrosshair(missle.transform))
             {
-                missle.currentQuarter = camera.giveLocationRelativeToCrosshair(missle.transform);
+                missle.CurrentQuarter = camera.giveLocationRelativeToCrosshair(missle.transform);
                 MisslesChanged();
             }
         }
@@ -518,22 +565,24 @@ public class Player : MonoBehaviour , IVehicle
 
     void MisslesChanged()
     {
-        //Debug.Log("Missles changed / Missle Location changed");
+        //Clear all existing targets
         foreach (var Mount in AMSTurrets)
         {
             Mount.clearMissles();
 
+            //Add new targets
             foreach (var missle in incomingMissles)
             {
-                if (Mount.Quarters.Contains(missle.currentQuarter)) Mount.AddMissle(missle);
+                if (Mount.Quarters.Contains(missle.CurrentQuarter)) Mount.AddMissle(missle);
             }
+            Mount.MisslesChanged();
         }
     }
 
     public void addIncomingMissle(Target M)
     {
         //Debug.Log("new Missle : " + M.name);
-        if (M.type != TargetType.missle) return;
+        if (M.Type != TargetType.missle) return;
         CameraScript camera = cam.GetComponent<CameraScript>();
 
         //Checks if target is already in List
@@ -543,7 +592,7 @@ public class Player : MonoBehaviour , IVehicle
         }
 
         //Adds target to list 
-        AquiredTarget target = new AquiredTarget(M.transform, M.getVelocity(), camera.giveLocationRelativeToCrosshair(M.transform), M.type);
+        AquiredTarget target = new AquiredTarget(M.transform, M.getVelocity(), camera.giveLocationRelativeToCrosshair(M.transform), M.Type);
         incomingMissles.Add(target);
         MisslesChanged();
     }
@@ -569,9 +618,9 @@ public class Player : MonoBehaviour , IVehicle
     {
         if (Targets.Count < target + 1) return;
         //shoots a missle if there is a single turret with missles left
-        foreach (var mtur in MissleTurrets)
+        for (int i = 0; i < MissleTurrets.Count; i++)
         {
-            if (MissleTurrets[lastTurret].isLoaded())
+            if (MissleTurrets[lastTurret].isLoaded() && MissleTurrets[lastTurret].Data.missleData == currentMissles)
             {
                 MissleTurrets[lastTurret].Fire(Targets[target]);
                 lastTurret = (lastTurret + 1) % MissleTurrets.Count;
@@ -579,6 +628,17 @@ public class Player : MonoBehaviour , IVehicle
             }
             lastTurret = (lastTurret + 1) % MissleTurrets.Count;
         }
+    }
+
+    void switchSelectedMissle()
+    {
+        int index = misslesAvailable.IndexOf(currentMissles);
+
+        index = (index + 1) % misslesAvailable.Count;
+
+        currentMissles = misslesAvailable[index];
+
+        UpdateSelectedMissle();
     }
     
     
@@ -633,6 +693,24 @@ public class Player : MonoBehaviour , IVehicle
             }
         }
     }
+
+    #endregion
+
+    #region UpdateHUD
+
+    void UpdateHealthbar()
+    {
+        foreach (VerticalBar item in hud.Healthbars)
+        {
+            item.CurrentValue = currentHealth;
+        }
+    }
+
+    void UpdateSelectedMissle()
+    {
+        hud.MissleIcon.UpdateMissle(currentMissles);
+    }
+
 
     #endregion
 }

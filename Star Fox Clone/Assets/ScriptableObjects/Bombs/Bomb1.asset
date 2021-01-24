@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 25
   radius: 10
+  detectionRange: 0
   speed: 0
+  damageType: 2
   visuals: {fileID: 735570072739434363, guid: 509e5068e97ebf2448f49f612c3e76bc, type: 3}
   explosionVisuals: {fileID: 1052516232856190482, guid: e05b4336b86382d418ca0e722347244e,
     type: 3}

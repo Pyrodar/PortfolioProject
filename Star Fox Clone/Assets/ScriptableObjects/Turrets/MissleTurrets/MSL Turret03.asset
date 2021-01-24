@@ -19,9 +19,11 @@ MonoBehaviour:
   bulletSpread: 0
   turretSpeed: 0
   cooldown: 18
+  heatBuildup: 0
+  heatDissipation: 0
   firingDiscipline: 0
   missleSpace: 6
-  ejectSpeed: 7
+  ejectSpeed: 5
   missleData: {fileID: 11400000, guid: ad2bdfea758848243843d326f8a02804, type: 2}
   bulletData: {fileID: 0}
   Icon: {fileID: 0}

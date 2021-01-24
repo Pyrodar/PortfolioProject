@@ -32,8 +32,6 @@ public class VerticalBar : MonoBehaviour
 
     private void UpdateView()
     {
-        float height = (originalHeight / maxValue) * currentValue;
-
-        fill.fillAmount = height;
+        fill.fillAmount = (originalHeight / maxValue) * currentValue;
     }
 }

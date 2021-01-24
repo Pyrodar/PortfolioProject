@@ -16,7 +16,7 @@ MonoBehaviour:
   speed: 15
   lifetime: 12
   visuals: {fileID: 3157765972114974939, guid: 82dd97365acc5be4493a03b746f0ebda, type: 3}
-  explosive: 1
+  damageType: 2
   radius: 2
   explosionVisuals: {fileID: 1052516232856190482, guid: e05b4336b86382d418ca0e722347244e,
     type: 3}

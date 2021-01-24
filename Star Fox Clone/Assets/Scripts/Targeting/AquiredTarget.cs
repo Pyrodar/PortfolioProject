@@ -3,28 +3,23 @@
 public class AquiredTarget
 {
     public Transform transform;
-    public Vector3 velocity;
-    public int currentQuarter;
-    public int gunsPointing;
-    public TargetType type;
+    public Vector3 Velocity;
+    public Vector3 AVelocity;
+    public int CurrentQuarter;
+    public TargetType Type;
     
-    public AquiredTarget(Transform t, Vector3 _velocity, int quarter, TargetType _type)
+    public AquiredTarget(Transform t, Vector3 velocity, int quarter, TargetType type)
     {
         transform = t;
-        velocity = _velocity;
-        currentQuarter = quarter;
-        type = _type;
+        Velocity = velocity;
+        CurrentQuarter = quarter;
+        Type = type;
     }
 
     public void UpdateVelocity()
     {
-        velocity = transform.GetComponent<Target>().getVelocity();
+        Velocity = transform.GetComponent<Target>().getVelocity();
+        //AVelocity = transform.GetComponent<Target>().getAVelocity();
     }
 }
 
-public enum TargetType
-{
-    missle
-    , vehicle
-    , plane
-}

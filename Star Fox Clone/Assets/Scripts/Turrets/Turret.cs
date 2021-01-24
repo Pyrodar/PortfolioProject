@@ -39,7 +39,7 @@ public class Turret : MonoBehaviour
     public virtual void ConnectToUI(TurretIcon icon)
     {
         myHudIcon = icon;
-        Debug.Log($"Connected {name} to UI");
+        //Debug.Log($"Connected {name} to UI");
     }
 }
 

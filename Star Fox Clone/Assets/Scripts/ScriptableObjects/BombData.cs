@@ -7,6 +7,7 @@ public class BombData : ScriptableObject
     public float radius;
     public float detectionRange;
     public float speed;
+    public DamageType damageType;
 
     public GameObject visuals;
     public GameObject explosionVisuals;

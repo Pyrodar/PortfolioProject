@@ -7,7 +7,7 @@ public class BulletData : ScriptableObject
     public float speed;
     public float lifetime;
     public GameObject visuals;
-    public bool explosive;
+    public DamageType damageType;
     public float radius;
     public GameObject explosionVisuals;
 }
@@ -29,12 +29,20 @@ public class BulletDataEditor : Editor
         t.lifetime = EditorGUILayout.FloatField("Lifetime", t.lifetime);
         t.visuals = EditorGUILayout.ObjectField("Visuals", t.visuals, typeof(GameObject), true) as GameObject;
 
-        t.explosive = EditorGUILayout.Toggle("Explosive", t.explosive);
+        t.damageType = (DamageType)EditorGUILayout.EnumPopup("Damage Type", t.damageType);
 
-        if (t.explosive)
+        switch (t.damageType)
         {
-            t.radius = EditorGUILayout.FloatField("Explosion Radius", t.radius);
-            t.explosionVisuals = EditorGUILayout.ObjectField("Explosion Visuals", t.explosionVisuals, typeof(GameObject), true) as GameObject;
+            case DamageType.highExplosive:
+                t.radius = EditorGUILayout.FloatField("Explosion Radius", t.radius);
+                t.explosionVisuals = EditorGUILayout.ObjectField("Explosion Visuals", t.explosionVisuals, typeof(GameObject), true) as GameObject;
+                break;
+            case DamageType.flak:
+                t.radius = EditorGUILayout.FloatField("Explosion Radius", t.radius);
+                t.explosionVisuals = EditorGUILayout.ObjectField("Explosion Visuals", t.explosionVisuals, typeof(GameObject), true) as GameObject;
+                break;
+            default:
+                break;
         }
     }
 }

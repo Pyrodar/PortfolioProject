@@ -11,6 +11,9 @@ public class TurretData : ScriptableObject
     public float turretSpeed;
     public float cooldown;
 
+    public float heatBuildup;
+    public float heatDissipation;
+
     public bool firingDiscipline;
 
     public int missleSpace;
@@ -54,7 +57,7 @@ public class TurretDataEditor : Editor
         {
             t.bulletData = EditorGUILayout.ObjectField("BulletData", t.bulletData, typeof(BulletData), true) as BulletData;
             t.bulletSpread = EditorGUILayout.Slider("Bullet Spread", t.bulletSpread, 0f, 1f);
-            t.turretSpeed = EditorGUILayout.Slider("Turret Speed", t.turretSpeed, 1f, 20f);
+            t.turretSpeed = EditorGUILayout.Slider("Turret Speed", t.turretSpeed, 1f, 24f);
             t.cooldown = EditorGUILayout.Slider("Reload Time", t.cooldown, 0f, 3f);
             t.firingDiscipline = EditorGUILayout.Toggle("Firing Discipline", t.firingDiscipline);
             if (t.firingDiscipline)
@@ -62,13 +65,15 @@ public class TurretDataEditor : Editor
                 t.turretRange = EditorGUILayout.FloatField("Turret Range", t.turretRange);
             }
         }
-        else
+        else //TurretType.AMS
         {
             t.bulletData = EditorGUILayout.ObjectField("BulletData", t.bulletData, typeof(BulletData), true) as BulletData;
             t.turretRange = EditorGUILayout.FloatField("Turret Range", t.turretRange);
             t.bulletSpread = EditorGUILayout.Slider("Bullet Spread", t.bulletSpread, 0f, 1f);
-            t.turretSpeed = EditorGUILayout.Slider("Turret Speed", t.turretSpeed, 1f, 20f);
+            t.turretSpeed = EditorGUILayout.Slider("Turret Speed", t.turretSpeed, 1f, 24f);
             t.cooldown = EditorGUILayout.Slider("Reload Time", t.cooldown, 0f, 3f);
+            t.heatBuildup = EditorGUILayout.Slider("Heat Buildup", t.heatBuildup, 0.01f, 5f);
+            t.heatDissipation = EditorGUILayout.Slider("Heat Dissipation", t.heatDissipation, 1f, 10f);
         }
         t.Description = EditorGUILayout.TextField("Description:", t.Description);
     } 

@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: AtGMissle Heavy
   m_EditorClassIdentifier: 
   damage: 250
+  hitpoints: 4
   speed: 10
-  turnSpeed: 2
+  turnSpeed: 0.6
   drag: 1.2
   timeBeforeArmed: 0.3
   detectionRange: 200
@@ -24,3 +25,4 @@ MonoBehaviour:
   explosionVisuals: {fileID: 1052516232856190482, guid: e05b4336b86382d418ca0e722347244e,
     type: 3}
   explosionRadius: 5
+  damageType: 2

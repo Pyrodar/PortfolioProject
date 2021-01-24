@@ -20,6 +20,13 @@ public class MissleLauncher : StationaryWeapon
 
     protected override IEnumerator Fire()
     {
+        Vector3 ic = getInterceptPoint();
+
+        //checking for free LOS
+        float dist = Vector3.Distance(transform.position, ic) * 0.75f;  //Reducing range to avoid being blocked by objects around the plane
+        Collider c = HelperFunctions.GetObjectInSights(transform.position, ic, dist);
+        if (c != null) yield return null;
+
         startReloading();
         //waiting for the turret to turn
         yield return new WaitForSeconds(2f);

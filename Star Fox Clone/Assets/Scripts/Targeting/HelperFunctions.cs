@@ -3,21 +3,6 @@ using UnityEngine;
 
 public  class HelperFunctions
 {
-    /*#region singleton
-	public static HelperFunctions instance;
-
-	private void Awake()
-	{
-		if (HelperFunctions.instance != null)
-		{
-			Debug.LogWarning("More than one instance of ");
-			return;
-		}
-		instance = this;
-	}
-	#endregion
-	*/
-
     #region intercept
     public static Vector3 Intercept
 	(
@@ -155,8 +140,6 @@ public  class HelperFunctions
 	#region explosions
 	public static Collider[] SpawnExplosion(GameObject explosionObject, float radius, Vector3 position)
     {
-		//Debug.Log("Boom");
-		//Spawn explosion Visuals
 
 		GameObject ex = GameObject.Instantiate(explosionObject);
 		Explosion expl = ex.GetComponent<Explosion>();

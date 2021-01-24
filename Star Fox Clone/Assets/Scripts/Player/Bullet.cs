@@ -15,11 +15,16 @@ public class Bullet : MonoBehaviour
         r.AddForce(transform.forward * data.speed + spread, ForceMode.Impulse);
     }
 
+    public void SetFlakTime(float time)
+    {
+        lifetimeEnd = Time.time + time;
+    }
+
     private void Update()
     {
         if (Time.time > lifetimeEnd)
         {
-            Destroy(this.gameObject);
+            destruction();
         }
     }
 
@@ -32,13 +37,13 @@ public class Bullet : MonoBehaviour
     {
         if (other.GetComponent<IVehicle>() != null)
         {
-            other.GetComponent<IVehicle>().takeDamage(data.damage);
+            other.GetComponent<IVehicle>().takeDamage(data.damage, data.damageType);
         }
     }
 
     void OnHit(Collider other)
     {
-        if(data.explosive) Explode();
+        if(data.damageType == DamageType.highExplosive) Explode();
         else dealDamage(other);
         
         Destroy(gameObject);
@@ -54,8 +59,17 @@ public class Bullet : MonoBehaviour
             IVehicle t = hit.GetComponent<IVehicle>();
             if (t != null)
             {
-                t.takeDamage(data.damage);
+                t.takeDamage(data.damage, data.damageType);
             }
         }
+    }
+
+    void destruction()
+    {
+        if (data.damageType == DamageType.flak)
+        {
+            Explode();
+        }
+        Destroy(this.gameObject);
     }
 }

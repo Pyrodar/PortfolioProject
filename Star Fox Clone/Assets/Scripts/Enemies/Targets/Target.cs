@@ -2,19 +2,43 @@
 
 public interface IVehicle
 {
-    void takeDamage(float damage);
+    void takeDamage(float damage, DamageType damageType);
 
     void destroySelf();
 }
 
+#region enums
+public enum DamageType
+{
+    basic,
+    armourpiercing,
+    highExplosive,
+    flak,
+    collision,
+    repairs
+}
+
+public enum TargetType
+{
+    vehicle
+    , missle
+    , plane
+}
+#endregion
 
 [RequireComponent(typeof(Rigidbody))]
 public class Target : MonoBehaviour , IVehicle
 {
-    public TargetType type;
+    protected TargetType type;
+    public TargetType Type { get {return type; } }
 
     [SerializeField] protected float maxHealth = 1;
     protected float currentHealth;
+    [SerializeField] protected float armour = 0;
+    public float Armour
+    {
+        get { return armour; }
+    }
     [SerializeField] protected float collisionDamage = 25;
     public float Damage
     {
@@ -55,14 +79,37 @@ public class Target : MonoBehaviour , IVehicle
 
     public void takeDamage(float dmg = 50)
     {
+        float ptrDmg = Mathf.Clamp(dmg - armour, 0, 500);
         //Debug.Log("Taken " + dmg + " damage");
         if (currentHealth <= 0) return;
-        currentHealth -= dmg;
+        currentHealth -= ptrDmg;
         if (currentHealth <= 0) destroySelf();
+    }
+
+    public void takeDamage(float dmg, DamageType damageType)
+    {
+        switch (damageType)
+        {
+            case DamageType.basic:
+                takeDamage(dmg);
+                break;
+            case DamageType.armourpiercing:
+                takeDamage(dmg + armour);
+                break;
+
+            default:
+                takeDamage(dmg);
+                break;
+        }
     }
 
     public Vector3 getVelocity()
     {
         return rigid.velocity;
+    }
+    
+    public Vector3 getAVelocity()
+    {
+        return rigid.angularVelocity;
     }
 }

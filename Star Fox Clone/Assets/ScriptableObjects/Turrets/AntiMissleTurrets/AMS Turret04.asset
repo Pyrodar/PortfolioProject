@@ -10,23 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf612a5d7d9819043996e4c7d7724f40, type: 3}
-  m_Name: AMS Turret02
+  m_Name: AMS Turret04
   m_EditorClassIdentifier: 
   turretType: 0
   TurretMesh: {fileID: 8347921153622649651, guid: 35738fafe129bbe40a583e84c2751b27,
     type: 3}
-  turretRange: 60
-  bulletSpread: 0.8
-  turretSpeed: 18
-  cooldown: 0.03
-  heatBuildup: 0.7
-  heatDissipation: 4
+  turretRange: 240
+  bulletSpread: 0.5
+  turretSpeed: 24
+  cooldown: 0.9
+  heatBuildup: 4.8
+  heatDissipation: 2
   firingDiscipline: 0
   missleSpace: 0
   ejectSpeed: 0
   missleData: {fileID: 0}
-  bulletData: {fileID: 11400000, guid: c9346d8db8067ab4ba8a85d3a15577b9, type: 2}
+  bulletData: {fileID: 11400000, guid: f39409be46195214fbd36d6a650fdf86, type: 2}
   Icon: {fileID: 0}
-  Description: Older model with much higher firing rate and shorter range. Can elliminate
-    almost any threat once it enters its designated Area. Has major heat dissipation
-    problems due to lack of modern cooling systems.
+  Description: FLAK TEST
