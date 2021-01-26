@@ -61,7 +61,7 @@ public class Player : MonoBehaviour , IVehicle
     #region Shiptype dependent
 
     #region Movement
-    [SerializeField] float moveSpeed = 2.6f;
+    [SerializeField] float moveSpeed = 4.6f;
     [SerializeField] float rotationSpeed = 0.7f;
 
     [SerializeField] float fokusPointRange = 2f;
@@ -205,20 +205,20 @@ public class Player : MonoBehaviour , IVehicle
     {
         if (!inGame) return;
         //Movement
-        applyMovement(inputMovement());
+        //applyMovement(inputMovement());
 
-        checkBoundaries();
+        //checkBoundaries();
 
-        applyRotation(inputRotation());
+        //applyRotation(inputRotation());
+
+        //clampFokusPointPosition();
 
         HelperFunctions.LookAt(playerVisuals, shipFokusPoint.position, fokusPointDamping);
-
-        clampFokusPointPosition();
 
         gravityAndLiftEffect();
 
         //Combat
-        combatInputs();
+        //combatInputs();
 
         applyTargetMarkers();
 
@@ -227,28 +227,19 @@ public class Player : MonoBehaviour , IVehicle
         designateMissles();
     }
 
+    /// <summary>
+    /// Contains the functions for movement and rotation of the plane
+    /// </summary>
+    /// <param name="input">Vector from the InputManager delivering the directional inputs</param>
     #region Movement
-    Vector3 inputMovement()
-    {
-        Vector3 retVal = Vector3.zero;
 
-        if (Input.GetAxis("Horizontal") != 0)
-        {
-            retVal += new Vector3(Input.GetAxis("Horizontal") * moveSpeed, 0, 0);
-        }
-
-        if (Input.GetAxis("Vertical") != 0)
-        {
-            retVal += new Vector3(0, Input.GetAxis("Vertical") * moveSpeed, 0);
-        }
-
-        return retVal;
-    }
-
-    void applyMovement(Vector3 input)
+    public void ApplyMovement(Vector3 input)
     {
         myRigid.AddForce(input * moveSpeed);
         updateFokusPoint(input);
+
+        checkBoundaries();
+        clampFokusPointPosition();
     }
 
     void checkBoundaries()
@@ -265,20 +256,9 @@ public class Player : MonoBehaviour , IVehicle
         transform.localPosition = new Vector3(Mathf.Clamp(transform.localPosition.x, -Plane.MaxWidth + x, Plane.MaxWidth + x), Mathf.Clamp(transform.localPosition.y, -Plane.MaxHeight + y, Plane.MaxHeight + y));
     }
 
-    float inputRotation()
+    public void ApplyRotation(float addedRotation)
     {
-        float retVal = 0;
-
-        if (Input.GetAxis("Rotation") != 0)
-        {
-            //Debug.Log("Added rotation: " + Input.GetAxis("Rotation"));
-            retVal += Input.GetAxis("Rotation") * rotationSpeed;
-        }
-        return retVal;
-    }
-
-    void applyRotation(float addedRotation)
-    {
+        addedRotation *= rotationSpeed;
         largeCrossHair.Rotate(Vector3.forward, addedRotation);
         playerRotationVisuals.Rotate(Vector3.forward, addedRotation);
     }
@@ -306,6 +286,7 @@ public class Player : MonoBehaviour , IVehicle
     {
         largeCrossHair.localPosition = shipFokusPoint.localPosition + crosshairOffset;
         smallCrossHair.localPosition = shipFokusPoint.localPosition * 2 + crosshairOffset;
+
         /*smallCrossHair.localPosition += mouseInputs() * 0.1f;
 
         if (smallCrossHair.localPosition.x < -plane.maxWidth) smallCrossHair.localPosition = new Vector3(-plane.maxWidth, smallCrossHair.localPosition.y, smallCrossHair.localPosition.z);
@@ -323,10 +304,10 @@ public class Player : MonoBehaviour , IVehicle
     void gravityAndLiftEffect()
     {
         Vector3 gravity = Vector3.down * gravityAndLift;
-        applyMovement(gravity);
+        ApplyMovement(gravity);
 
         Vector3 lift = playerRotationVisuals.TransformDirection(Vector3.up) * gravityAndLift;
-        applyMovement(lift);
+        ApplyMovement(lift);
     }
 
     public Vector3 getVelocity()
@@ -336,26 +317,14 @@ public class Player : MonoBehaviour , IVehicle
 
     #endregion
 
+    /// <summary>
+    /// Contains the functions related to targetmarking and launching missles
+    /// </summary>
+    /// <param name="input">An Enum from the inputmanager containing information about wich action to perform</param>
     #region combat
 
     #region Inputs
-    void combatInputs()
-    {
-        if (Input.GetButton("Mark")) scanCrosshairForTarget();
-
-        if (Input.GetButtonDown("SwitchTargets")) rotateTargetList();
-        //NumButtons
-        if (Input.GetButtonDown("Missle1")) FireMissle(0);
-        if (Input.GetButtonDown("Missle2")) FireMissle(1);
-        if (Input.GetButtonDown("Missle3")) FireMissle(2);
-        if (Input.GetButtonDown("SwitchMissles")) switchSelectedMissle();
-        //Dpad axis TODO: called every frame after pushing axis down
-        if (Input.GetAxisRaw("DPad X") < -0.1) {if(DPadBool) FireMissle(0); DPadBool = false;}
-        else if (Input.GetAxisRaw("DPad X") > 0.1) {if (DPadBool) FireMissle(1); DPadBool = false;}
-        else if (Input.GetAxisRaw("DPad Y") > 0.1) {if (DPadBool) FireMissle(2); DPadBool = false;}
-        else DPadBool = true;
-    }
-
+    /*
     Vector3 mouseInputs()
     {
         Vector3 retVal = Vector3.zero;
@@ -368,8 +337,32 @@ public class Player : MonoBehaviour , IVehicle
             retVal.y += Input.GetAxis("Mouse Y");
         }
         return retVal;
+    }*/
+
+    public void applyCombatInputs(INPUTS input)
+    {
+        switch (input)
+        {
+            case INPUTS.Scan:
+                scanCrosshairForTarget();
+                break;
+            case INPUTS.SwitchTargets:
+                rotateTargetList();
+                break;
+            case INPUTS.SwitchMissle:
+                switchSelectedMissle();
+                break;
+        }
     }
-    #endregion
+
+    public void applyCombatInputs(INPUTS input, int i)
+    {
+        if (input == INPUTS.Missle)
+        {
+            FireMissle(i);
+        }
+    }
+        #endregion
 
     #region health and death
     public void takeDamage(float damage)
@@ -461,6 +454,7 @@ public class Player : MonoBehaviour , IVehicle
     #endregion
 
     #region Non-AMS-Targets
+    //Layermask including Ground, player, playerbullets and other layers ignored by the target marking ray
     LayerMask layermask = 1536;
     void scanCrosshairForTarget()
     {
@@ -482,7 +476,7 @@ public class Player : MonoBehaviour , IVehicle
         Targets.RemoveAt(0);
         Targets.Add(targetOne);
 
-        TargetsChanged();
+        targetsChanged();
     }
 
     public void aquireTarget(Target T)
@@ -505,7 +499,7 @@ public class Player : MonoBehaviour , IVehicle
         if (Targets.Count > maxTargets) Targets.RemoveAt(0);
 
 
-        TargetsChanged();
+        targetsChanged();
     }
 
     void designateTargets()
@@ -519,20 +513,20 @@ public class Player : MonoBehaviour , IVehicle
             {
                 Debug.Log("lost target");
                 Targets.Remove(target);
-                TargetsChanged();
+                targetsChanged();
                 return;//Targets List was modified, continuing next frame
             }
 
             if (target.CurrentQuarter != camera.giveLocationRelativeToCrosshair(target.transform))
             {
                 target.CurrentQuarter = camera.giveLocationRelativeToCrosshair(target.transform);
-                TargetsChanged();
+                targetsChanged();
             }
         }
     }
 
-    static int amtOfTrgts;
-    void TargetsChanged()
+    int amtOfTrgts = 0; //TODO: Either move to variables or replace
+    void targetsChanged()
     {
         //Adding Targets to Mounts in range;
 
@@ -555,7 +549,7 @@ public class Player : MonoBehaviour , IVehicle
             if (T.transform == t.transform)
             {
                 Targets.Remove(t);
-                TargetsChanged();
+                targetsChanged();
                 return;
             }
         }
@@ -633,7 +627,6 @@ public class Player : MonoBehaviour , IVehicle
                 return;
             }
         }
-
     }
     #endregion
 
@@ -669,6 +662,7 @@ public class Player : MonoBehaviour , IVehicle
     
     #endregion
     #endregion
+
 
     /// <summary>
     /// used in Loadout map to change turrets

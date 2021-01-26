@@ -1756,7 +1756,7 @@ MonoBehaviour:
   largeCrossHair: {fileID: 7748306176197144771}
   crashExplosion: {fileID: 1052516232856190482, guid: e05b4336b86382d418ca0e722347244e,
     type: 3}
-  moveSpeed: 2.25
+  moveSpeed: 4.6
   rotationSpeed: 0.5
   fokusPointRange: 2
   fokusPointSpeed: 0.038

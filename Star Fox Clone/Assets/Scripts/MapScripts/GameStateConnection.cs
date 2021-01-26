@@ -39,7 +39,8 @@ public class GameStateConnection : MonoBehaviour
 
     #region Players
     Player[] players;
-
+    public Player[] Players { get { return players; } }
+    public int NumberOfPlayers { get { return gameStateInfo.PlayerNumber; } }
 
     Player frontlinePlayer;
     GameplayPlane gameplayPlane;
