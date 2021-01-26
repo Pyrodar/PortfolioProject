@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Player : MonoBehaviour , IVehicle
 {
+    /// <summary>
+    /// Everything needed for the game to work
+    /// </summary>
     #region SetOnLevelLoaded
     [SerializeField]GameplayPlane plane;
     public GameplayPlane Plane
@@ -30,6 +33,10 @@ public class Player : MonoBehaviour , IVehicle
 
     #endregion
 
+    /// <summary>
+    ///Required for the game to work and saved before starting the game in the prefab
+    ///TODO: Visuals and HItbox must be interchangable based on ship type
+    /// </summary>
     #region SetManuallyInEditor
     [SerializeField] TurretMount[] turretMounts;
     public TurretMount[] TurretMounts
@@ -47,6 +54,12 @@ public class Player : MonoBehaviour , IVehicle
     Rigidbody myRigid;
     #endregion
 
+    /// <summary>
+    /// All variables that affect the Gameplay feeling
+    /// TODO: NEEDS TO BE INTERCHANGABLE BASED ON SHIPTYPE!!!
+    /// </summary>
+    #region Shiptype dependent
+
     #region Movement
     [SerializeField] float moveSpeed = 2.6f;
     [SerializeField] float rotationSpeed = 0.7f;
@@ -54,10 +67,10 @@ public class Player : MonoBehaviour , IVehicle
     [SerializeField] float fokusPointRange = 2f;
     [SerializeField] float fokusPointSpeed = 0.04f;
     [SerializeField] float fokusPointDamping = 2f; 
-    [SerializeField]
+    //[SerializeField]
     [Tooltip("how fast the ship returns to looking straight forward again. fastest: 0.0 slowest: 1.0")]
-    [Range(0f, 1f)]
-    float fokusPointCenteringSpeed = 0.98f;
+    [Range(0.5f, 1f)]
+    float fokusPointCenteringSpeed = 0.995f;
     [SerializeField]
     [Tooltip("how close to the ships front the crosshair returns after stopping the inputs")]
     float fokusPointCenteringTolerance = 0.01f;
@@ -77,9 +90,14 @@ public class Player : MonoBehaviour , IVehicle
 
     [SerializeField] float invulnTime = 1;
     float invulnTimeEnd = 1;
+    #endregion
 
+    #endregion
+
+    /// <summary>
+    /// will be set automatically when the Game starts
+    /// </summary>
     #region Targets and Turrets
-
     List<TurretMount> ATGTurrets = new List<TurretMount>();
     List<TurretMount> AMSTurrets = new List<TurretMount>();
     List<MissleTurret> MissleTurrets = new List<MissleTurret>();
@@ -94,13 +112,12 @@ public class Player : MonoBehaviour , IVehicle
     [SerializeField] Transform[] TargetMarker;
     #endregion
 
-    #endregion
 
     #region HUD
     VerticalBar[] healthbars;
     #endregion
 
-    #region InputManagement
+    #region InputFunktionBools
     bool DPadBool = true;
     #endregion 
 
@@ -116,7 +133,6 @@ public class Player : MonoBehaviour , IVehicle
     /// Setting some values required for the game to funktion.
     /// currently too split between here and GameStateConnection
     /// </summary>
-    /// <param name="_plane"></param>
     public void StartGame()
     {
         #region HUD Setup
@@ -177,6 +193,14 @@ public class Player : MonoBehaviour , IVehicle
         inGame = true;
     }
 
+    /// <summary>
+    /// processing Inputs 
+    /// TODO: move to Input Managing Script
+    /// 
+    /// Adjusting plane transform based on Fokuspoint position
+    /// recalculates target locations and updates HUD accordingly
+    /// applies gravity and lift
+    /// </summary>
     void Update()
     {
         if (!inGame) return;
@@ -388,6 +412,7 @@ public class Player : MonoBehaviour , IVehicle
                 break;
             case DamageType.repairs:
                 gainHealth(damage);
+                Debug.Log("Healing");
                 break;
 
             default:
@@ -552,7 +577,7 @@ public class Player : MonoBehaviour , IVehicle
                 //Debug.Log("removing missle");
                 incomingMissles.Remove(missle);
                 MisslesChanged();
-                return;//Targets List was modified, continuing next frame
+                break; //Targets List length was modified, continuing next frame
             }
 
             if (missle.CurrentQuarter != camera.giveLocationRelativeToCrosshair(missle.transform))
@@ -643,6 +668,35 @@ public class Player : MonoBehaviour , IVehicle
     
     
     #endregion
+    #endregion
+
+    /// <summary>
+    /// used in Loadout map to change turrets
+    /// </summary>
+    #region Loadout
+    public void AddTurretModules()
+    {
+        foreach (TurretMount tm in turretMounts)
+        {
+            TurretModule mod = tm.gameObject.AddComponent<TurretModule>();
+            mod.Instantiate();
+        }
+    }
+    
+    public void RemoveTurretModules()
+    {
+        foreach (TurretMount tm in turretMounts)
+        {
+            if (tm.GetComponent<TurretModule>() != null)
+            {
+                tm.GetComponent<TurretModule>().startGame();
+            }
+        }
+    }
+
+    #endregion
+
+    #region UpdateHUD
 
     #region UIMarkers
     void applyTargetMarkers()
@@ -671,32 +725,6 @@ public class Player : MonoBehaviour , IVehicle
     }
     #endregion
 
-    #endregion
-
-    #region Loadout
-    public void AddTurretModules()
-    {
-        foreach (TurretMount tm in turretMounts)
-        {
-            TurretModule mod = tm.gameObject.AddComponent<TurretModule>();
-            mod.Instantiate();
-        }
-    }
-    
-    public void RemoveTurretModules()
-    {
-        foreach (TurretMount tm in turretMounts)
-        {
-            if (tm.GetComponent<TurretModule>() != null)
-            {
-                tm.GetComponent<TurretModule>().startGame();
-            }
-        }
-    }
-
-    #endregion
-
-    #region UpdateHUD
 
     void UpdateHealthbar()
     {

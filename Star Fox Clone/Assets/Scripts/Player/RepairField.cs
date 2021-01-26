@@ -5,13 +5,28 @@ using UnityEngine;
 public class RepairField : MonoBehaviour
 {
     [SerializeField] float repairSpeed;
-    private void OnCollisionStay(Collision collision)
+    IVehicle objectToRepair;
+
+    private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("REPAIRING?");
-        IVehicle player = collision.gameObject.GetComponent<IVehicle>();
-        if (player != null)
+        IVehicle obj = other.gameObject.GetComponent<IVehicle>();
+        if (obj != null)
         {
-            player.takeDamage(repairSpeed * Time.deltaTime, DamageType.repairs);
+            objectToRepair = obj;
         }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        IVehicle obj = other.gameObject.GetComponent<IVehicle>();
+        if (obj == objectToRepair)
+        {
+            objectToRepair = null;
+        }
+    }
+
+    private void Update()
+    {
+        if(objectToRepair != null)objectToRepair.takeDamage(repairSpeed * Time.deltaTime, DamageType.repairs);
     }
 }

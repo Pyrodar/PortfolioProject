@@ -51,6 +51,8 @@ public class LoadoutHUD : UIBaseClass
                     TurretMenuButton tb = Instantiate(TurretListPrefabs);
                     tb.Initialize(turret);
                     tb.transform.SetParent(turretListParent);
+
+                    resetScale(tb);
                 }
 
                 break;
@@ -61,6 +63,8 @@ public class LoadoutHUD : UIBaseClass
                     TurretMenuButton tb = Instantiate(TurretListPrefabs);
                     tb.Initialize(turret);
                     tb.transform.SetParent(turretListParent);
+
+                    resetScale(tb);
                 }
 
                 break;
@@ -71,12 +75,21 @@ public class LoadoutHUD : UIBaseClass
                     TurretMenuButton tb = Instantiate(TurretListPrefabs);
                     tb.Initialize(turret);
                     tb.transform.SetParent(turretListParent);
+
+                    resetScale(tb);
                 }
 
                 break;
             default:
                 break;
         }
+    }
+
+    //After assigning new parent RectTransform seems to get messed up
+    void resetScale(TurretMenuButton t)
+    {
+        t.GetComponent<RectTransform>().localPosition = Vector3.zero;
+        t.transform.localScale = Vector3.one;
     }
 
     public void ShowAllTurrets()

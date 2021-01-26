@@ -18,7 +18,7 @@ MonoBehaviour:
   turretRange: 0
   bulletSpread: 0
   turretSpeed: 0
-  cooldown: 8
+  cooldown: 10
   heatBuildup: 0
   heatDissipation: 0
   firingDiscipline: 0

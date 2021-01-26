@@ -59,6 +59,15 @@ public class GameStateConnection : MonoBehaviour
 
     #endregion
 
+    /// <summary>
+    /// called in Main menu when opening singleplayer or coop
+    /// </summary>
+    #region setPlayerNumber
+    public void SetPlayerNumber(int i)
+    {
+        gameStateInfo.PlayerNumber = i;
+    }
+    #endregion
 
     #region Loading maps
     //#######################################
@@ -132,6 +141,11 @@ public class GameStateConnection : MonoBehaviour
             players[i].transform.position = mapLayoutInfo.LoadoutMapPlayerPositions[i].position;
             DontDestroyOnLoad(players[i]);
             players[i].AddTurretModules();
+
+            //Set up cameras
+            mapLayoutInfo.HUD[i].gameObject.SetActive(true);
+            mapLayoutInfo.HUD[i].GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceCamera;
+            mapLayoutInfo.HUD[i].GetComponent<Canvas>().worldCamera = mapLayoutInfo.Cameras[i];
         }
 
     }
@@ -171,10 +185,19 @@ public class GameStateConnection : MonoBehaviour
             players[i].transform.SetParent(gameplayPlane.Playerpositions[i]);
             players[i].transform.position = gameplayPlane.Playerpositions[i].position;
             players[i].Plane = gameplayPlane;
+
             players[i].Cam = mapLayoutInfo.Cameras[i];
+            mapLayoutInfo.Cameras[i].gameObject.SetActive(true);
             players[i].HUD = (InGameHUD)mapLayoutInfo.HUD[i];
+
             //set camera connections
             mapLayoutInfo.Cameras[i].GetComponent<CameraScript>().setPlayer(players[i]);
+
+            //Set up HUDs
+            mapLayoutInfo.HUD[i].gameObject.SetActive(true);
+            mapLayoutInfo.HUD[i].GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceCamera;
+            mapLayoutInfo.HUD[i].GetComponent<Canvas>().worldCamera = mapLayoutInfo.Cameras[i];
+
             //remove Layout funktions
             players[i].RemoveTurretModules();
         }
@@ -297,9 +320,10 @@ class GameStateInfo
     public int PlayerNumber
     {
         get { return playerNumber; }
-        set { playerNumber = value; }
+        set { playerNumber = Mathf.Clamp(value, 1, 2); }
     }
 
+    //Maybe saved as strings instead of Player class
     Player[] playerObjects;
     public Player[] PlayerObjects
     {
@@ -326,7 +350,7 @@ class GameStateInfo
 
 
         //Debugging:#######
-        playerNumber = 1;
+        //playerNumber = 1;
 
         playerObjects = new Player[2];
         playerObjects[0] = GameStateConnection.Instance.Playerprefabs[0];

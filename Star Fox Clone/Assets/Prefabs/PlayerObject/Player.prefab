@@ -134,7 +134,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7748306175435445341}
   m_Layer: 2
-  m_Name: LookAtThis
+  m_Name: ShipFokusPoint
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1751,20 +1751,19 @@ MonoBehaviour:
   - {fileID: 8036535939069579555}
   playerVisuals: {fileID: 7748306175353126453}
   playerRotationVisuals: {fileID: 7748306177027821726}
-  lookAtThis: {fileID: 7748306175435445341}
+  shipFokusPoint: {fileID: 7748306175435445341}
   smallCrossHair: {fileID: 7748306175890210644}
   largeCrossHair: {fileID: 7748306176197144771}
   crashExplosion: {fileID: 1052516232856190482, guid: e05b4336b86382d418ca0e722347244e,
     type: 3}
   moveSpeed: 2.25
   rotationSpeed: 0.5
-  lookAtThisRange: 2
-  lookAtThisSpeed: 0.03
-  lookAtThisDamping: 3
-  lookAtThisCenteringSpeed: 0.995
-  lookAtThisCenteringTolerance: 0.3
-  gravityAlsoLift: 0.4
-  crosshairoffset: {x: 0, y: 1.5, z: 0}
+  fokusPointRange: 2
+  fokusPointSpeed: 0.038
+  fokusPointDamping: 1.9
+  fokusPointCenteringTolerance: 0.01
+  gravityAndLift: 0.4
+  crosshairOffset: {x: 0, y: 0, z: 0}
   maxHealth: 100
   invulnTime: 1
   TargetMarker:

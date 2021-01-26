@@ -77,10 +77,9 @@ public class Target : MonoBehaviour , IVehicle
         Destroy(this.gameObject);
     }
 
-    public void takeDamage(float dmg = 50)
+    public void takeDamage(float dmg)
     {
         float ptrDmg = Mathf.Clamp(dmg - armour, 0, 500);
-        //Debug.Log("Taken " + dmg + " damage");
         if (currentHealth <= 0) return;
         currentHealth -= ptrDmg;
         if (currentHealth <= 0) destroySelf();
@@ -90,9 +89,6 @@ public class Target : MonoBehaviour , IVehicle
     {
         switch (damageType)
         {
-            case DamageType.basic:
-                takeDamage(dmg);
-                break;
             case DamageType.armourpiercing:
                 takeDamage(dmg + armour);
                 break;

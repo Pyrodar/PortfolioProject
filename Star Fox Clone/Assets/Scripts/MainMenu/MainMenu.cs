@@ -14,12 +14,17 @@ public class MainMenu : MonoBehaviour
         Main.SetActive(false);
         Return.SetActive(true);
         Levels.SetActive(true);
+
+        GameStateConnection.Instance.SetPlayerNumber(1);
     }
 
     public void CoopButton()
     {
         Return.SetActive(true);
         Main.SetActive(false);
+        Levels.SetActive(true);
+
+        GameStateConnection.Instance.SetPlayerNumber(2);
     }
 
     public void SettingsButton()
