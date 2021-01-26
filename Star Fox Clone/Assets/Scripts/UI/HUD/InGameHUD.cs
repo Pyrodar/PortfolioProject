@@ -20,8 +20,8 @@ public class InGameHUD : UIBaseClass
         get { return turretIconList; }
     }
 
-    [SerializeField] Transform[] targetMarkers;
-    public Transform[] TargetMarkers
+    [SerializeField] RectTransform[] targetMarkers;
+    public RectTransform[] TargetMarkers
     {
         get { return targetMarkers; }
     }

@@ -20,6 +20,14 @@ public class TurretIconList : MonoBehaviour
 
         icon.Initiate(mount, sprite);
         icon.transform.SetParent(transform);
+        resetScale(icon);
+    }
+
+    //After assigning new parent RectTransform seems to get messed up
+    void resetScale(TurretIcon t)
+    {
+        t.GetComponent<RectTransform>().localPosition = Vector3.zero;
+        t.transform.localScale = Vector3.one;
     }
 
     Sprite generateSprite(TurretType type)

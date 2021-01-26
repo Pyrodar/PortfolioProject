@@ -30,6 +30,7 @@ public class Player : MonoBehaviour , IVehicle
     {
         set { hud = value; }
     }
+    RectTransform canvas { get { return hud.GetComponent<RectTransform>(); } }
 
     #endregion
 
@@ -109,12 +110,12 @@ public class Player : MonoBehaviour , IVehicle
     List<AquiredTarget> Targets = new List<AquiredTarget>();
     List<AquiredTarget> incomingMissles = new List<AquiredTarget>();
     private int maxTargets = 3;
-    [SerializeField] Transform[] TargetMarker;
     #endregion
 
 
     #region HUD
     VerticalBar[] healthbars;
+    [SerializeField] RectTransform[] TargetMarker;
     #endregion
 
     #region InputFunktionBools
@@ -152,6 +153,8 @@ public class Player : MonoBehaviour , IVehicle
         {
             TargetMarker[i] = hud.TargetMarkers[i];
         }
+
+        resetMarkings();
         #endregion
 
         #region Rigidbody Setup
@@ -699,12 +702,18 @@ public class Player : MonoBehaviour , IVehicle
         foreach (var t in Targets)
         {
             if (t == null) return;
-            TargetMarker[n].position = cam.WorldToScreenPoint(t.transform.position);
+
+
+            Vector2 screenPos = cam.WorldToScreenPoint(t.transform.position);
+            Debug.Log(screenPos);
+            
+            TargetMarker[n].anchoredPosition = screenPos;
             //keeping the markers inside the screen
-            if (TargetMarker[n].position.x > Screen.width) TargetMarker[n].position = new Vector3(Screen.width, TargetMarker[n].position.y);
-            if (TargetMarker[n].position.x < 0) TargetMarker[n].position = new Vector3(0, TargetMarker[n].position.y);
-            if (TargetMarker[n].position.y > Screen.height) TargetMarker[n].position = new Vector3(TargetMarker[n].position.x, Screen.height);
-            if (TargetMarker[n].position.y < 0) TargetMarker[n].position = new Vector3(TargetMarker[n].position.x, 0);
+
+            if (TargetMarker[n].anchoredPosition.x > canvas.rect.width) TargetMarker[n].anchoredPosition = new Vector3(canvas.rect.width, TargetMarker[n].anchoredPosition.y);
+            if (TargetMarker[n].anchoredPosition.x < 0) TargetMarker[n].anchoredPosition = new Vector3(0, TargetMarker[n].anchoredPosition.y);
+            if (TargetMarker[n].anchoredPosition.y > canvas.rect.height) TargetMarker[n].anchoredPosition = new Vector3(TargetMarker[n].anchoredPosition.x, canvas.rect.height);
+            if (TargetMarker[n].anchoredPosition.y < 0) TargetMarker[n].anchoredPosition = new Vector3(TargetMarker[n].anchoredPosition.x, 0);
 
             n++;
         }
@@ -714,7 +723,7 @@ public class Player : MonoBehaviour , IVehicle
     {
         foreach (var marker in TargetMarker)
         {
-            marker.position = new Vector3(-20, -20);
+            marker.anchoredPosition = new Vector3(-20, -20);
         }
     }
     #endregion
