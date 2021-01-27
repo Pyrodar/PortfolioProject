@@ -18,8 +18,8 @@ public class AquiredTarget
 
     public void UpdateVelocity()
     {
-        Velocity = transform.GetComponent<Target>().getVelocity();
-        //AVelocity = transform.GetComponent<Target>().getAVelocity();
+        Velocity = transform.GetComponent<Target>().Velocity;
+        //AVelocity = transform.GetComponent<Target>().AVelocity;
     }
 }
 

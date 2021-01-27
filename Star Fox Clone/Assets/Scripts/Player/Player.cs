@@ -32,6 +32,10 @@ public class Player : MonoBehaviour , IVehicle
     }
     RectTransform canvas { get { return hud.GetComponent<RectTransform>(); } }
 
+    //required for splitscreen
+    int playerNumber;
+    public int PlayerNumber { set { playerNumber = value; } }
+
     #endregion
 
     /// <summary>
@@ -495,7 +499,7 @@ public class Player : MonoBehaviour , IVehicle
         }
 
         //Adds target to list 
-        AquiredTarget target = new AquiredTarget(T.transform, T.getVelocity(), camera.giveLocationRelativeToCrosshair(T.transform), T.Type);
+        AquiredTarget target = new AquiredTarget(T.transform, T.Velocity, camera.giveLocationRelativeToCrosshair(T.transform), T.Type);
         Targets.Add(target);
 
         //removes oldest Target when max target count is met 
@@ -614,7 +618,7 @@ public class Player : MonoBehaviour , IVehicle
         }
 
         //Adds target to list 
-        AquiredTarget target = new AquiredTarget(M.transform, M.getVelocity(), camera.giveLocationRelativeToCrosshair(M.transform), M.Type);
+        AquiredTarget target = new AquiredTarget(M.transform, M.Velocity, camera.giveLocationRelativeToCrosshair(M.transform), M.Type);
         incomingMissles.Add(target);
         MisslesChanged();
     }
@@ -676,7 +680,7 @@ public class Player : MonoBehaviour , IVehicle
         foreach (TurretMount tm in turretMounts)
         {
             TurretModule mod = tm.gameObject.AddComponent<TurretModule>();
-            mod.Instantiate();
+            mod.Instantiate(playerNumber);
         }
     }
     
@@ -705,8 +709,15 @@ public class Player : MonoBehaviour , IVehicle
 
 
             Vector2 screenPos = cam.WorldToScreenPoint(t.transform.position);
-            Debug.Log(screenPos);
-            
+            //Debug.Log(screenPos);
+
+            //used for vertical splitscreen. using if since only 2 players are possible
+            if (playerNumber != 0) screenPos.x -= canvas.rect.width;// * playerNumber;
+
+            //TODO: set up for horizontal splitscreen 
+            //if (playerNumber != 0) screenPos.y -= canvas.rect.height;// * playerNumber;
+
+
             TargetMarker[n].anchoredPosition = screenPos;
             //keeping the markers inside the screen
 

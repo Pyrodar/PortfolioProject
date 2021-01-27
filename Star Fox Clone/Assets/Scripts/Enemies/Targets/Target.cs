@@ -29,38 +29,60 @@ public enum TargetType
 [RequireComponent(typeof(Rigidbody))]
 public class Target : MonoBehaviour , IVehicle
 {
+    #region Type
     protected TargetType type;
     public TargetType Type { get {return type; } }
+    #endregion
 
+    #region Health
     [SerializeField] protected float maxHealth = 1;
     protected float currentHealth;
-    [SerializeField] protected float armour = 0;
-    public float Armour
-    {
-        get { return armour; }
-    }
-    [SerializeField] protected float collisionDamage = 25;
-    public float Damage
-    {
-        get { return collisionDamage; }
-    }
-    protected Player myTarget;
 
+    [SerializeField] protected float armour = 0;
+    //public float Armour{get { return armour; }}
+
+    [SerializeField] protected float collisionDamage = 25;
+    public float Damage{get { return collisionDamage; }}
+    #endregion
+
+    #region rigidbody
     protected Rigidbody rigid;
+    public Vector3 Velocity { get { return rigid.velocity; } }
+    public Vector3 AVelocity { get { return rigid.angularVelocity; } }
+    #endregion
+
+    protected Player myTarget;
+    protected Player[] Players { get { return GameStateConnection.Instance.Players; } }
+
 
     protected virtual void Start()
     {
-        myTarget = GameStateConnection.Instance.getFrontlinePlayer();
         currentHealth = maxHealth;
         rigid = GetComponent<Rigidbody>();
 
-        GameStateConnection.Instance.switchingPlayers += changeTarget;
-        //Debug.Log("Added object: " + name + " to list of switch player delegate");
+        if (GameStateConnection.Instance != null)
+        {
+            GameStateConnection.Instance.switchingPlayers += changeTarget;
+            //Debug.Log("Added object: " + name + " to list of switch player delegate");
+
+            changeTarget();
+        }
     }
 
     protected void changeTarget()
     {
+        if (GameStateConnection.Instance == null)
+        {
+            myTarget = null;
+            return;
+        }
         myTarget = GameStateConnection.Instance.getFrontlinePlayer();
+    }
+
+    protected virtual void addScore()
+    {
+        //TODO: Add destruction to score based on "TargetType"
+        destroySelf();
     }
 
     public virtual void destroySelf()
@@ -73,7 +95,15 @@ public class Target : MonoBehaviour , IVehicle
         }
 
         changeTarget();
-        if (type != TargetType.missle) myTarget.removeMarkedTarget(this);
+        if (type != TargetType.missle)
+        {
+            //myTarget.removeMarkedTarget(this);
+            foreach (var player in Players)
+            {
+                player.removeMarkedTarget(this);
+            }
+
+        }
         Destroy(this.gameObject);
     }
 
@@ -82,7 +112,7 @@ public class Target : MonoBehaviour , IVehicle
         float ptrDmg = Mathf.Clamp(dmg - armour, 0, 500);
         if (currentHealth <= 0) return;
         currentHealth -= ptrDmg;
-        if (currentHealth <= 0) destroySelf();
+        if (currentHealth <= 0) addScore();
     }
 
     public void takeDamage(float dmg, DamageType damageType)
@@ -99,13 +129,4 @@ public class Target : MonoBehaviour , IVehicle
         }
     }
 
-    public Vector3 getVelocity()
-    {
-        return rigid.velocity;
-    }
-    
-    public Vector3 getAVelocity()
-    {
-        return rigid.angularVelocity;
-    }
 }

@@ -205,8 +205,6 @@ public class TurretMount : MonoBehaviour, IVehicle
     {
         switch (damageType)
         {
-
-
             default:
                 takeDamage(dmg);
                 break;

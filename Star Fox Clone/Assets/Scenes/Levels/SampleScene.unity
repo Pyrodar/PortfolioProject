@@ -2044,6 +2044,7 @@ MonoBehaviour:
   - {fileID: 269898189591206140}
   hud:
   - {fileID: 3212747277690150412}
+  - {fileID: 1045762524}
 --- !u!1 &243773969
 GameObject:
   m_ObjectHideFlags: 0
@@ -6544,6 +6545,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e07e8a9948cc4f46b217b7ac43ebdcc, type: 3}
+--- !u!114 &1045762524 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3212747278172850642, guid: 6e07e8a9948cc4f46b217b7ac43ebdcc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1045762523}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a80b23146b42e748b31b7c3f3b69643, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1050703659
 GameObject:
   m_ObjectHideFlags: 0
@@ -12335,12 +12348,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameplayPlane
       objectReference: {fileID: 0}
+    - target: {fileID: 8264223446377356060, guid: 8b007f87161246b45aade0bbc0ac3d9b,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8879472419297759796, guid: 8b007f87161246b45aade0bbc0ac3d9b,
         type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8264223446377356060, guid: 8b007f87161246b45aade0bbc0ac3d9b, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8b007f87161246b45aade0bbc0ac3d9b, type: 3}
 --- !u!20 &269898189591206140 stripped
 Camera:

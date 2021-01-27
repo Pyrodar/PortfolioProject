@@ -7,6 +7,10 @@ public class UIBaseClass : MonoBehaviour
     //Currently only used to differ between InGameHUD and LoadoutHUD
     protected UIType uiType;
     public UIType UIType { get { return uiType; } }
+
+    //required for splitscreen
+    protected int playerNumber;
+    public int PlayerNumber { set { playerNumber = value; } }
 }
 
 public enum UIType

@@ -49,7 +49,7 @@ public class LoadoutHUD : UIBaseClass
                 foreach (TurretData turret in availableTurretsAMS)
                 {
                     TurretMenuButton tb = Instantiate(TurretListPrefabs);
-                    tb.Initialize(turret);
+                    tb.Initialize(turret, playerNumber);
                     tb.transform.SetParent(turretListParent);
 
                     resetScale(tb);
@@ -61,7 +61,7 @@ public class LoadoutHUD : UIBaseClass
                 foreach (TurretData turret in availableTurretsATG)
                 {
                     TurretMenuButton tb = Instantiate(TurretListPrefabs);
-                    tb.Initialize(turret);
+                    tb.Initialize(turret, playerNumber);
                     tb.transform.SetParent(turretListParent);
 
                     resetScale(tb);
@@ -73,7 +73,7 @@ public class LoadoutHUD : UIBaseClass
                 foreach (TurretData turret in availableTurretsMSL)
                 {
                     TurretMenuButton tb = Instantiate(TurretListPrefabs);
-                    tb.Initialize(turret);
+                    tb.Initialize(turret, playerNumber);
                     tb.transform.SetParent(turretListParent);
 
                     resetScale(tb);
@@ -129,7 +129,7 @@ public class LoadoutHUD : UIBaseClass
         if (Input.GetMouseButtonDown(0))
         {
             //Ignore UI Inputs
-            if (EventSystem.current.IsPointerOverGameObject())
+            if (EventSystem.current.IsPointerOverGameObject() || !isMouseInViewport(Input.mousePosition))
             {
                 return;
             }
@@ -150,6 +150,23 @@ public class LoadoutHUD : UIBaseClass
                 deselectModule();
             }
         }
+    }
+
+    bool isMouseInViewport(Vector3 pos)
+    {
+        RectTransform rect = GetComponent<RectTransform>();
+
+        //Vertical splitscreen
+        if (Input.mousePosition.x < rect.sizeDelta.x * playerNumber) return false;
+        if (Input.mousePosition.x > rect.sizeDelta.x + (rect.sizeDelta.x * playerNumber)) return false;
+
+        //Horizontal splitscreen
+        //if (Input.mousePosition.y < rect.sizeDelta.y * playerNumber) return false;
+        //if (Input.mousePosition.y > rect.sizeDelta.y + (rect.sizeDelta.y * playerNumber)) return false;
+
+
+        //Debug.Log("Mouse is in Screen " + playerNumber);
+        return true;
     }
 
     public void selectModule(TurretModule tm)

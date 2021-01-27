@@ -15,9 +15,9 @@ public class TurretModule : MonoBehaviour
     Material HoveredAM;
     Material SelectedAM;
 
-    public void Instantiate()
+    public void Instantiate(int i)
     {
-        HUD = (LoadoutHUD)MapLayoutInfo.Instance.HUD[0];
+        HUD = (LoadoutHUD)MapLayoutInfo.Instance.HUD[i];
 
         //Materials
         RegularAM = Resources.Load("Materials/LoadoutHUD/RegularAM") as Material;

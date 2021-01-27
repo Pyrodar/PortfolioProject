@@ -135,20 +135,24 @@ public class GameStateConnection : MonoBehaviour
         }
 
         players = new Player[gameStateInfo.PlayerNumber];
+        frontlinePlayer = players[0];
 
         for (int i = 0; i < gameStateInfo.PlayerNumber; i++)
         {
             players[i] = Instantiate(gameStateInfo.PlayerObjects[i]);
+            players[i].PlayerNumber = i;
             players[i].transform.position = mapLayoutInfo.LoadoutMapPlayerPositions[i].position;
             DontDestroyOnLoad(players[i]);
             players[i].AddTurretModules();
 
             //Set up cameras
             mapLayoutInfo.HUD[i].gameObject.SetActive(true);
+            mapLayoutInfo.HUD[i].PlayerNumber = i;
             mapLayoutInfo.HUD[i].GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceCamera;
             mapLayoutInfo.HUD[i].GetComponent<Canvas>().worldCamera = mapLayoutInfo.Cameras[i];
-        }
+            setupCameraViewport(mapLayoutInfo.Cameras[i], i);
 
+        }
     }
     #endregion
 
@@ -180,6 +184,7 @@ public class GameStateConnection : MonoBehaviour
             {
                 Debug.LogWarning("Player " + i + " had to be loaded but should already exist");
                 players[i] = Instantiate(gameStateInfo.PlayerObjects[i]);
+                players[i].PlayerNumber = i;
             }
             Debug.Log("Setting HUD " + i);
             //Set player connections
@@ -191,8 +196,9 @@ public class GameStateConnection : MonoBehaviour
             mapLayoutInfo.Cameras[i].gameObject.SetActive(true);
             players[i].HUD = (InGameHUD)mapLayoutInfo.HUD[i];
 
-            //set camera connections
+            //set camera connections and viewport
             mapLayoutInfo.Cameras[i].GetComponent<CameraScript>().setPlayer(players[i]);
+            setupCameraViewport(mapLayoutInfo.Cameras[i], i);
 
             //Set up HUDs
             mapLayoutInfo.HUD[i].gameObject.SetActive(true);
@@ -218,6 +224,16 @@ public class GameStateConnection : MonoBehaviour
         gameplayPlane.GetComponent<FollowTrack>().StartFollow();
     }
     #endregion
+
+    void setupCameraViewport(Camera cam, int player)
+    {
+        cam.gameObject.SetActive(true);
+        //vertical
+        cam.rect = new Rect(.5f * player, 0f, 1f / NumberOfPlayers, 1f);
+
+        //horizontal
+        //cam.rect = new Rect(0f, 0.5f * player, 1f, 1f / NumberOfPlayers);
+    }
 
     #region RestartMap
 

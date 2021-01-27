@@ -17,10 +17,9 @@ public class TurretMenuButton : MonoBehaviour
     TurretData data;
     LoadoutHUD HUD;
 
-    public void Initialize(TurretData td)
+    public void Initialize(TurretData td, int playerNumber)
     {
-        //TODO: Implement for second player
-        HUD = (LoadoutHUD)MapLayoutInfo.Instance.HUD[0];
+        HUD = (LoadoutHUD)MapLayoutInfo.Instance.HUD[playerNumber];
         data = td;
         Icon.sprite = data.Icon;
         turretName.text = data.name;
