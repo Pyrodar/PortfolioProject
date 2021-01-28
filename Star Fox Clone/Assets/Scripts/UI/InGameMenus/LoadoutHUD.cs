@@ -134,11 +134,12 @@ public class LoadoutHUD : UIBaseClass
                 return;
             }
 
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = MapLayoutInfo.Instance.Cameras[playerNumber].ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
             if (Physics.Raycast(ray, out hit, 1000f))
             {
+                Debug.Log($"Clicked on: {hit.collider.name}");
                 //Deselect when no Turret is clicked on. Selecting right turret is handled in the TurretModule Script
                 if (hit.collider.GetComponent<TurretModule>() == null)
                 {
@@ -147,6 +148,7 @@ public class LoadoutHUD : UIBaseClass
             }
             else
             {
+                Debug.Log($"Clicked on: nothing");
                 deselectModule();
             }
         }

@@ -8,10 +8,13 @@ public class GameplayPlane : MonoBehaviour
     Rigidbody rigid;
 
     [SerializeField] Transform[] playerpositions;
-    public Transform[] Playerpositions
-    {
-        get { return playerpositions; }
-    }
+    public Transform[] Playerpositions { get { return playerpositions; } }
+
+                                                  //Front                //Back
+    Vector3[] desiredPositions = new Vector3[2] { new Vector3(0, 0, 0) , new Vector3(0, 0, -15) };
+    bool inPosition;
+    float lerpPosition;
+    float switchTime = 5f; //how long to reach new position
 
     public int MaxWidth
     {
@@ -25,6 +28,8 @@ public class GameplayPlane : MonoBehaviour
     private void Start()
     {
         rigid = GetComponent<Rigidbody>();
+        //playerpositions[0].localPosition = desiredPositions[0];
+        //playerpositions[1].localPosition = desiredPositions[1];
     }
 
     public float relativeZposition(Vector3 pos)
@@ -38,9 +43,41 @@ public class GameplayPlane : MonoBehaviour
         return rigid.velocity;
     }
 
-    public void switchPlayerPositions(int playerNumber)
+    public bool switchPlayerPositions(int playerNumber)
     {
+        if (!inPosition) return false;
+
         Debug.Log("Switch Player positions to " + playerNumber + " in front");
+
+        #region switching desired positions
+        Vector3 vector = desiredPositions[0];
+        desiredPositions[0] = desiredPositions[1];
+        desiredPositions[1] = vector;
+        #endregion
+
+        inPosition = false;
+        lerpPosition = 0;
+
+        return true;
+    }
+
+    /// <summary>
+    /// Only for moving players
+    /// </summary>
+    private void Update()
+    {
+        if (inPosition) return;
+
+        for (int i = 0; i < playerpositions.Length; i++)
+        {
+            playerpositions[i].localPosition = Vector3.Lerp(desiredPositions[(i + 1) % 2], desiredPositions[i], lerpPosition);
+        }
+
+        lerpPosition += (Time.deltaTime / switchTime);
+        if (lerpPosition >= 1)
+        {
+            inPosition = true;
+        }
     }
 
     public void PathEnded()

@@ -93,7 +93,7 @@ public class StationaryWeapon : MonoBehaviour
 
     protected bool isInRange()
     {
-        if (myTarget == null)
+        if (myTarget == null || myTarget.Plane == null)
         { 
             changeTarget(); 
             return false; 
@@ -101,6 +101,7 @@ public class StationaryWeapon : MonoBehaviour
 
         float distance = Vector3.Distance(myTarget.transform.position, transform.position);
         if (distance > data.turretRange || myTarget.Plane.relativeZposition(transform.position) < 20) return false;
+
         return true;
     }
 

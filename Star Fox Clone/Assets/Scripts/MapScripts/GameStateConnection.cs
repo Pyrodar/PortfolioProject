@@ -186,10 +186,11 @@ public class GameStateConnection : MonoBehaviour
                 players[i] = Instantiate(gameStateInfo.PlayerObjects[i]);
                 players[i].PlayerNumber = i;
             }
+
             Debug.Log("Setting HUD " + i);
             //Set player connections
             players[i].transform.SetParent(gameplayPlane.Playerpositions[i]);
-            players[i].transform.position = gameplayPlane.Playerpositions[i].position;
+            players[i].transform.localPosition = Vector3.zero;//gameplayPlane.Playerpositions[i].position;
             players[i].Plane = gameplayPlane;
 
             players[i].Cam = mapLayoutInfo.Cameras[i];
@@ -266,10 +267,6 @@ public class GameStateConnection : MonoBehaviour
     #region Playerpositions
     public Player getFrontlinePlayer()
     {
-        if (frontlinePlayer == null)
-        {
-            SwitchPlayerPositions();
-        }
         return frontlinePlayer;
     }
 
@@ -279,19 +276,18 @@ public class GameStateConnection : MonoBehaviour
 
         if (frontlinePlayer == null)
         {
-            frontlinePlayer = players[0]; 
-        }
-
-        else if (frontlinePlayer = players[0])
-        {
-            frontlinePlayer = players[1];
-            gameplayPlane.switchPlayerPositions(1);
-        }
-
-        else if (frontlinePlayer = players[1])
-        {
             frontlinePlayer = players[0];
-            gameplayPlane.switchPlayerPositions(0);
+            return;
+        }
+
+        else if (frontlinePlayer == players[0])
+        {
+            if(gameplayPlane.switchPlayerPositions(1)) frontlinePlayer = players[1];
+        }
+
+        else if (frontlinePlayer == players[1])
+        {
+            if(gameplayPlane.switchPlayerPositions(0)) frontlinePlayer = players[0];
         }
 
         switchingPlayers();
