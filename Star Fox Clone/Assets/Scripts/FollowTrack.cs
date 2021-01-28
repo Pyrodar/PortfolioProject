@@ -9,7 +9,7 @@ public class FollowTrack : MonoBehaviour
 {
     [SerializeField] float speed;
     [SerializeField] CinemachineDollyCart cart;
-    public bool Go = false;
+    bool go = false;
     Transform cartTransform;
     Rigidbody rigid;
 
@@ -20,28 +20,43 @@ public class FollowTrack : MonoBehaviour
     private void Awake()
     {
         cartTransform = cart.transform;
-        cart.m_Speed = speed;
-        cart.m_Position = 1f;
         rigid = GetComponent<Rigidbody>();
+
+        if (go)
+        {
+            cart.m_Speed = speed;
+            cart.m_Position = 1f;
+        }
     }
 
     private void FixedUpdate()
     {
-        if (!Go) return;
+        if (!go) return;
 
         moveAlongPath();
 
         if (IsEndReached())
         {
-            Go = false;
+            StopFollow();
             trackEnded.Invoke();
         }
     }
 
     public void StartFollow()
     {
-        Go = true;
+        go = true;
         gameObject.SetActive(true);
+
+        if (rigid != null) rigid.drag = 0f;
+
+        cart.m_Speed = speed;
+    }
+
+    public void StopFollow()
+    {
+        go = false;
+        rigid.drag = 1f;
+        cart.m_Speed = 0f;
     }
 
     void moveAlongPath()

@@ -30,6 +30,7 @@ public class GameplayPlane : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         //playerpositions[0].localPosition = desiredPositions[0];
         //playerpositions[1].localPosition = desiredPositions[1];
+        inPosition = true;
     }
 
     public float relativeZposition(Vector3 pos)
@@ -43,12 +44,18 @@ public class GameplayPlane : MonoBehaviour
         return rigid.velocity;
     }
 
-    public bool switchPlayerPositions(int playerNumber)
+    public bool requestPlayerSwitch(int playerNumber)
     {
         if (!inPosition) return false;
 
         Debug.Log("Switch Player positions to " + playerNumber + " in front");
+        forcePlayerSwitch();
 
+        return true;
+    }
+
+    public void forcePlayerSwitch()
+    {
         #region switching desired positions
         Vector3 vector = desiredPositions[0];
         desiredPositions[0] = desiredPositions[1];
@@ -57,8 +64,6 @@ public class GameplayPlane : MonoBehaviour
 
         inPosition = false;
         lerpPosition = 0;
-
-        return true;
     }
 
     /// <summary>
@@ -83,10 +88,17 @@ public class GameplayPlane : MonoBehaviour
     public void PathEnded()
     {
         Debug.Log("Track Has Reached Its End");
+        stopTrack();
         foreach (InGameHUD UI in MapLayoutInfo.Instance.HUD)
         {
             if (UI == null) continue;
             UI.Victory();
         }
+    }
+
+    public void stopTrack()
+    {
+        Debug.Log("STOPPED TRACK");
+        GetComponent<FollowTrack>().StopFollow();
     }
 }

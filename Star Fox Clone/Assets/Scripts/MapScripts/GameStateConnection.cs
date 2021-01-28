@@ -139,11 +139,14 @@ public class GameStateConnection : MonoBehaviour
 
         for (int i = 0; i < gameStateInfo.PlayerNumber; i++)
         {
+            //Create Object
             players[i] = Instantiate(gameStateInfo.PlayerObjects[i]);
-            players[i].PlayerNumber = i;
+            players[i].SetPlayerNumber(i);
             players[i].transform.position = mapLayoutInfo.LoadoutMapPlayerPositions[i].position;
             DontDestroyOnLoad(players[i]);
-            players[i].AddTurretModules();
+
+            //Load Modules
+            players[i].AddTurretModules((LoadoutHUD)mapLayoutInfo.HUD[i]);
 
             //Set up cameras
             mapLayoutInfo.HUD[i].gameObject.SetActive(true);
@@ -184,7 +187,7 @@ public class GameStateConnection : MonoBehaviour
             {
                 Debug.LogWarning("Player " + i + " had to be loaded but should already exist");
                 players[i] = Instantiate(gameStateInfo.PlayerObjects[i]);
-                players[i].PlayerNumber = i;
+                players[i].SetPlayerNumber(i);
             }
 
             Debug.Log("Setting HUD " + i);
@@ -224,11 +227,13 @@ public class GameStateConnection : MonoBehaviour
         }
         gameplayPlane.GetComponent<FollowTrack>().StartFollow();
     }
-    #endregion
 
     void setupCameraViewport(Camera cam, int player)
     {
         cam.gameObject.SetActive(true);
+        cam.cullingMask = ~(1 << 14 - player);  //Ignore other player crosshair
+
+
         //vertical
         cam.rect = new Rect(.5f * player, 0f, 1f / NumberOfPlayers, 1f);
 
@@ -240,9 +245,12 @@ public class GameStateConnection : MonoBehaviour
 
     public void RestartMap()
     {
+        //TODO: reset players
         Debug.Log("Reset Players pls");
         StartLoadingScreen();
     }
+
+    #endregion
 
     #endregion
 
@@ -282,15 +290,23 @@ public class GameStateConnection : MonoBehaviour
 
         else if (frontlinePlayer == players[0])
         {
-            if(gameplayPlane.switchPlayerPositions(1)) frontlinePlayer = players[1];
+            if (players[1] == null || players[1].IsInGame == false) return;
+            if (gameplayPlane.requestPlayerSwitch(1)) 
+            { 
+                frontlinePlayer = players[1];
+                switchingPlayers();
+            }
         }
 
         else if (frontlinePlayer == players[1])
         {
-            if(gameplayPlane.switchPlayerPositions(0)) frontlinePlayer = players[0];
+            if (players[0] == null || players[0].IsInGame == false) return;
+            if (gameplayPlane.requestPlayerSwitch(0))
+            {
+                frontlinePlayer = players[0];
+                switchingPlayers();
+            }
         }
-
-        switchingPlayers();
     }
     #endregion
 
@@ -301,9 +317,8 @@ public class GameStateConnection : MonoBehaviour
 
         if (players.Length > 1 && frontlinePlayer == P)
         {
-            switchingPlayers();
+            forcePlayerSwitch(P);
         }
-
 
         bool stillInGame = false;
         foreach (Player p in players)
@@ -319,9 +334,26 @@ public class GameStateConnection : MonoBehaviour
         if (!stillInGame) GameOver();
     }
 
+    void forcePlayerSwitch(Player oldPlayer)
+    {
+            Debug.Log("ForcingPlayerSwitch");
+            gameplayPlane.forcePlayerSwitch();
+
+            if (oldPlayer == players[0]) frontlinePlayer = players[1];
+            if (oldPlayer == players[1]) frontlinePlayer = players[0];
+            
+            switchingPlayers();
+    }
+
     public void GameOver()
     {
-        Debug.LogWarning("GAME OVER BOYS");
+        Plane.stopTrack();
+        foreach (var hud in MapLayoutInfo.Instance.HUD)
+        {
+            InGameHUD gameHUD = (InGameHUD)hud;
+            gameHUD.GameOver();
+        }
+        //Debug.LogWarning("GAME OVER BOYS");
     }
     #endregion
 }

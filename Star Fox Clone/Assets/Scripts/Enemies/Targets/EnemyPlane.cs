@@ -31,8 +31,13 @@ public class EnemyPlane : Target
 
     public override void destroySelf()
     {
-        track.Go = false;
+        track.StopFollow();
         rigid.useGravity = true;
+        rigid.drag = 0f;
+
+        float hurlRange = 1f;
+
+        rigid.angularVelocity = new Vector3(Random.Range(-hurlRange, hurlRange), Random.Range(-hurlRange, hurlRange), Random.Range(-hurlRange, hurlRange));
 
         foreach (StationaryWeapon sw in stationaryWeapons)
         {

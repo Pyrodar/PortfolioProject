@@ -21,8 +21,8 @@ TagManager:
   - Environment
   - EnemyBullets
   - PlayerBullets
-  - 
-  - 
+  - PlayerOneCrosshair
+  - PlayerTwoCrosshair
   - 
   - 
   - 

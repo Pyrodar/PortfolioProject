@@ -34,7 +34,6 @@ public class Player : MonoBehaviour , IVehicle
 
     //required for splitscreen
     int playerNumber;
-    public int PlayerNumber { set { playerNumber = value; } }
 
     #endregion
 
@@ -198,6 +197,13 @@ public class Player : MonoBehaviour , IVehicle
         #endregion
 
         inGame = true;
+    }
+
+    public void SetPlayerNumber(int i)
+    {
+        playerNumber = i;
+        largeCrossHair.gameObject.layer = 13 + i;
+        smallCrossHair.gameObject.layer = 13 + i;
     }
 
     /// <summary>
@@ -461,7 +467,7 @@ public class Player : MonoBehaviour , IVehicle
     #endregion
 
     #region Non-AMS-Targets
-    //Layermask including Ground, player, playerbullets and other layers ignored by the target marking ray
+    //Layermask including only Environment and Enemies
     LayerMask layermask = 1536;
     void scanCrosshairForTarget()
     {
@@ -675,13 +681,18 @@ public class Player : MonoBehaviour , IVehicle
     /// used in Loadout map to change turrets
     /// </summary>
     #region Loadout
-    public void AddTurretModules()
+    public void AddTurretModules(LoadoutHUD HUD)
     {
+        List<TurretModule> mods = new List<TurretModule>();
         foreach (TurretMount tm in turretMounts)
         {
             TurretModule mod = tm.gameObject.AddComponent<TurretModule>();
             mod.Instantiate(playerNumber);
+
+            mods.Add(mod);
         }
+
+        HUD.SetModuleList = mods;
     }
     
     public void RemoveTurretModules()

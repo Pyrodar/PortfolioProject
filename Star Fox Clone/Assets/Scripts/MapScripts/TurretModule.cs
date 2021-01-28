@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 [RequireComponent(typeof(TurretMount))]
-public class TurretModule : MonoBehaviour
+public class TurretModule : MonoBehaviour, IManeuverableListEntry
 {
     //Empty sphere Object to mark where to click
     //[SerializeField] GameObject clickableAreaMarker;
@@ -59,32 +59,16 @@ public class TurretModule : MonoBehaviour
     {
         if (selected) return;
 
-        //Debug.Log($"Hovering on: {name}");
-        areaMarker.GetComponent<MeshRenderer>().material = HoveredAM;
+        HUD.MarkModule(this);
     }
 
     private void OnMouseExit()
     {
         if (selected) return;
 
-        //Debug.Log($"No longer hovering on: {name}");
-        areaMarker.GetComponent<MeshRenderer>().material = RegularAM;
+        //HUD.UnmarkModule(this);
     }
 
-    public void SelectModule()
-    {
-        Debug.Log($"Selected turret: {name}");
-        selected = true;
-        areaMarker.GetComponent<MeshRenderer>().material = SelectedAM;
-
-    }
-
-    public void DeselectModule()
-    {
-        Debug.Log($"Deselected turret: {name}");
-        selected = false;
-        areaMarker.GetComponent<MeshRenderer>().material = RegularAM;
-    }
 
     #endregion
 
@@ -150,4 +134,32 @@ public class TurretModule : MonoBehaviour
         gameObject.layer = 2;       //IgnoreRaycastLayer
         Destroy(this);
     }
+
+    #region Interface
+
+    public void SelectEntry()
+    {
+        Debug.Log($"Selected turret: {name}");
+        selected = true;
+        areaMarker.GetComponent<MeshRenderer>().material = SelectedAM;
+    }
+
+    public void DeselectEntry()
+    {
+        Debug.Log($"Deselected turret: {name}");
+        selected = false;
+        areaMarker.GetComponent<MeshRenderer>().material = RegularAM;
+    }
+
+    public void MarkEntry()
+    {
+        areaMarker.GetComponent<MeshRenderer>().material = HoveredAM;
+    }
+
+    public void UnmarkEntry()
+    {
+        areaMarker.GetComponent<MeshRenderer>().material = RegularAM;
+    }
+
+    #endregion
 }

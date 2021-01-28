@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -120,12 +121,51 @@ public class LoadoutHUD : UIBaseClass
 
     [SerializeField]Transform TurretsList;
     [SerializeField]TurretDetails CurrentTurret;
-    
+
+    List<TurretModule> modules;
     TurretModule selectedModule;
+
+    CyclingLists cyclingLists;
+
+    [SerializeField] ModuleListIcon ModuleIconPrefab;
+    [SerializeField] Transform modulesLayout;
+    List<ModuleListIcon> moduleIcons;
+    public List<TurretModule> SetModuleList
+    {
+        set
+        {
+            modules = value;
+
+
+            //list modules on the bottom of the screen
+            moduleIcons = new List<ModuleListIcon>();
+            foreach (var mod in modules)
+            {
+                ModuleListIcon icon = Instantiate(ModuleIconPrefab);
+                icon.transform.parent = modulesLayout;
+                icon.transform.localScale = Vector3.one;
+                icon.transform.localPosition = Vector3.zero;
+                moduleIcons.Add(icon);
+            }
+
+            //Create cyclingList element for keyboard/gamepad controlls
+            List<IManeuverableListEntry> a = modules.ToList<IManeuverableListEntry>();
+            List<IManeuverableListEntry> b = moduleIcons.ToList<IManeuverableListEntry>();
+            
+            cyclingLists = new CyclingLists(a);
+            cyclingLists.AddList(b);
+
+        }
+    }
+    bool switchedModule;
+    
 
     private void Update()
     {
-        //TODO: Set proper inputs
+        if (modules == null) return;
+
+
+        #region mouseInputs
         if (Input.GetMouseButtonDown(0))
         {
             //Ignore UI Inputs
@@ -152,6 +192,40 @@ public class LoadoutHUD : UIBaseClass
                 deselectModule();
             }
         }
+        #endregion
+
+        #region ModuleListInputs
+
+        #region get input based on player
+        float axisInput = 0;
+
+        switch (playerNumber)
+        {
+            case 0:
+                axisInput = Input.GetAxisRaw("Horizontal");
+                if (Input.GetButtonDown("MenuEnter")) selectModule();
+                if (Input.GetButtonDown("MenuBack")) deselectModule();
+                break;
+
+            case 1:
+                axisInput = Input.GetAxisRaw("Horizontal-2");
+                if (Input.GetButtonDown("MenuEnter-2")) selectModule();
+                if (Input.GetButtonDown("MenuBack-2")) deselectModule();
+                break;
+        }
+        #endregion
+
+        #region cycle through turret list
+        if (Mathf.Abs(axisInput) == 1 && modules != null)
+        {
+            if (switchedModule) return;
+            cyclingLists.moveSteps(Mathf.FloorToInt(axisInput));
+            switchedModule = true;
+        }
+        else switchedModule = false;
+        #endregion
+
+        #endregion
     }
 
     bool isMouseInViewport(Vector3 pos)
@@ -173,33 +247,61 @@ public class LoadoutHUD : UIBaseClass
 
     public void selectModule(TurretModule tm)
     {
+        #region show TurretList and Descriptions
         TurretsList.gameObject.SetActive(true);
         CurrentTurret.gameObject.SetActive(true);
 
         CurrentTurret.SetDescription(tm.CurrentTurret);
         CurrentTurret.SetQuadrants(tm.GetComponent<TurretMount>()); ;
-
-        //Unmark Turret in UI
-        if(selectedModule != null) selectedModule.DeselectModule();
+        #endregion
 
         selectedModule = tm;
 
-        //Mark Turret in UI
-        selectedModule.SelectModule();
+        for (int i = 0; i < modules.Count; i++)
+        {
+            if (modules[i] == tm)
+            {
+                cyclingLists.moveTo(i);
+                cyclingLists.selectCurrentEntry();
+                continue;
+            }
+        }
+    }
+
+    public void selectModule()
+    {
+        selectModule(modules[cyclingLists.Index]);
     }
 
     public void deselectModule()
     {
+        #region Hide TurretList and Description
         TurretsList.gameObject.SetActive(false);
         CurrentTurret.gameObject.SetActive(false);
+        #endregion
 
         if (selectedModule == null) return;
 
-        //Unmark Turret in UI
-        selectedModule.DeselectModule();
-
+        cyclingLists.deselectCurrentEntry();
 
         selectedModule = null;
+    }
+
+    public void MarkModule(TurretModule tm)
+    {
+        for (int i = 0; i < modules.Count; i++)
+        {
+            if(modules[i] == tm)
+            {
+                cyclingLists.moveTo(i);
+                continue;
+            }
+        }
+    }
+
+    public void UnmarkModule(TurretModule tm)
+    {
+        cyclingLists.jumpOfList();
     }
 
     #endregion
