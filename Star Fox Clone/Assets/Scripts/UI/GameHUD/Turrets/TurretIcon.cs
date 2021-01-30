@@ -8,10 +8,13 @@ public class TurretIcon : MonoBehaviour
     [SerializeField] Image bg;
     [SerializeField] Image fill;
     [SerializeField] Image full;
+    [SerializeField] Image reloadFill;
+    [SerializeField] Text missles;
 
     [SerializeField] Transform HeatWarning;
 
     float respawnTime;
+    float reloadTime;
     //float timeLeft;
 
     public void Initiate(TurretMount turretMount, Sprite sprite)
@@ -25,6 +28,12 @@ public class TurretIcon : MonoBehaviour
         full.sprite = sprite;
 
         respawnTime = turretMount.RespawnTime;
+
+        if (turretMount.MyTurretType == TurretType.Missiles)
+        {
+            missles.gameObject.SetActive(true);
+            reloadTime = turretMount.MyTurret.Data.cooldown;
+        }
     }
 
     void LinkToTurretMount(TurretMount turretMount)
@@ -39,6 +48,7 @@ public class TurretIcon : MonoBehaviour
 
     private void Update()
     {
+        #region Destruction
         if (fill.fillAmount < 1)
         {
             fill.fillAmount += Time.deltaTime / respawnTime;
@@ -47,6 +57,18 @@ public class TurretIcon : MonoBehaviour
         {
             full.gameObject.SetActive(true);
         }
+        #endregion
+
+        #region Missles
+        if (reloadFill.fillAmount < 1)
+        {
+            reloadFill.fillAmount += Time.deltaTime / reloadTime;
+        }
+        else if(reloadFill.gameObject.activeSelf)
+        {
+            reloadFill.gameObject.SetActive(false);
+        }
+        #endregion
     }
 
     public void Destroyed()
@@ -91,33 +113,17 @@ public class TurretIcon : MonoBehaviour
     #endregion
 
     #region missles
-    /*
-    public void AddMisslesToHUD(int maxMissles)
-    {
-        MissleStatus.gameObject.SetActive(true);
 
-        missleIcons = new List<Image>();
-        for (int i = 0; i <maxMissles; i++)
-        {
-            Image ri = Instantiate(rocketIconPrefab);
-            missleIcons.Add(ri);
-            ri.transform.SetParent(MissleIconParent);
-        }
+    public void LoadingMissle()
+    {
+        reloadFill.fillAmount = 0;
+        reloadFill.gameObject.SetActive(true);
     }
 
     public void SetMissles(int amount)
     {
-        foreach (Image im in missleIcons)
-        {
-            im.gameObject.SetActive(false);
-        }
-
-        for (int i = 0; i < amount; i++)
-        {
-            missleIcons[i].gameObject.SetActive(true);
-        }
+        missles.text = amount.ToString();
     }
-    */
     #endregion
-    
+
 }

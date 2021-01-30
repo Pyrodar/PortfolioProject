@@ -247,6 +247,8 @@ public class LoadoutHUD : UIBaseClass
 
     public void selectModule(TurretModule tm)
     {
+        deselectModule();
+
         #region show TurretList and Descriptions
         TurretsList.gameObject.SetActive(true);
         CurrentTurret.gameObject.SetActive(true);
