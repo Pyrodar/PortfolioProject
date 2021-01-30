@@ -6,7 +6,7 @@ TagManager:
   tags:
   - Enemy
   - Environment
-  - PlayerBullet
+  - AMSBullet
   layers:
   - Default
   - TransparentFX
@@ -21,8 +21,8 @@ TagManager:
   - Environment
   - EnemyBullets
   - PlayerBullets
-  - PlayerOneCrosshair
-  - PlayerTwoCrosshair
+  - PlayerOneView
+  - PlayerTwoView
   - 
   - 
   - 

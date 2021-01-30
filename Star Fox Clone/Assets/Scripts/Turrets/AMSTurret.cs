@@ -87,8 +87,8 @@ public class AMSTurret : Turret
             b.transform.rotation = transform.rotation;
 
             Bullet bullet = b.AddComponent<Bullet>();
-            bullet.tag = "PlayerBullet";
-            bullet.Initialize(data.bulletData, data.bulletSpread);
+            bullet.tag = "AMSBullet";
+            bullet.Initialize(data.bulletData, data.bulletSpread, BulletOrigin.Player);
 
             if (data.bulletData.damageType == DamageType.flak)
             {
@@ -114,31 +114,28 @@ public class AMSTurret : Turret
     void applyHeat()
     {
         currentHeat += data.heatBuildup;
-        if (currentHeat > maximumHeat * .6f) myHudIcon.ShowHeatWarning();
-        if (currentHeat > maximumHeat) overheat(true);
+
+        if (currentHeat > maximumHeat * .6f) myHudIcon.ShowHeatWarning(true);   //Start Warning
+        if (currentHeat > maximumHeat) overheat(true);                          //Start Overheat
     }
 
     void coolWeapon()
     {
+        #region reduce Heat
         if (currentHeat <= 0) return;
 
         if(overheated) currentHeat -= Time.deltaTime * data.heatDissipation * 3f;
         else currentHeat -= Time.deltaTime * data.heatDissipation;
+        #endregion
 
-        if (overheated && currentHeat < maximumHeat / 4)
-        {
-            overheat(false);
-        }
-
-        //Debug.Log($"{name} current Heat is at: {currentHeat}");
+        if (!overheated && currentHeat < maximumHeat * .6f) myHudIcon.ShowHeatWarning(false);   //Stop Warning
+        if (overheated && currentHeat < maximumHeat / 4) overheat(false);                       //Stop Overheat
     }
 
     void overheat(bool value)
     {
         overheated = value;
         myHudIcon.ShowHeatShutdown(value);
-        
-        //Debug.Log($"Weapon is overheated: {value}");
     }
 
     #endregion

@@ -5,11 +5,21 @@ public class Bullet : MonoBehaviour
     [SerializeField] private BulletData data;
     private float lifetimeEnd;
 
-    public void Initialize(BulletData _data, float bulletSpread)
+    public void Initialize(BulletData _data, float bulletSpread, BulletOrigin origin)
     {
         data = _data;
         lifetimeEnd = Time.time + data.lifetime;
         Rigidbody r = GetComponent<Rigidbody>();
+        switch (origin)
+        {
+            case BulletOrigin.Player:
+                gameObject.layer = 12; //Player
+                break;
+            default:
+                gameObject.layer = 11; //Enemies
+                break;
+        }
+
 
         Vector3 spread = new Vector3(Random.Range(-bulletSpread, bulletSpread), Random.Range(-bulletSpread, bulletSpread), Random.Range(-bulletSpread, bulletSpread));
         r.AddForce(transform.forward * data.speed + spread, ForceMode.Impulse);
@@ -72,4 +82,10 @@ public class Bullet : MonoBehaviour
         }
         Destroy(this.gameObject);
     }
+}
+
+public enum BulletOrigin
+{
+    Player
+    ,Enemy
 }

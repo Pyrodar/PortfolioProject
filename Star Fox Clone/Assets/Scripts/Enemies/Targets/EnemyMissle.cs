@@ -91,7 +91,7 @@ public class EnemyMissle : Target
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag != "Enemy" && other.tag != "PlayerBullet")
+        if (other.tag != "Enemy" && other.tag != "AMSBullet")
         {
             //Debug.Log("Missle hit something");
             //slowed down detonation to retain the impact of the missle

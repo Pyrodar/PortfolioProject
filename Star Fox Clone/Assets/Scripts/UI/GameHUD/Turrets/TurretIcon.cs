@@ -5,12 +5,14 @@ using UnityEngine.UI;
 
 public class TurretIcon : MonoBehaviour
 {
+    //Destroyed
     [SerializeField] Image bg;
     [SerializeField] Image fill;
     [SerializeField] Image full;
+    //Missles
     [SerializeField] Image reloadFill;
     [SerializeField] Text missles;
-
+    //Heat
     [SerializeField] Transform HeatWarning;
 
     float respawnTime;
@@ -89,25 +91,31 @@ public class TurretIcon : MonoBehaviour
 
     bool warningActive;
 
-    public void ShowHeatWarning()
+    public void ShowHeatWarning(bool value)
     {
-        if (warningActive) return;
-        warningActive = true;
-        StartCoroutine("BlinkingLights");
+        if (value == warningActive) return;
+        warningActive = value;
+
+
+        if (warningActive)
+            StartCoroutine("BlinkingLights");
+        else
+        {
+            StopCoroutine("BlinkingLights");
+            HeatWarning.gameObject.SetActive(false);
+        }
     }
 
     IEnumerator BlinkingLights()
     {
         //Play sound
-        for (int i = 0; i < 20; i++)
-        {
-            HeatWarning.gameObject.SetActive(true);
-            yield return new WaitForSeconds(0.3f);
-            HeatWarning.gameObject.SetActive(false);
-            yield return new WaitForSeconds(0.3f);
-        }
 
-        warningActive = false;
+        HeatWarning.gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.3f);
+        HeatWarning.gameObject.SetActive(false);
+        yield return new WaitForSeconds(0.3f);
+
+        StartCoroutine("BlinkingLights");
     }
 
     #endregion

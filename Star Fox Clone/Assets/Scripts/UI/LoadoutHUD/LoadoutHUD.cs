@@ -142,7 +142,7 @@ public class LoadoutHUD : UIBaseClass
             foreach (var mod in modules)
             {
                 ModuleListIcon icon = Instantiate(ModuleIconPrefab);
-                icon.transform.parent = modulesLayout;
+                icon.transform.SetParent(modulesLayout);
                 icon.transform.localScale = Vector3.one;
                 icon.transform.localPosition = Vector3.zero;
                 moduleIcons.Add(icon);
