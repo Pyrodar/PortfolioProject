@@ -21,6 +21,7 @@ public class EnemyPlane : Target
         track = GetComponent<FollowTrack>();
         base.Start();
         type = TargetType.plane;
+        gameObject.SetActive(false);    //hiding plane until it starts moving
     }
 
     void getCurrentWaypoint()

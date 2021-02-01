@@ -699,6 +699,7 @@ public class Player : MonoBehaviour , IVehicle
     {
         foreach (TurretMount tm in turretMounts)
         {
+            tm.gameObject.layer = 2;       //Ignore Raycast Layer
             if (tm.GetComponent<TurretModule>() != null)
             {
                 tm.GetComponent<TurretModule>().startGame();

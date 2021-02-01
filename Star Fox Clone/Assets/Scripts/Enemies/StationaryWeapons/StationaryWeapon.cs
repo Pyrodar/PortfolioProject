@@ -9,6 +9,9 @@ public class StationaryWeapon : MonoBehaviour
 
     [SerializeField] protected Sprite impactMarkersprite;
 
+    [Tooltip("If synchronized is active there will be no random element to the reload time")]
+    [SerializeField] private bool synchronized;
+
     protected GameObject impactMarker;
 
     protected Player myTarget;
@@ -82,7 +85,8 @@ public class StationaryWeapon : MonoBehaviour
     {
         if (Time.time > timeWhenReloaded)
         {
-            timeWhenReloaded = Time.time + data.cooldown;
+            if (synchronized) timeWhenReloaded = Time.time + data.cooldown;
+            else timeWhenReloaded = Time.time + data.cooldown + Random.Range(0, 1.5f); //Added some randomness so the same weapons don't all fire synchronized
         }
     }
 

@@ -203,7 +203,7 @@ GameObject:
   - component: {fileID: 2702344785408772971}
   - component: {fileID: 2702344785408772948}
   m_Layer: 9
-  m_Name: DollyCart2
+  m_Name: DollyCart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -330,7 +330,7 @@ GameObject:
   - component: {fileID: 2702344785862245080}
   - component: {fileID: 2702344785862245087}
   m_Layer: 9
-  m_Name: DollyTrack2
+  m_Name: DollyTrack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -706,8 +706,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 149e6b57b4d22704b81f3c6a8a198221, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 2
   maxHealth: 1
+  armour: 0
   collisionDamage: 25
   startShootingAfterWaypoint: 0
 --- !u!114 &476622974083868883
@@ -723,7 +723,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 8
-  Go: 0
   cart: {fileID: 2702344785408772948}
   trackEnded:
     m_PersistentCalls:

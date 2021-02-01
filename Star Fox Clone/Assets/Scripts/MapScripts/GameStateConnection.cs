@@ -140,8 +140,8 @@ public class GameStateConnection : MonoBehaviour
         for (int i = 0; i < gameStateInfo.PlayerNumber; i++)
         {
             //Create Object
-            players[i] = Instantiate(gameStateInfo.PlayerObjects[i]);
-            players[i].SetPlayerNumber(i);
+            spawnPlayer(i);
+
             players[i].transform.position = mapLayoutInfo.LoadoutMapPlayerPositions[i].position;
             DontDestroyOnLoad(players[i]);
 
@@ -159,6 +159,12 @@ public class GameStateConnection : MonoBehaviour
     }
     #endregion
 
+    void spawnPlayer(int i)
+    {
+        players[i] = Instantiate(gameStateInfo.PlayerObjects[i]);
+        players[i].SetPlayerNumber(i);
+    }
+
     #region GameMap
     public void LoadGameMap()
     {
@@ -166,9 +172,10 @@ public class GameStateConnection : MonoBehaviour
         StartLoadingScreen();
     }
 
-    void StartGameMap()
+    //public for debugging
+    public void StartGameMap()
     {
-        Debug.Log($"Starting up {levelData.LevelName}");
+        //Debug.Log($"Starting up {levelData.LevelName}");
         
         MapLayoutInfo mapLayoutInfo = MapLayoutInfo.Instance;
         if (mapLayoutInfo == null)
@@ -179,15 +186,16 @@ public class GameStateConnection : MonoBehaviour
 
         gameplayPlane = mapLayoutInfo.Plane;
 
-        if(players == null) players = new Player[2];
-
         for (int i = 0; i < gameStateInfo.PlayerNumber; i++)
         {
-            if (players[i] == null)
+            if (players == null)
             {
+                players = new Player[gameStateInfo.PlayerNumber];
+                frontlinePlayer = players[0];
+
                 Debug.LogWarning("Player " + i + " had to be loaded but should already exist");
-                players[i] = Instantiate(gameStateInfo.PlayerObjects[i]);
-                players[i].SetPlayerNumber(i);
+                spawnPlayer(i);
+                players[i].RemoveTurretModules();
             }
 
             Debug.Log("Setting HUD " + i);

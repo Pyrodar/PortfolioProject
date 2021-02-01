@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6189026944260776684}
   - component: {fileID: 6189026944260776685}
+  - component: {fileID: 5754979230635979140}
   m_Layer: 0
   m_Name: GameStateConnection
   m_TagString: Untagged
@@ -45,3 +46,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerprefabs:
   - {fileID: 7748306175967555314, guid: 936bc5c1754c3dd4da685b71615b8664, type: 3}
+--- !u!114 &5754979230635979140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6189026944260776682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee5b0793c73e85c4c87ed50b1a11fd5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

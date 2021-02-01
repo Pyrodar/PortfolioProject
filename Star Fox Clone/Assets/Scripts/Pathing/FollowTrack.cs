@@ -64,9 +64,9 @@ public class FollowTrack : MonoBehaviour
         rigid.velocity = transform.forward * speed;
         transform.LookAt(cartTransform);
 
-        //ensuring cart always has the same distance (of 1) to this object
+        //ensuring cart always has the same distance (of 4) to this object
         float distance = Vector3.Distance(transform.position, cartTransform.position);
-        cart.m_Speed = speed * ((distance * (-1)) + 2);
+        cart.m_Speed = speed * ((distance * (-1)) + 8);
     }
 
     internal int getCurrentWaypoint()
@@ -78,6 +78,12 @@ public class FollowTrack : MonoBehaviour
     bool IsEndReached()
     {
         return cart.m_Position == cart.m_Path.PathLength;
+    }
+
+    public void debugSpeed(float i)
+    {
+        speed = i;
+        cart.m_Speed = i;
     }
 }
 

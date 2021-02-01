@@ -20,7 +20,6 @@ public class Bullet : MonoBehaviour
                 break;
         }
 
-
         Vector3 spread = new Vector3(Random.Range(-bulletSpread, bulletSpread), Random.Range(-bulletSpread, bulletSpread), Random.Range(-bulletSpread, bulletSpread));
         r.AddForce(transform.forward * data.speed + spread, ForceMode.Impulse);
     }
@@ -40,7 +39,7 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        OnHit(other);
+        if (other.tag != "AMSBullet") OnHit(other);
     }
 
     private void dealDamage(Collider other)

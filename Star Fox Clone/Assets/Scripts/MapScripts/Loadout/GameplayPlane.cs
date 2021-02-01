@@ -3,6 +3,10 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class GameplayPlane : MonoBehaviour
 {
+    //Debugging############
+    [SerializeField] GameStateConnection gamePrefab;
+    //######################
+
     [SerializeField] int maxWidth = 10;
     [SerializeField] int maxHeight = 6;
     Rigidbody rigid;
@@ -25,14 +29,25 @@ public class GameplayPlane : MonoBehaviour
         get { return maxHeight; }
     }
 
+
     private void Start()
     {
+        //Debugging############
+        if (GameStateConnection.Instance == null) loadGameStateCon();
+        //######################
+
         rigid = GetComponent<Rigidbody>();
-        //playerpositions[0].localPosition = desiredPositions[0];
-        //playerpositions[1].localPosition = desiredPositions[1];
         inPosition = true;
     }
 
+    //Debugging#####################
+    void loadGameStateCon()
+    {
+        GameStateConnection game = Instantiate(gamePrefab);
+        game.SetPlayerNumber(1);
+        game.StartGameMap();
+    }
+    //#############################
     public float relativeZposition(Vector3 pos)
     {
         Vector3 relativePos = transform.InverseTransformPoint(pos);
@@ -68,9 +83,23 @@ public class GameplayPlane : MonoBehaviour
 
     /// <summary>
     /// Only for moving players
+    /// And debugging
     /// </summary>
     private void Update()
     {
+        //DEBUGGING##################
+        if (Input.GetKey(KeyCode.G))
+        {
+            GetComponent<FollowTrack>().debugSpeed(24);
+        }
+        else
+        {
+            GetComponent<FollowTrack>().debugSpeed(8);
+        }
+
+        //#########################
+
+
         if (inPosition) return;
 
         for (int i = 0; i < playerpositions.Length; i++)

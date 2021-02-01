@@ -63,7 +63,6 @@ public class Target : MonoBehaviour , IVehicle
         if (GameStateConnection.Instance != null)
         {
             GameStateConnection.Instance.switchingPlayers += changeTarget;
-            //Debug.Log("Added object: " + name + " to list of switch player delegate");
 
             changeTarget();
         }
@@ -79,7 +78,7 @@ public class Target : MonoBehaviour , IVehicle
         myTarget = GameStateConnection.Instance.getFrontlinePlayer();
     }
 
-    protected virtual void addScore()
+    protected virtual void addScoreAndDestroy()
     {
         //TODO: Add destruction to score based on "TargetType"
         destroySelf();
@@ -88,7 +87,7 @@ public class Target : MonoBehaviour , IVehicle
     public virtual void destroySelf()
     {
         GameStateConnection.Instance.switchingPlayers -= changeTarget;
-        //Debug.Log("Removed object: " + name + " to list of switch player delegate");
+
         foreach (StationaryWeapon SW in GetComponentsInChildren<StationaryWeapon>())
         {
             SW.destroySelf();
@@ -97,7 +96,6 @@ public class Target : MonoBehaviour , IVehicle
         changeTarget();
         if (type != TargetType.missle)
         {
-            //myTarget.removeMarkedTarget(this);
             foreach (var player in Players)
             {
                 player.removeMarkedTarget(this);
@@ -109,10 +107,12 @@ public class Target : MonoBehaviour , IVehicle
 
     public void takeDamage(float dmg)
     {
-        float ptrDmg = Mathf.Clamp(dmg - armour, 0, 500);
         if (currentHealth <= 0) return;
+
+        float ptrDmg = Mathf.Clamp(dmg - armour, 0, 500);
         currentHealth -= ptrDmg;
-        if (currentHealth <= 0) addScore();
+        
+        if (currentHealth <= 0) addScoreAndDestroy();
     }
 
     public void takeDamage(float dmg, DamageType damageType)
@@ -128,5 +128,4 @@ public class Target : MonoBehaviour , IVehicle
                 break;
         }
     }
-
 }
