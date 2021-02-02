@@ -9,7 +9,7 @@ public class UIBaseClass : MonoBehaviour
     public UIType UIType { get { return uiType; } }
 
     //required for splitscreen
-    protected int playerNumber;
+    [SerializeField]protected int playerNumber;
     public int PlayerNumber { set { playerNumber = value; } }
 }
 

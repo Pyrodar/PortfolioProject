@@ -17,9 +17,9 @@ public class TurretMenuButton : MonoBehaviour
     TurretData data;
     LoadoutHUD HUD;
 
-    public void Initialize(TurretData td, int playerNumber)
+    public void Initialize(TurretData td, UIBaseClass myHud)
     {
-        HUD = (LoadoutHUD)MapLayoutInfo.Instance.HUD[playerNumber];
+        HUD = (LoadoutHUD)myHud;
         data = td;
         Icon.sprite = data.Icon;
         turretName.text = data.name;

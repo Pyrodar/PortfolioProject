@@ -140,7 +140,9 @@ public class GameStateConnection : MonoBehaviour
         for (int i = 0; i < gameStateInfo.PlayerNumber; i++)
         {
             //Create Object
-            spawnPlayer(i);
+            //spawnPlayer(i);               //calling spawnPlayer funktion has proven to be a bit slow, it should no longer cause bugs but I'll keep it like this for now just in case
+            players[i] = Instantiate(gameStateInfo.PlayerObjects[i]);
+            players[i].SetPlayerNumber(i);
 
             players[i].transform.position = mapLayoutInfo.LoadoutMapPlayerPositions[i].position;
             DontDestroyOnLoad(players[i]);

@@ -50,7 +50,7 @@ public class LoadoutHUD : UIBaseClass
                 foreach (TurretData turret in availableTurretsAMS)
                 {
                     TurretMenuButton tb = Instantiate(TurretListPrefabs);
-                    tb.Initialize(turret, playerNumber);
+                    tb.Initialize(turret, this);
                     tb.transform.SetParent(turretListParent);
 
                     resetScale(tb);
@@ -62,7 +62,7 @@ public class LoadoutHUD : UIBaseClass
                 foreach (TurretData turret in availableTurretsATG)
                 {
                     TurretMenuButton tb = Instantiate(TurretListPrefabs);
-                    tb.Initialize(turret, playerNumber);
+                    tb.Initialize(turret, this);
                     tb.transform.SetParent(turretListParent);
 
                     resetScale(tb);
@@ -74,7 +74,7 @@ public class LoadoutHUD : UIBaseClass
                 foreach (TurretData turret in availableTurretsMSL)
                 {
                     TurretMenuButton tb = Instantiate(TurretListPrefabs);
-                    tb.Initialize(turret, playerNumber);
+                    tb.Initialize(turret, this);
                     tb.transform.SetParent(turretListParent);
 
                     resetScale(tb);
@@ -136,7 +136,6 @@ public class LoadoutHUD : UIBaseClass
         {
             modules = value;
 
-
             //list modules on the bottom of the screen
             moduleIcons = new List<ModuleListIcon>();
             foreach (var mod in modules)
@@ -168,7 +167,7 @@ public class LoadoutHUD : UIBaseClass
         #region mouseInputs
         if (Input.GetMouseButtonDown(0))
         {
-            //Ignore UI Inputs
+            //Ignore UI Inputs and inputs outside this players screen
             if (EventSystem.current.IsPointerOverGameObject() || !isMouseInViewport(Input.mousePosition))
             {
                 return;
@@ -179,7 +178,7 @@ public class LoadoutHUD : UIBaseClass
 
             if (Physics.Raycast(ray, out hit, 1000f))
             {
-                Debug.Log($"Clicked on: {hit.collider.name}");
+                //Debug.Log($"Clicked on: {hit.collider.name}");
                 //Deselect when no Turret is clicked on. Selecting right turret is handled in the TurretModule Script
                 if (hit.collider.GetComponent<TurretModule>() == null)
                 {
@@ -258,6 +257,7 @@ public class LoadoutHUD : UIBaseClass
         #endregion
 
         selectedModule = tm;
+        Debug.Log($"Selected Module is now: {tm.name}");
 
         for (int i = 0; i < modules.Count; i++)
         {
@@ -287,6 +287,8 @@ public class LoadoutHUD : UIBaseClass
         cyclingLists.deselectCurrentEntry();
 
         selectedModule = null;
+
+        Debug.Log($"Selected Module is now nothing");
     }
 
     public void MarkModule(TurretModule tm)
