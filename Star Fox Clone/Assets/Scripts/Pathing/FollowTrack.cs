@@ -1,14 +1,15 @@
-﻿using Cinemachine;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 using UnityEngine.Events;
 
+/// <summary>
+/// This script uses a rigidbodys velocity to move so the velocity can be added to the gameobject for targeting purposes. 
+/// The actual cart following the path uses the "Cart" script
+/// </summary>
 public class FollowTrack : MonoBehaviour
 {
     [SerializeField] float speed;
-    [SerializeField] CinemachineDollyCart cart;
+    [SerializeField] Cart Cart;
     bool go = false;
     Transform cartTransform;
     Rigidbody rigid;
@@ -19,14 +20,19 @@ public class FollowTrack : MonoBehaviour
 
     private void Awake()
     {
-        cartTransform = cart.transform;
+        cartTransform = Cart.transform;
         rigid = GetComponent<Rigidbody>();
 
         if (go)
         {
-            cart.m_Speed = speed;
-            cart.m_Position = 1f;
+            Cart.Speed = speed;
+            Cart.Distance = 1f;
         }
+    }
+
+    private void Start()
+    {
+        transform.position = cartTransform.position;
     }
 
     private void FixedUpdate()
@@ -42,23 +48,6 @@ public class FollowTrack : MonoBehaviour
         }
     }
 
-    public void StartFollow()
-    {
-        go = true;
-        gameObject.SetActive(true);
-
-        if (rigid != null) rigid.drag = 0f;
-
-        cart.m_Speed = speed;
-    }
-
-    public void StopFollow()
-    {
-        go = false;
-        rigid.drag = 1f;
-        cart.m_Speed = 0f;
-    }
-
     void moveAlongPath()
     {
         rigid.velocity = transform.forward * speed;
@@ -66,7 +55,24 @@ public class FollowTrack : MonoBehaviour
 
         //ensuring cart always has the same distance (of 4) to this object
         float distance = Vector3.Distance(transform.position, cartTransform.position);
-        cart.m_Speed = speed * ((distance * (-1)) + 8);
+        Cart.Speed = speed * ((distance * (-1)) + 8);
+    }
+
+    public void StartFollow()
+    {
+        go = true;
+        gameObject.SetActive(true);
+
+        if (rigid != null) rigid.drag = 0f;
+
+        Cart.Speed = speed;
+    }
+
+    public void StopFollow()
+    {
+        go = false;
+        rigid.drag = 1f;
+        Cart.Speed = 0f;
     }
 
     internal int getCurrentWaypoint()
@@ -77,13 +83,14 @@ public class FollowTrack : MonoBehaviour
 
     bool IsEndReached()
     {
-        return cart.m_Position == cart.m_Path.PathLength;
+        return Cart.Distance >= Cart.PathLength;
     }
 
+    
     public void debugSpeed(float i)
     {
         speed = i;
-        cart.m_Speed = i;
+        //Cart.Speed = i;
     }
 }
 

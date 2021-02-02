@@ -160,6 +160,7 @@ MonoBehaviour:
   RotationParent: {fileID: 2702344784734378621}
   data: {fileID: 11400000, guid: a88778103516b564d9299245193fc8dc, type: 2}
   impactMarkersprite: {fileID: 21300000, guid: 0993bb797b95dad4098c1a7ee2ec4c7c, type: 3}
+  synchronized: 0
 --- !u!1 &2702344785142053717
 GameObject:
   m_ObjectHideFlags: 0
@@ -201,9 +202,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2702344785408772971}
-  - component: {fileID: 2702344785408772948}
+  - component: {fileID: 1244384645791598421}
   m_Layer: 9
-  m_Name: DollyCart
+  m_Name: Cart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -216,14 +217,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2702344785408772970}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.09000015}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2702344785142053718}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2702344785408772948
+--- !u!114 &1244384645791598421
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -232,14 +233,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 2702344785408772970}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99a9c787e5d1bbf48a389834c4a9641c, type: 3}
+  m_Script: {fileID: 11500000, guid: 56504ca3c534d1c4f941ebb1a49face0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Path: {fileID: 2702344785862245087}
-  m_UpdateMethod: 0
-  m_PositionUnits: 1
-  m_Speed: 0
-  m_Position: 0
+  Path: {fileID: 816820813151438755}
+  Speed: 0
+  Distance: 0
 --- !u!1 &2702344785724415146
 GameObject:
   m_ObjectHideFlags: 0
@@ -328,9 +327,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2702344785862245080}
-  - component: {fileID: 2702344785862245087}
+  - component: {fileID: 816820813151438755}
   m_Layer: 9
-  m_Name: DollyTrack
+  m_Name: Track
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -344,13 +343,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2702344785862245086}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 4.91}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2702344785142053718}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2702344785862245087
+--- !u!114 &816820813151438755
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -359,20 +358,54 @@ MonoBehaviour:
   m_GameObject: {fileID: 2702344785862245086}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a200b19ca1a9685429ed7e043c28e904, type: 3}
+  m_Script: {fileID: 11500000, guid: 8e5ac92bc18f545cc84cd886ece82b4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Resolution: 20
-  m_Appearance:
-    pathColor: {r: 0, g: 1, b: 0, a: 1}
-    inactivePathColor: {r: 0.34420612, g: 0.7271924, b: 0.8018868, a: 0}
-    width: 0
-  m_Looped: 0
-  m_Waypoints:
-  - position: {x: 0, y: 0, z: -5}
-    roll: 0
-  - position: {x: 0, y: 0, z: 5}
-    roll: 0
+  editorData:
+    _bezierPath:
+      points:
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 1}
+      - {x: 0, y: 0, z: 2}
+      - {x: 0, y: 0, z: 2.5}
+      - {x: 0, y: 0, z: 3}
+      - {x: 0, y: 0, z: 4}
+      - {x: 0, y: 0, z: 5}
+      isClosed: 0
+      space: 0
+      controlMode: 0
+      autoControlLength: 0.3
+      boundsUpToDate: 0
+      bounds:
+        m_Center: {x: 1.8779906, y: 0.25425798, z: -0.07661629}
+        m_Extent: {x: 1.8779906, y: 0.3985955, z: 0.07661629}
+      perAnchorNormalsAngle:
+      - 0
+      - 0
+      - 0
+      globalNormalsAngle: 0
+      flipNormals: 0
+    vertexPathUpToDate: 0
+    vertexPathMaxAngleError: 0.3
+    vertexPathMinVertexSpacing: 0.01
+    showTransformTool: 1
+    showPathBounds: 0
+    showPerSegmentBounds: 0
+    displayAnchorPoints: 1
+    displayControlPoints: 1
+    bezierHandleScale: 1
+    globalDisplaySettingsFoldout: 0
+    keepConstantHandleSize: 0
+    showNormalsInVertexMode: 0
+    showBezierPathInVertexMode: 0
+    showDisplayOptions: 0
+    showPathOptions: 1
+    showVertexPathDisplayOptions: 0
+    showVertexPathOptions: 1
+    showNormals: 0
+    showNormalsHelpInfo: 0
+    tabIndex: 0
+  initialized: 1
 --- !u!1 &2702344785968909916
 GameObject:
   m_ObjectHideFlags: 0
@@ -723,7 +756,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 8
-  cart: {fileID: 2702344785408772948}
+  Cart: {fileID: 1244384645791598421}
   trackEnded:
     m_PersistentCalls:
       m_Calls:
