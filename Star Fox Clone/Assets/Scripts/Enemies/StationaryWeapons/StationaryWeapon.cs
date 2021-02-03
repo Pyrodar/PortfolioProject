@@ -4,15 +4,22 @@ using UnityEngine;
 public class StationaryWeapon : MonoBehaviour
 {
     [SerializeField] protected Transform RotationParent;
+    protected Target myHost;
+    protected Vector3 MyVelocity
+    {
+        get {
+            if (myHost != null) return myHost.Velocity;
+            else return Vector3.zero;    
+        }
+    }
 
     [SerializeField] protected HostileTurretData data;
 
     [SerializeField] protected Sprite impactMarkersprite;
+    protected GameObject impactMarker;
 
     [Tooltip("If synchronized is active there will be no random element to the reload time")]
-    [SerializeField] private bool synchronized;
-
-    protected GameObject impactMarker;
+    [SerializeField] protected bool synchronized;
 
     protected Player myTarget;
 
@@ -73,12 +80,13 @@ public class StationaryWeapon : MonoBehaviour
     }
 
     /// <summary>
-    /// better to override this funktion pretending on whether bullets or missles are used
+    /// uses Bulletspeed, not missleSpeed
+    /// better to override this funktion depending on whether bullets or missles are used
     /// </summary>
     /// <returns>point to shoot in order to hit the target with it's current velocity</returns>
     protected virtual Vector3 getInterceptPoint()
     {
-        return HelperFunctions.Intercept(transform.position, Vector3.zero, data.bulletData.speed, myTarget.transform.position, myTarget.getVelocity());
+        return HelperFunctions.Intercept(transform.position, MyVelocity, data.bulletData.speed, myTarget.transform.position, myTarget.Velocity);
     }
 
     protected void startReloading()
@@ -130,4 +138,9 @@ public class StationaryWeapon : MonoBehaviour
         Destroy(this.gameObject);
     }
     #endregion
+
+    public void SetParent(Target parent)
+    {
+        myHost = parent;
+    }
 }

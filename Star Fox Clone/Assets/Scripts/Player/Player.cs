@@ -70,7 +70,7 @@ public class Player : MonoBehaviour , IVehicle
 
     [SerializeField] float fokusPointRange = 2f;
     [SerializeField] float fokusPointSpeed = 0.04f;
-    [SerializeField] float fokusPointDamping = 2f; 
+    [SerializeField] float fokusPointDamping = 3f; 
     //[SerializeField]
     [Tooltip("how fast the ship returns to looking straight forward again. fastest: 0.0 slowest: 1.0")]
     [Range(0.5f, 1f)]
@@ -113,6 +113,11 @@ public class Player : MonoBehaviour , IVehicle
     List<AquiredTarget> Targets = new List<AquiredTarget>();
     List<AquiredTarget> incomingMissles = new List<AquiredTarget>();
     private int maxTargets = 3;
+
+    public Vector3 Velocity
+    {
+        get { return myRigid.velocity + Plane.getVelocity(); }
+    }
     #endregion
 
 
@@ -179,13 +184,14 @@ public class Player : MonoBehaviour , IVehicle
         foreach (var tur in turretMounts)
         {
             list.AddTurretToList(tur);
+            tur.PlayerReferenz = this;      //Referenz to get Player Velocity
             if (tur.MyTurretType == TurretType.AntiGround) ATGTurrets.Add(tur);
             if (tur.MyTurretType == TurretType.AMS) AMSTurrets.Add(tur);
             if (tur.MyTurretType == TurretType.Missiles)
             {
                 MissleTurrets.Add(tur.getMissleTurret());
 
-                //Adding all available MissleTypes
+                //Listing all available MissleTypes
                 if (!misslesAvailable.Contains(tur.getMissleTurret().Data.missleData))
                 {
                     misslesAvailable.Add(tur.getMissleTurret().Data.missleData);
@@ -217,21 +223,10 @@ public class Player : MonoBehaviour , IVehicle
     void Update()
     {
         if (!inGame) return;
-        //Movement
-        //applyMovement(inputMovement());
-
-        //checkBoundaries();
-
-        //applyRotation(inputRotation());
-
-        //clampFokusPointPosition();
 
         HelperFunctions.LookAt(playerVisuals, shipFokusPoint.position, fokusPointDamping);
 
         gravityAndLiftEffect();
-
-        //Combat
-        //combatInputs();
 
         applyTargetMarkers();
 
@@ -321,11 +316,6 @@ public class Player : MonoBehaviour , IVehicle
 
         Vector3 lift = playerRotationVisuals.TransformDirection(Vector3.up) * gravityAndLift;
         ApplyMovement(lift);
-    }
-
-    public Vector3 getVelocity()
-    {
-        return myRigid.velocity + Plane.getVelocity();
     }
 
     #endregion

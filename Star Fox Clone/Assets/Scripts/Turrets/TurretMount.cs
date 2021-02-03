@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class TurretMount : MonoBehaviour, IVehicle
 {
+    #region quarters
     [SerializeField] bool upperRight;
     [SerializeField] bool lowerRight;
     [SerializeField] bool lowerLeft;
@@ -13,7 +14,9 @@ public class TurretMount : MonoBehaviour, IVehicle
     {
         get { return quarters; }
     }
+    #endregion
 
+    #region health and destruction
     [SerializeField] float TurretHP = 25;
     float currentHP;
     bool recharging = false;
@@ -28,7 +31,9 @@ public class TurretMount : MonoBehaviour, IVehicle
         get { return respawnTime; }
     }
     float timeOfRespawn;
-    
+    #endregion
+
+    #region turret
     [SerializeField]
     Turret myTurret;
     public Turret MyTurret
@@ -39,15 +44,24 @@ public class TurretMount : MonoBehaviour, IVehicle
     {
         get { return myTurret.TurretType; }
     }
-    
-    [SerializeField]
+
+    Player playerReferenz;  //Referenz to get Player Velocity
+    public Player PlayerReferenz { set { playerReferenz = value; } }
+    public Vector3 PlayerVelocity
+    {
+        get { return playerReferenz.Velocity; }
+    }
+    #endregion
+
+    #region Targets
     List<AquiredTarget> Targets = new List<AquiredTarget>();
-    [SerializeField]
     List<AquiredTarget> Missles = new List<AquiredTarget>();
+    #endregion
 
-
+    #region UI
     public delegate void InformUI();
     public InformUI TurretDestroyed;
+    #endregion
 
     #region GeneralSetup
     private void Awake()

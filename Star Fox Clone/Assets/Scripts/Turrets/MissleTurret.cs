@@ -51,7 +51,7 @@ public class MissleTurret : Turret
         Transform tube = transform.GetChild(0);
         //############################################
 
-        M.GetComponent<Rigidbody>().AddForce(tube.forward * data.ejectSpeed + spread, ForceMode.Impulse);
+        M.GetComponent<Rigidbody>().AddForce(tube.forward * data.ejectSpeed + spread, ForceMode.Impulse); //TODO: add plane Velocity
 
         startReloading();
     }

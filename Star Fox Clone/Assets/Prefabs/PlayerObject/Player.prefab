@@ -1760,7 +1760,7 @@ MonoBehaviour:
   rotationSpeed: 0.5
   fokusPointRange: 2
   fokusPointSpeed: 0.038
-  fokusPointDamping: 1.9
+  fokusPointDamping: 3
   fokusPointCenteringTolerance: 0.01
   gravityAndLift: 0.4
   crosshairOffset: {x: 0, y: 0, z: 0}

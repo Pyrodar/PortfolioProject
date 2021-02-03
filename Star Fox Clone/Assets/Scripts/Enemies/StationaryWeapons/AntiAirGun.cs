@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class AntiAirGun : StationaryWeapon
 {
-    protected override Vector3 getInterceptPoint()
-    {
-        return HelperFunctions.Intercept(transform.position, Vector3.zero, data.bulletData.speed, myTarget.transform.position, myTarget.getVelocity());
-    }
-
     protected override IEnumerator Fire()
     {
         startReloading();
@@ -26,7 +21,7 @@ public class AntiAirGun : StationaryWeapon
             b.layer = 11;
 
             Bullet bullet = b.AddComponent<Bullet>();
-            bullet.Initialize(data.bulletData, data.bulletspread, BulletOrigin.Enemy);
+            bullet.Initialize(data.bulletData, data.bulletspread, BulletOrigin.Enemy, MyVelocity);
 
             yield return new WaitForSeconds(data.ejectSpeed);
         }

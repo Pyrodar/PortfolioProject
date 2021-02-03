@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class MissleLauncher : StationaryWeapon
 {
+    /// <summary>
+    /// Aims above the player, so the missles can descend into the AMS cover
+    /// </summary>
     protected override void aim()
     {
         Vector3 offset = new Vector3(0, 5, 0);
@@ -13,9 +16,13 @@ public class MissleLauncher : StationaryWeapon
         HelperFunctions.LookAt(transform, InterceptPoint + offset, data.turretSpeed, RotationParent.up);
     }
 
+    /// <summary>
+    /// uses Missle speed
+    /// </summary>
+    /// <returns></returns>
     protected override Vector3 getInterceptPoint()
     {
-        return HelperFunctions.Intercept(transform.position, Vector3.zero, data.missleData.speed, myTarget.transform.position, myTarget.getVelocity());
+        return HelperFunctions.Intercept(transform.position, Vector3.zero, data.missleData.speed, myTarget.transform.position, myTarget.Velocity);
     }
 
     protected override IEnumerator Fire()
@@ -27,11 +34,12 @@ public class MissleLauncher : StationaryWeapon
         Collider c = HelperFunctions.GetObjectInSights(transform.position, ic, dist);
         if (c != null) yield return null;
 
-        startReloading();
-        //waiting for the turret to turn
-        yield return new WaitForSeconds(2f);
+        //waiting for the turret to turn. randomizing it to desynchronize enemies
+        if(synchronized) yield return new WaitForSeconds(2f);
+        else yield return new WaitForSeconds(Random.Range(1.5f, 3f));
 
-        //Debug.Log("Fire!");
+        startReloading();
+
 
         for (int i = 0; i < data.bulletsPerSalvo; i++)
         {

@@ -5,7 +5,7 @@ public class Bullet : MonoBehaviour
     [SerializeField] private BulletData data;
     private float lifetimeEnd;
 
-    public void Initialize(BulletData _data, float bulletSpread, BulletOrigin origin)
+    public void Initialize(BulletData _data, float bulletSpread, BulletOrigin origin, Vector3 startingVelocity)
     {
         data = _data;
         lifetimeEnd = Time.time + data.lifetime;
@@ -21,7 +21,7 @@ public class Bullet : MonoBehaviour
         }
 
         Vector3 spread = new Vector3(Random.Range(-bulletSpread, bulletSpread), Random.Range(-bulletSpread, bulletSpread), Random.Range(-bulletSpread, bulletSpread));
-        r.AddForce(transform.forward * data.speed + spread, ForceMode.Impulse);
+        r.AddForce((transform.forward * data.speed + spread) + startingVelocity, ForceMode.Impulse);
     }
 
     public void SetFlakTime(float time)

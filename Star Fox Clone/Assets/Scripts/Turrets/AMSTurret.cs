@@ -88,7 +88,7 @@ public class AMSTurret : Turret
 
             Bullet bullet = b.AddComponent<Bullet>();
             bullet.tag = "AMSBullet";
-            bullet.Initialize(data.bulletData, data.bulletSpread, BulletOrigin.Player);
+            bullet.Initialize(data.bulletData, data.bulletSpread, BulletOrigin.Player, Vector3.zero); //Not yet adding ships Velocity here
 
             if (data.bulletData.damageType == DamageType.flak)
             {

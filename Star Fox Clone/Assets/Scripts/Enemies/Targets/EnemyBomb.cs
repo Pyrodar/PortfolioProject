@@ -29,7 +29,7 @@ public class EnemyBomb : Target
     {
         if (data.speed <= 0) return;
 
-        Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, Vector3.zero, data.speed, myTarget.transform.position, myTarget.getVelocity());
+        Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, Vector3.zero, data.speed, myTarget.transform.position, myTarget.Velocity);
         Vector3 direction = Vector3.Normalize(interceptCourse - transform.position);
         rigid.AddForce(direction * data.speed * Time.deltaTime);
     }

@@ -739,7 +739,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 149e6b57b4d22704b81f3c6a8a198221, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 1
+  maxHealth: 9
   armour: 0
   collisionDamage: 25
   startShootingAfterWaypoint: 0

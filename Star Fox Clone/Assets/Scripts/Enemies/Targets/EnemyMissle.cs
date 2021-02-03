@@ -54,14 +54,14 @@ public class EnemyMissle : Target
         if (isInArmingRange())
         {
             //calculating missle course with double player Velocity for better tracking
-            Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, Velocity, data.speed, myTarget.transform.position, myTarget.getVelocity() * 2);
+            Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, Velocity, data.speed, myTarget.transform.position, myTarget.Velocity * 2);
             HelperFunctions.LookAt(transform, interceptCourse, data.turnSpeed);
         }
         else
         {
             //Aiming Above the player first for better AMS coverage
             Vector3 AMSArea = myTarget.transform.position + new Vector3(0, 5, 0);
-            Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, Velocity, data.speed, AMSArea, myTarget.getVelocity());
+            Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, Velocity, data.speed, AMSArea, myTarget.Velocity);
             HelperFunctions.LookAt(transform, interceptCourse, data.turnSpeed);
         }
     }

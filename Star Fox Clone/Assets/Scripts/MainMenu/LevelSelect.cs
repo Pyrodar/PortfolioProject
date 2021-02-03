@@ -7,8 +7,13 @@ using UnityEngine.UI;
 public class LevelSelect : MonoBehaviour
 {
     [SerializeField] List<LevelData> levelsAvailable;
-    [SerializeField] GridLayoutGroup levelGrid;
+    //[SerializeField] GridLayoutGroup levelGrid;
+    [SerializeField] LevelMap map;
+
+
     [SerializeField] LevelSelectButton levelButtonPrefab;
+
+
     [SerializeField] Transform StartLevelPopUp;
     [SerializeField] Text StartLevelPopUpText;
 
@@ -16,12 +21,7 @@ public class LevelSelect : MonoBehaviour
 
     private void Start()
     {
-        foreach (LevelData ld in levelsAvailable)
-        {
-            LevelSelectButton lsb = Instantiate(levelButtonPrefab);
-            lsb.Instantiate(ld, this);
-            lsb.transform.SetParent(levelGrid.transform);
-        }
+        DislplayLevels();
     }
 
     public void OpenPopUp(LevelData ld)
@@ -41,5 +41,29 @@ public class LevelSelect : MonoBehaviour
     {
         selectedLevel = null;
         StartLevelPopUp.gameObject.SetActive(false);
+    }
+
+    void DislplayLevels()
+    {
+        /*
+        foreach (LevelData ld in levelsAvailable)
+        {
+            LevelSelectButton lsb = Instantiate(levelButtonPrefab);
+            lsb.Instantiate(ld, this);
+            lsb.transform.SetParent(levelGrid.transform);
+        }*/
+        for (int i = 0; i < levelsAvailable.Count; i++)
+        {
+            LevelSelectButton lsb = Instantiate(levelButtonPrefab);
+            lsb.Instantiate(levelsAvailable[i], this);
+
+            if (map.getLevelPosition(i) == null)
+            {
+                Debug.LogError($"Map has no position assigned for level {i}");
+                return;
+            }
+            lsb.transform.SetParent(map.getLevelPosition(i));
+            lsb.transform.localPosition = Vector3.zero;
+        }
     }
 }

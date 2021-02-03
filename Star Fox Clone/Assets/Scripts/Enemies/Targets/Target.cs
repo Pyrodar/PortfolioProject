@@ -84,27 +84,6 @@ public class Target : MonoBehaviour , IVehicle
         destroySelf();
     }
 
-    public virtual void destroySelf()
-    {
-        GameStateConnection.Instance.switchingPlayers -= changeTarget;
-
-        foreach (StationaryWeapon SW in GetComponentsInChildren<StationaryWeapon>())
-        {
-            SW.destroySelf();
-        }
-
-        changeTarget();
-        if (type != TargetType.missle)
-        {
-            foreach (var player in Players)
-            {
-                player.removeMarkedTarget(this);
-            }
-
-        }
-        Destroy(this.gameObject);
-    }
-
     public void takeDamage(float dmg)
     {
         if (currentHealth <= 0) return;
@@ -126,6 +105,35 @@ public class Target : MonoBehaviour , IVehicle
             default:
                 takeDamage(dmg);
                 break;
+        }
+    }
+
+    public virtual void destroySelf()
+    {
+        GameStateConnection.Instance.switchingPlayers -= changeTarget;
+
+        foreach (StationaryWeapon SW in GetComponentsInChildren<StationaryWeapon>())
+        {
+            SW.destroySelf();
+        }
+
+        changeTarget();
+        if (type != TargetType.missle)
+        {
+            foreach (var player in Players)
+            {
+                player.removeMarkedTarget(this);
+            }
+
+        }
+        Destroy(this.gameObject);
+    }
+
+    public void setWeaponParent()
+    {
+        foreach (StationaryWeapon SW in GetComponentsInChildren<StationaryWeapon>())
+        {
+            SW.destroySelf();
         }
     }
 }
