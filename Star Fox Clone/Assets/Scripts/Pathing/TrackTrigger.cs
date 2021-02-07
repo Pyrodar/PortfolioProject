@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TrackTrigger : MonoBehaviour
 {
-    [SerializeField] List<FollowTrack> connectedPlanes;
+    [SerializeField] UnityEvent OnTrigger;
     [SerializeField] float relativeZStartingDistance;
 
     GameplayPlane plane;
     bool active = false;
+
     void Start()
     {
         plane = GameStateConnection.Instance.Plane;
@@ -31,9 +33,6 @@ public class TrackTrigger : MonoBehaviour
     void activate()
     {
         active = true;
-        foreach (var plane in connectedPlanes)
-        {
-            plane.StartFollow();
-        }
+        OnTrigger?.Invoke();
     }
 }
