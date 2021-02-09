@@ -87,19 +87,6 @@ public class GameplayPlane : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        //DEBUGGING##################
-        if (Input.GetKey(KeyCode.G))
-        {
-            GetComponent<FollowTrack>().debugSpeed(24);
-        }
-        else
-        {
-            GetComponent<FollowTrack>().debugSpeed(8);
-        }
-
-        //#########################
-
-
         if (inPosition) return;
 
         for (int i = 0; i < playerpositions.Length; i++)

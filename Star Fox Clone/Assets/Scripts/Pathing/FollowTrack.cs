@@ -1,42 +1,55 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.Events;
+using PathCreation;
 
 /// <summary>
 /// This script uses a rigidbodys velocity to move so the velocity can be added to the gameobject for targeting purposes. 
-/// The actual cart following the path uses the "Cart" script
+/// NO LONGER ACCURATE[The actual cart following the path uses the "Cart" script]
+/// removed the cart, since only the position on the path was beeing used
 /// </summary>
 public class FollowTrack : MonoBehaviour
 {
     [SerializeField] float speed;
-    [SerializeField] Cart Cart;
+    [SerializeField] PathCreator Path;
+    float pathPosition = 0;
+    Vector3 PathPosition
+    {
+        get { return Path.path.GetPointAtDistance(pathPosition); }
+    }
     bool go = false;
-    Transform cartTransform;
+
     Rigidbody rigid;
 
-
-    public TrackEndEvent trackEnded;
+    public UnityEvent trackEnded;
 
 
     private void Awake()
     {
-        cartTransform = Cart.transform;
         rigid = GetComponent<Rigidbody>();
-
-        if (go)
-        {
-            Cart.Speed = speed;
-            Cart.Distance = 1f;
-        }
     }
 
     private void Start()
     {
-        transform.position = cartTransform.position;
+        transform.position = PathPosition;
+        pathPosition = 8;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
+        //DEBUGGING##################
+        if (Input.GetKey(KeyCode.G))
+        {
+            debugSpeed(24);
+        }
+        else
+        {
+            debugSpeed(8);
+        }
+
+        //#########################
+
+
         if (!go) return;
 
         moveAlongPath();
@@ -51,11 +64,13 @@ public class FollowTrack : MonoBehaviour
     void moveAlongPath()
     {
         rigid.velocity = transform.forward * speed;
-        transform.LookAt(cartTransform);
+        pathPosition += speed * Time.deltaTime;
+        transform.LookAt(PathPosition);
 
-        //ensuring cart always has the same distance (of 4) to this object
-        float distance = Vector3.Distance(transform.position, cartTransform.position);
-        Cart.Speed = speed * ((distance * (-1)) + 8);
+        //ensuring cart always has a certain distance to this object
+        float distance = Vector3.Distance(transform.position, PathPosition);
+        if(distance > 8.5) pathPosition -= speed * Time.deltaTime;
+        if(distance < 7.5) pathPosition += speed * Time.deltaTime;
     }
 
     public void StartFollow()
@@ -64,15 +79,12 @@ public class FollowTrack : MonoBehaviour
         gameObject.SetActive(true);
 
         if (rigid != null) rigid.drag = 0f;
-
-        Cart.Speed = speed;
     }
 
     public void StopFollow()
     {
         go = false;
         rigid.drag = 1f;
-        Cart.Speed = 0f;
     }
 
     internal int getCurrentWaypoint()
@@ -83,17 +95,12 @@ public class FollowTrack : MonoBehaviour
 
     bool IsEndReached()
     {
-        return Cart.Distance >= Cart.PathLength;
+        return pathPosition >= Path.path.length;
     }
 
     
     public void debugSpeed(float i)
     {
         speed = i;
-        //Cart.Speed = i;
     }
 }
-
-
-[Serializable]
-public class TrackEndEvent : UnityEvent { }

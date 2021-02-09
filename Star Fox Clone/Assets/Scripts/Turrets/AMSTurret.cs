@@ -88,12 +88,12 @@ public class AMSTurret : Turret
 
             Bullet bullet = b.AddComponent<Bullet>();
             bullet.tag = "AMSBullet";
-            bullet.Initialize(data.bulletData, data.bulletSpread, BulletOrigin.Player, Vector3.zero); //Not yet adding ships Velocity here
-
-            if (data.bulletData.damageType == DamageType.flak)
+            
+            if (data.bulletData.damageType == DamageType.flak)                                                          //TODO: add player Velocity to bullet
             {
-                bullet.SetFlakTime(flakDelay);
+                bullet.Initialize(data.bulletData, data.bulletSpread, BulletOrigin.Player, Vector3.zero, flakDelay);    //setting bullet timer manually for flak ammunition
             }
+            else bullet.Initialize(data.bulletData, data.bulletSpread, BulletOrigin.Player, Vector3.zero);              //using regular bullet timer
 
             applyHeat();
         }

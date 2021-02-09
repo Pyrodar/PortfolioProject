@@ -69,7 +69,8 @@ public class StationaryWeapon : MonoBehaviour
         yield return new WaitForSeconds(1);
     }
     /// <summary>
-    /// Aims directly for the player. Missles have their own funktion, since they are designed to shoot above the player and descend afterwards
+    /// Aims directly for the player. Should be overwritten in each subtype
+    /// Missles have their own funktion, since they are designed to shoot above the player and descend afterwards
     /// </summary>
     protected virtual void aim()
     {
@@ -96,6 +97,11 @@ public class StationaryWeapon : MonoBehaviour
             if (synchronized) timeWhenReloaded = Time.time + data.cooldown;
             else timeWhenReloaded = Time.time + data.cooldown + Random.Range(0, 1.5f); //Added some randomness so the same weapons don't all fire synchronized
         }
+    }
+
+    protected void skipLoading()
+    {
+        timeWhenReloaded = 0;
     }
 
     protected bool isLoaded()

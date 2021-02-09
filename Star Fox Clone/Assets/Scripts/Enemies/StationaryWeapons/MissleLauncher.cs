@@ -27,33 +27,38 @@ public class MissleLauncher : StationaryWeapon
 
     protected override IEnumerator Fire()
     {
+        startReloading();       //Has to be set to reload to avoid calling 2 or more instances of this Coroutine
+
         Vector3 ic = getInterceptPoint();
 
         //checking for free LOS
         float dist = Vector3.Distance(transform.position, ic) * 0.75f;  //Reducing range to avoid being blocked by objects around the plane
         Collider c = HelperFunctions.GetObjectInSights(transform.position, ic, dist);
-        if (c != null) yield return null;
-
-        //waiting for the turret to turn. randomizing it to desynchronize enemies
-        if(synchronized) yield return new WaitForSeconds(2f);
-        else yield return new WaitForSeconds(Random.Range(1.5f, 3f));
-
-        startReloading();
-
-
-        for (int i = 0; i < data.bulletsPerSalvo; i++)
+        if (c != null)
         {
-            GameObject M = GameObject.Instantiate(data.missleData.visuals);
-            EnemyMissle MC = M.AddComponent<EnemyMissle>();
-            MC.Initialize(data.missleData);
+            skipLoading();      //Immidiately ready to fire again
+            yield return null;
+        }
+        else
+        {
+            //waiting for the turret to turn. randomizing it to desynchronize enemies
+            if (synchronized) yield return new WaitForSeconds(2f);
+            else yield return new WaitForSeconds(Random.Range(1.5f, 3f));
 
-            M.transform.position = transform.position;
-            M.transform.rotation = transform.rotation;
+            for (int i = 0; i < data.bulletsPerSalvo; i++)
+            {
+                GameObject M = GameObject.Instantiate(data.missleData.visuals);
+                EnemyMissle MC = M.AddComponent<EnemyMissle>();
+                MC.Initialize(data.missleData);
 
-            Vector3 spread = new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f));
-            M.GetComponent<Rigidbody>().AddForce(transform.forward * data.ejectSpeed + spread, ForceMode.Impulse);
+                M.transform.position = transform.position;
+                M.transform.rotation = transform.rotation;
 
-            yield return new WaitForSeconds(0.5f);
+                Vector3 spread = new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f));
+                M.GetComponent<Rigidbody>().AddForce(transform.forward * data.ejectSpeed + spread, ForceMode.Impulse);
+
+                yield return new WaitForSeconds(0.5f);
+            }
         }
     }
 }

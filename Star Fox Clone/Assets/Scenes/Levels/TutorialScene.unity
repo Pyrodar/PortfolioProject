@@ -12640,6 +12640,11 @@ PrefabInstance:
       propertyPath: Cart
       value: 
       objectReference: {fileID: 626535415}
+    - target: {fileID: 269898189591589315, guid: 8b007f87161246b45aade0bbc0ac3d9b,
+        type: 3}
+      propertyPath: Path
+      value: 
+      objectReference: {fileID: 170089495}
     - target: {fileID: 269898189591589324, guid: 8b007f87161246b45aade0bbc0ac3d9b,
         type: 3}
       propertyPath: gamePrefab

@@ -21,12 +21,17 @@ public class Bullet : MonoBehaviour
         }
 
         Vector3 spread = new Vector3(Random.Range(-bulletSpread, bulletSpread), Random.Range(-bulletSpread, bulletSpread), Random.Range(-bulletSpread, bulletSpread));
-        r.AddForce((transform.forward * data.speed + spread) + startingVelocity, ForceMode.Impulse);
+        Vector3 vel = (transform.forward * data.speed + spread) + startingVelocity;
+        r.AddForce(vel, ForceMode.Impulse);
+
+        //Tell Server about new Bullet
+        if (Server.Instance != null) Server.Instance.SpawnBullet(data, transform.position, vel, origin);
     }
 
-    public void SetFlakTime(float time)
+    public void Initialize(BulletData _data, float bulletSpread, BulletOrigin origin, Vector3 startingVelocity, float flaktime)
     {
-        lifetimeEnd = Time.time + time;
+        Initialize(_data, bulletSpread, origin, startingVelocity);
+        lifetimeEnd = Time.time + flaktime;
     }
 
     private void Update()
