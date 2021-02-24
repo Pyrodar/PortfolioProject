@@ -5,7 +5,7 @@ using PathCreation;
 
 /// <summary>
 /// This script uses a rigidbodys velocity to move so the velocity can be added to the gameobject for targeting purposes. 
-/// NO LONGER ACCURATE[The actual cart following the path uses the "Cart" script]
+/// [The actual cart following the path uses the "Cart" script]NO LONGER ACCURATE
 /// removed the cart, since only the position on the path was beeing used
 /// </summary>
 public class FollowTrack : MonoBehaviour
@@ -95,7 +95,7 @@ public class FollowTrack : MonoBehaviour
 
     bool IsEndReached()
     {
-        return pathPosition >= Path.path.length;
+        return pathPosition >= Path.path.length - 1;
     }
 
     

@@ -22,8 +22,6 @@ public class CyclingLists
         get { return mE; }
         set
         {
-            if (selected) return;
-
             if (value < 0)
             {
                 unmarkEntry(mE);
@@ -38,12 +36,13 @@ public class CyclingLists
     }
     public int Index { get { if (mE < 0) return 0; return mE; } }
 
-    bool selected;
+    #region construction and destruction
 
-    public CyclingLists(List<IManeuverableListEntry> firstList)
+    public CyclingLists(List<IManeuverableListEntry> firstList = null)
     {
         affectedLists = new List<List<IManeuverableListEntry>>();
-        affectedLists.Add(firstList);
+             
+        if(firstList != null) affectedLists.Add(firstList);
 
         //Mark no entry
         MarkedEntry = -1;
@@ -51,7 +50,7 @@ public class CyclingLists
 
     public void AddList(List<IManeuverableListEntry> list)
     {
-        if (list.Count != affectedLists[0].Count)
+        if (affectedLists.Count > 0 && list.Count != affectedLists[0].Count)
         {
             Debug.LogWarning($"Added list does not have the same amount of entries as the base list: \nBase list has {affectedLists[0].Count}, while added list has {list.Count} entries");
             return;
@@ -60,11 +59,26 @@ public class CyclingLists
         affectedLists.Add(list);
     }
 
-    #region public move and select functions
+    public void RemoveList(List<IManeuverableListEntry> list)
+    {
+        affectedLists.Remove(list);
+    }
+
+    public void ResetLists(List<IManeuverableListEntry> list)
+    {
+        affectedLists.Clear();
+
+        AddList(list);
+
+    }
+
+    #endregion
+
+    #region public functions
+
+    #region Move and Select
     public void moveSteps(int steps)
     {
-        if (selected) return;
-
         if (MarkedEntry < 0)                        //when no entry was marked we start at the first entry
         {
             MarkedEntry = 0;
@@ -88,7 +102,6 @@ public class CyclingLists
 
     public void jumpOfList()
     {
-        if (selected) return;
         MarkedEntry = -1;                           //Unmarks every entry on the list
     }
 
@@ -97,7 +110,6 @@ public class CyclingLists
         if (MarkedEntry < 0) return;    //no entry marked
 
         selectEntry(MarkedEntry);
-        selected = true;
     }
 
     public void deselectCurrentEntry()
@@ -105,8 +117,34 @@ public class CyclingLists
         if (MarkedEntry < 0) return;    //no entry marked
 
         deselectEntry(MarkedEntry);
-        selected = false;
     }
+
+    #endregion
+
+    #region Find and IndexOf
+
+    public bool Find(IManeuverableListEntry entry)
+    {
+        if (IndexOf(entry) < 0) return false;
+        return true;
+    }
+
+    public int IndexOf(IManeuverableListEntry entry)
+    {
+        foreach (var list in affectedLists)
+        {
+            foreach (var item in list)
+            {
+                if (item == entry)
+                {
+                    return list.IndexOf(item);
+                }
+            }
+        }
+        return -1;
+    }
+    #endregion
+
     #endregion
 
     #region privat select and mark funktions

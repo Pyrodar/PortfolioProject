@@ -357,14 +357,6 @@ public class Player : MonoBehaviour , IVehicle
                 break;
         }
     }
-
-    public void applyCombatInputs(INPUTS input, int i)
-    {
-        if (input == INPUTS.Missle)
-        {
-            FireMissle(i);
-        }
-    }
         #endregion
 
     #region health and death
@@ -635,7 +627,7 @@ public class Player : MonoBehaviour , IVehicle
 
     #region OwnMissles
     
-    void FireMissle(int target)
+    public void FireMissle(int target)
     {
         if (Targets.Count < target + 1) return;
         //shoots a missle if there is a single turret with missles left

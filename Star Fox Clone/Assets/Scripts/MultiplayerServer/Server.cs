@@ -18,6 +18,13 @@ public class Server : MonoBehaviour
     }
     #endregion
 
+    #region PlaneSynchronisation
+    public void SynchronizePlanePosition(float ditanceTraveled)
+    {
+
+    }
+    #endregion
+
     #region Players
     public void UpdatePlayerPosition(Player player)
     {

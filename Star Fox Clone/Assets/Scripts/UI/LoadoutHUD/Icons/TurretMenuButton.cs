@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TurretMenuButton : MonoBehaviour
+public class TurretMenuButton : MonoBehaviour, IManeuverableListEntry
 {
     [SerializeField] Image Background;
     [SerializeField] Image Icon;
@@ -38,6 +38,28 @@ public class TurretMenuButton : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    public void MarkEntry()
+    {
+        Background.color = Color.red;
+    }
+
+    public void UnmarkEntry()
+    {
+        Background.color = Color.white;
+    }
+
+    public void SelectEntry()
+    {
+        TurretButtonClicked();
+        //UnmarkEntry();
+        HUD.deselectModule();
+    }
+
+    public void DeselectEntry()
+    {
+        //HUD.deselectModule();
     }
 
     public void TurretButtonClicked()

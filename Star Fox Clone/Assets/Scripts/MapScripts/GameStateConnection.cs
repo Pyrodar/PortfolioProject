@@ -23,6 +23,8 @@ public class GameStateConnection : MonoBehaviour
         DontDestroyOnLoad(this);
         gameStateInfo = new GameStateInfo("path");
         Debug.Log("Loaded Gamestate");
+
+        SceneManager.sceneLoaded += OnLevelLoaded;
     }
     #endregion
 
@@ -85,9 +87,9 @@ public class GameStateConnection : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
-    private void OnLevelWasLoaded(int level)
+    private void OnLevelLoaded(Scene level, LoadSceneMode loadSceneMode)
     {
-        if (level == 0) return;     //skipping loading screen
+        if (level.buildIndex == 0) return;     //skipping loading screen
 
         Debug.Log("Done Loading");
         DoneLoading();
@@ -199,6 +201,8 @@ public class GameStateConnection : MonoBehaviour
                 spawnPlayer(i);
                 players[i].RemoveTurretModules();
             }
+
+            GetComponent<InputManagment>().ConnectInputs();     //Setting up PlayerInputs
 
             Debug.Log("Setting HUD " + i);
             //Set player connections

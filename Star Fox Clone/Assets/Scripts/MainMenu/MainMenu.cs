@@ -30,6 +30,7 @@ public class MainMenu : MonoBehaviour
     public void SettingsButton()
     {
         Return.SetActive(true);
+        Debug.Log("Showing Settings");
         Settings.SetActive(true);
         Main.SetActive(false);
     }

@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class LevelSelect : MonoBehaviour
 {
     [SerializeField] List<LevelData> levelsAvailable;
-    //[SerializeField] GridLayoutGroup levelGrid;
     [SerializeField] LevelMap map;
 
 

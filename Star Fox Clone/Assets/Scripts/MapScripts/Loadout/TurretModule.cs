@@ -52,7 +52,7 @@ public class TurretModule : MonoBehaviour, IManeuverableListEntry
     {
         Debug.Log($"Klicked on: {name}");
         //Opening Turret Menu
-        HUD.selectModule(this);
+        HUD.selectEntry(this);
     }
 
     private void OnMouseEnter()

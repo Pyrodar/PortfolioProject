@@ -34,6 +34,21 @@ public class LevelMap : MonoBehaviour
         checkBounds();
     }
 
+    private void Update()
+    {
+        if (Mathf.Abs(Input.GetAxis("Right Joystick X")) > 0.05f || Mathf.Abs(Input.GetAxis("Right Joystick Y")) > 0.05f)
+        {
+            Vector3 value = Vector3.zero;
+            value.x += Input.GetAxis("Right Joystick X");
+            value.y += Input.GetAxis("Right Joystick Y");
+
+            transform.localPosition += value * MyCanvas.scaleFactor * 5; //no Idea why I need to multiply it with 5
+
+
+            checkBounds();
+        }
+    }
+
     void checkBounds()
     {
         Vector2 maxSize = (Map.rectTransform.sizeDelta / 2) - new Vector2(Screen.width / 2, Screen.height / 2);

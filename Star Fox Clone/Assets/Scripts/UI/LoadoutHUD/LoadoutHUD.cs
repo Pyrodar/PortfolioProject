@@ -16,8 +16,12 @@ public class LoadoutHUD : UIBaseClass
     [SerializeField] TurretMenuButton TurretListPrefabs;
     [SerializeField] Transform turretListParent;
 
+    List<TurretMenuButton> turretButtons;
+
     private void Start()
     {
+        turretButtons = new List<TurretMenuButton>();
+        turretsListed = new CyclingLists();
         clearList();
         fillListAll();
     }
@@ -29,11 +33,14 @@ public class LoadoutHUD : UIBaseClass
         {
             GameObject.Destroy(child.gameObject);
         }
+
+        turretButtons.Clear();
     }
 
     void fillListAll()
     {
         Debug.Log("Listing All");
+
         fillList(TurretType.AMS);
         fillList(TurretType.AntiGround);
         fillList(TurretType.Missiles);
@@ -52,6 +59,7 @@ public class LoadoutHUD : UIBaseClass
                     TurretMenuButton tb = Instantiate(TurretListPrefabs);
                     tb.Initialize(turret, this);
                     tb.transform.SetParent(turretListParent);
+                    turretButtons.Add(tb);
 
                     resetScale(tb);
                 }
@@ -64,6 +72,7 @@ public class LoadoutHUD : UIBaseClass
                     TurretMenuButton tb = Instantiate(TurretListPrefabs);
                     tb.Initialize(turret, this);
                     tb.transform.SetParent(turretListParent);
+                    turretButtons.Add(tb);
 
                     resetScale(tb);
                 }
@@ -76,6 +85,7 @@ public class LoadoutHUD : UIBaseClass
                     TurretMenuButton tb = Instantiate(TurretListPrefabs);
                     tb.Initialize(turret, this);
                     tb.transform.SetParent(turretListParent);
+                    turretButtons.Add(tb);
 
                     resetScale(tb);
                 }
@@ -84,6 +94,8 @@ public class LoadoutHUD : UIBaseClass
             default:
                 break;
         }
+
+        turretsListed.ResetLists(turretButtons.ToList<IManeuverableListEntry>());
     }
 
     //After assigning new parent RectTransform seems to get messed up
@@ -125,7 +137,9 @@ public class LoadoutHUD : UIBaseClass
     List<TurretModule> modules;
     TurretModule selectedModule;
 
-    CyclingLists cyclingLists;
+    CyclingLists modulesListed;     //List for Modules
+    CyclingLists turretsListed;     //List for TurretSelection
+    CyclingLists maneuveredList;    //Currently active List
 
     [SerializeField] ModuleListIcon ModuleIconPrefab;
     [SerializeField] Transform modulesLayout;
@@ -151,11 +165,13 @@ public class LoadoutHUD : UIBaseClass
             List<IManeuverableListEntry> a = modules.ToList<IManeuverableListEntry>();
             List<IManeuverableListEntry> b = moduleIcons.ToList<IManeuverableListEntry>();
             
-            cyclingLists = new CyclingLists(a);
-            cyclingLists.AddList(b);
+            maneuveredList = new CyclingLists(a);
+            maneuveredList.AddList(b);
 
+            modulesListed = maneuveredList;
         }
-    }
+    }   //Creating modulesListed object
+
     bool switchedModule;
     
 
@@ -202,13 +218,13 @@ public class LoadoutHUD : UIBaseClass
         {
             case 0:
                 axisInput = Input.GetAxisRaw("Horizontal");
-                if (Input.GetButtonDown("MenuEnter")) selectModule();
+                if (Input.GetButtonDown("MenuEnter")) selectEntry();
                 if (Input.GetButtonDown("MenuBack")) deselectModule();
                 break;
 
             case 1:
                 axisInput = Input.GetAxisRaw("Horizontal-2");
-                if (Input.GetButtonDown("MenuEnter-2")) selectModule();
+                if (Input.GetButtonDown("MenuEnter-2")) selectEntry();
                 if (Input.GetButtonDown("MenuBack-2")) deselectModule();
                 break;
         }
@@ -218,7 +234,7 @@ public class LoadoutHUD : UIBaseClass
         if (Mathf.Abs(axisInput) == 1 && modules != null)
         {
             if (switchedModule) return;
-            cyclingLists.moveSteps(Mathf.FloorToInt(axisInput));
+            maneuveredList.moveSteps(Mathf.FloorToInt(axisInput));
             switchedModule = true;
         }
         else switchedModule = false;
@@ -244,6 +260,29 @@ public class LoadoutHUD : UIBaseClass
         return true;
     }
 
+    public void selectEntry()
+    {
+        //ERROR: dont select modules list entry
+        if(maneuveredList == modulesListed) selectEntry(modules[maneuveredList.Index]);
+        else maneuveredList.selectCurrentEntry();
+    }
+
+    public void selectEntry(IManeuverableListEntry entry)
+    {
+        TurretModule turretModule = (TurretModule)entry;
+        if (turretModule != null)
+        {
+            selectModule(turretModule);
+            return;
+        }
+
+        TurretMenuButton button = (TurretMenuButton)entry;
+        if(button != null)
+        {
+            button.SelectEntry();
+        }
+    }
+
     public void selectModule(TurretModule tm)
     {
         deselectModule();
@@ -253,26 +292,29 @@ public class LoadoutHUD : UIBaseClass
         CurrentTurret.gameObject.SetActive(true);
 
         CurrentTurret.SetDescription(tm.CurrentTurret);
-        CurrentTurret.SetQuadrants(tm.GetComponent<TurretMount>()); ;
+        CurrentTurret.SetQuadrants(tm.GetComponent<TurretMount>());
         #endregion
 
+
         selectedModule = tm;
-        Debug.Log($"Selected Module is now: {tm.name}");
 
         for (int i = 0; i < modules.Count; i++)
         {
             if (modules[i] == tm)
             {
-                cyclingLists.moveTo(i);
-                cyclingLists.selectCurrentEntry();
+                maneuveredList.moveTo(i);
+                maneuveredList.selectCurrentEntry();
                 continue;
             }
         }
-    }
 
-    public void selectModule()
-    {
-        selectModule(modules[cyclingLists.Index]);
+        #region Switch maneuvered List to available Turrets
+
+        maneuveredList = turretsListed;
+        maneuveredList.moveSteps(0);                        //Mark current entry
+        Debug.Log($"Maneuvered List is now: turretsListed");
+
+        #endregion
     }
 
     public void deselectModule()
@@ -282,9 +324,18 @@ public class LoadoutHUD : UIBaseClass
         CurrentTurret.gameObject.SetActive(false);
         #endregion
 
+        #region Switch maneuvered List back to modules
+
+        maneuveredList.deselectCurrentEntry();
+
+        maneuveredList = modulesListed;
+        Debug.Log($"Maneuvered List is now: modulesListed");
+
+        #endregion
+
         if (selectedModule == null) return;
 
-        cyclingLists.deselectCurrentEntry();
+        maneuveredList.deselectCurrentEntry();
 
         selectedModule = null;
 
@@ -297,7 +348,7 @@ public class LoadoutHUD : UIBaseClass
         {
             if(modules[i] == tm)
             {
-                cyclingLists.moveTo(i);
+                maneuveredList.moveTo(i);
                 continue;
             }
         }
@@ -305,7 +356,7 @@ public class LoadoutHUD : UIBaseClass
 
     public void UnmarkModule(TurretModule tm)
     {
-        cyclingLists.jumpOfList();
+        maneuveredList.jumpOfList();
     }
 
     #endregion

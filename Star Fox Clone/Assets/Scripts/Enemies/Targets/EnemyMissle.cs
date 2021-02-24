@@ -7,6 +7,8 @@ public class EnemyMissle : Target
 
     bool lostTarget = false;
 
+    Player lockedTarget;
+
     public void Initialize(MissleData data)
     {
         this.data = data;
@@ -54,7 +56,7 @@ public class EnemyMissle : Target
         if (isInArmingRange())
         {
             //calculating missle course with double player Velocity for better tracking
-            Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, Velocity, data.speed, myTarget.transform.position, myTarget.Velocity * 2);
+            Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, Velocity, data.speed, lockedTarget.transform.position, lockedTarget.Velocity * 2);
             HelperFunctions.LookAt(transform, interceptCourse, data.turnSpeed);
         }
         else
@@ -85,9 +87,10 @@ public class EnemyMissle : Target
         return true;
     }
     
-    bool isInArmingRange()
+    bool isInArmingRange()          //Checks if the target is in range to engage directly and locks the target so switching who's in front doesn't allow for easy dodging
     {
         if(Vector3.Distance(transform.position, myTarget.transform.position) > data.armingRange || Time.time < timeWhenArmed) return false;
+        lockedTarget = myTarget;
         return true;
     }
 
@@ -96,7 +99,7 @@ public class EnemyMissle : Target
         if (other.tag != "Enemy" && other.tag != "AMSBullet")
         {
             //Debug.Log("Missle hit something");
-            //slowed down detonation to retain the impact of the missle
+            //delayed detonation to retain the impact of the missle TODO: just add knockback
             Invoke("detonate", 0.05f);
         }
     }
