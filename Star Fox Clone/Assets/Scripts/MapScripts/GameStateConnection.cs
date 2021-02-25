@@ -91,7 +91,7 @@ public class GameStateConnection : MonoBehaviour
     {
         if (level.buildIndex == 0) return;     //skipping loading screen
 
-        Debug.Log("Done Loading");
+        //Debug.Log("Done Loading");
         DoneLoading();
     }
 
@@ -400,7 +400,7 @@ class GameStateInfo
 
     void LoadSaveFile(string file)
     {
-        Debug.Log("loading: " + file);
+        Debug.Log("loading: nothing");
 
         //#################
         //TODO: Load a save file

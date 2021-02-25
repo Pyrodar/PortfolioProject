@@ -11,6 +11,11 @@ public class OptionsMenu : MonoBehaviour
     OptionsSetup currentSetup;
 
     [SerializeField] AudioMixer audioMixer;
+    [SerializeField] AudioMixerGroup masterMixer;
+    [SerializeField] AudioMixerGroup musicMixer;
+    [SerializeField] AudioMixerGroup sfxMixer;
+    [SerializeField] AudioMixerGroup voiceMixer;
+    [SerializeField] AudioSource testSoundSource;
 
     [SerializeField] Dropdown qualityDropDown;
     [SerializeField] Dropdown resolutionDropdown;
@@ -46,7 +51,7 @@ public class OptionsMenu : MonoBehaviour
 
         qualityDropDown.AddOptions(options);
         qualityDropDown.SetValueWithoutNotify(QualitySettings.GetQualityLevel());
-        currentSetup.quality = QualitySettings.GetQualityLevel();
+        currentSetup.Quality = QualitySettings.GetQualityLevel();
 
         #endregion
 
@@ -63,7 +68,7 @@ public class OptionsMenu : MonoBehaviour
 
         resolutionDropdown.AddOptions(resOptions);
         resolutionDropdown.SetValueWithoutNotify(currentRes);
-        currentSetup.resolution = new Vector2Int(Screen.currentResolution.width, Screen.currentResolution.height);
+        currentSetup.Resolution = currentRes;
 
         #endregion
 
@@ -76,7 +81,7 @@ public class OptionsMenu : MonoBehaviour
         }
         fullscreenModeDropdown.AddOptions(fullOptions);
         fullscreenModeDropdown.SetValueWithoutNotify((int)Screen.fullScreenMode);
-        currentSetup.fullscreen = Screen.fullScreenMode;
+        currentSetup.Fullscreen = Screen.fullScreenMode;
 
         #endregion
 
@@ -94,34 +99,27 @@ public class OptionsMenu : MonoBehaviour
         float temp;
 
         audioMixer.GetFloat("MasterVolume", out temp);
-        MasterVolumeSlider.SetValueWithoutNotify(temp);
         MasterVolumeSlider.maxValue = 20f;
         MasterVolumeSlider.minValue = -60f;
-        currentSetup.MasterVolume = temp;
+        MasterVolumeSlider.SetValueWithoutNotify(temp);
 
         audioMixer.GetFloat("MusicVolume", out temp);
-        MusicVolumeSlider.SetValueWithoutNotify(temp);
         MusicVolumeSlider.maxValue = 20f;
         MusicVolumeSlider.minValue = -60f;
-        currentSetup.MusicVolume = temp;
+        MusicVolumeSlider.SetValueWithoutNotify(temp);
 
         audioMixer.GetFloat("SFXVolume", out temp);
-        SFXVolumeSlider.SetValueWithoutNotify(temp);
         SFXVolumeSlider.maxValue = 20f;
         SFXVolumeSlider.minValue = -60f;
-        currentSetup.SFXVolume = temp;
+        SFXVolumeSlider.SetValueWithoutNotify(temp);
 
         audioMixer.GetFloat("VoiceVolume", out temp);
-        VoiceVolumeSlider.SetValueWithoutNotify(temp);
         VoiceVolumeSlider.maxValue = 20f;
         VoiceVolumeSlider.minValue = -60f;
-        currentSetup.VoiceVolume = temp;
-
-        //AudioPanel.SetActive(false);
+        VoiceVolumeSlider.SetValueWithoutNotify(temp);
 
         #endregion
-
-        gameObject.SetActive(false);
+        nextSetup.CopyValues(currentSetup);
     }
 
     /// <summary>
@@ -130,21 +128,17 @@ public class OptionsMenu : MonoBehaviour
     /// <param name="setup"></param>
     public void loadSetup(OptionsSetup setup)
     {
-        #region AudioSettings
-
-        audioMixer.SetFloat("MasterVolume", setup.MasterVolume);
-        audioMixer.SetFloat("MusicVolume", setup.MusicVolume);
-        audioMixer.SetFloat("SFXVolume", setup.SFXVolume);
-        audioMixer.SetFloat("VoiceVolume", setup.VoiceVolume);
-
-        #endregion
-
         #region VideoSettings
 
-        QualitySettings.SetQualityLevel(setup.quality);
+        qualityDropDown.SetValueWithoutNotify(setup.Quality);
+        resolutionDropdown.SetValueWithoutNotify(setup.Resolution);
+        fullscreenModeDropdown.SetValueWithoutNotify((int)setup.Fullscreen);
 
-        Screen.SetResolution(setup.resolution.x, setup.resolution.y, setup.fullscreen);
+        QualitySettings.SetQualityLevel(setup.Quality);
 
+        int x = Screen.resolutions[setup.Resolution].width;
+        int y = Screen.resolutions[setup.Resolution].height;
+        Screen.SetResolution(x, y, setup.Fullscreen);
 
         #endregion
     }
@@ -154,22 +148,20 @@ public class OptionsMenu : MonoBehaviour
     {
         Debug.Log("Quality changed: " + QualitySettings.names[dropValue]);
 
-        nextSetup.quality = dropValue;
+        nextSetup.Quality = dropValue;
     }
 
     public void ResolutionChanged(int dropValue)
     {
         Debug.Log("Resolution changed: " + Screen.resolutions[dropValue].ToString());
-        int x = Screen.resolutions[dropValue].width;
-        int y = Screen.resolutions[dropValue].height;
 
-        nextSetup.resolution = new Vector2Int(x, y);
+        nextSetup.Resolution = dropValue;
     }
 
     public void FullscreenModeChanged(int dropValue)
     {
         Debug.Log("FullscreenMode changed: " + Enum.GetName(typeof(FullScreenMode), dropValue));
-        nextSetup.fullscreen = (FullScreenMode)dropValue;
+        nextSetup.Fullscreen = (FullScreenMode)dropValue;
     }
     #endregion
 
@@ -177,23 +169,50 @@ public class OptionsMenu : MonoBehaviour
 
     public void MasterVolumeChanged(float value)
     {
-        nextSetup.MasterVolume = value;
+        Debug.Log("MasterVol changed");
+        audioMixer.SetFloat("MasterVolume", value);
+        playTestSound(0);
     }
     public void SFXVolumeChanged(float value)
     {
-        nextSetup.SFXVolume = value;
+        Debug.Log("SFXVol changed");
+        audioMixer.SetFloat("SFXVolume", value);
+        playTestSound(1);
     }
 
     public void MusicVolumeChanged(float value)
     {
-        nextSetup.MusicVolume = value;
+        Debug.Log("MusicVol changed");
+        audioMixer.SetFloat("MusicVolume", value);
+        playTestSound(2);
     }
 
     public void VoiceVolumeChanged(float value)
     {
-        nextSetup.VoiceVolume = value;
+        Debug.Log("VoiceVol changed");
+        audioMixer.SetFloat("VoiceVolume", value);
+        playTestSound(3);
     }
 
+    void playTestSound(int mixerGroup)
+    {
+        switch (mixerGroup)
+        {
+            case 0:     //Master
+                testSoundSource.outputAudioMixerGroup = masterMixer;
+                break;
+            case 1:     //SFX
+                testSoundSource.outputAudioMixerGroup = sfxMixer;
+                break;
+            case 2:     //Music
+                testSoundSource.outputAudioMixerGroup = musicMixer;
+                break;
+            case 3:     //Voice
+                testSoundSource.outputAudioMixerGroup = voiceMixer;
+                break;
+        }
+        testSoundSource.Play();
+    }
     #endregion
 
     #region ConfirmPopUp
@@ -202,17 +221,16 @@ public class OptionsMenu : MonoBehaviour
     /// </summary>
     public void ApplyButtonPressed()
     {
-        if (nextSetup == currentSetup) return;
+        if (nextSetup.Equals(currentSetup)) return;
         loadSetup(nextSetup);
-        OpenPopUp();
+        openPopUp();
     }
     /// <summary>
     /// stops the timer and saves the new setup
     /// </summary>
     public void ConfirmButtonPressed()
     {
-        currentSetup = nextSetup;
-        ConfirmPopUp.SetActive(false);
+        currentSetup.CopyValues(nextSetup);
         cancelTimer();
     }
     /// <summary>
@@ -221,15 +239,14 @@ public class OptionsMenu : MonoBehaviour
     public void CancelNewSetup()
     {
         loadSetup(currentSetup);
-        nextSetup = currentSetup;
-        ConfirmPopUp.SetActive(false);
+        nextSetup.CopyValues(currentSetup);
         cancelTimer();
     }
 
     #region Timer
     float endTime = 0;
 
-    void OpenPopUp()
+    void openPopUp()
     {
         ConfirmPopUp.SetActive(true);
         endTime = Time.time + 10f;
@@ -238,6 +255,7 @@ public class OptionsMenu : MonoBehaviour
     void cancelTimer()
     {
         endTime = 0;
+        ConfirmPopUp.SetActive(false);
     }
 
     private void Update()
@@ -254,29 +272,30 @@ public class OptionsMenu : MonoBehaviour
 
 public class OptionsSetup : IEquatable<OptionsSetup>
 {
-    public FullScreenMode fullscreen;
-    public int quality;
-    public Vector2Int resolution;
-
-    public float MasterVolume;
-    public float MusicVolume;
-    public float SFXVolume;
-    public float VoiceVolume;
+    public FullScreenMode Fullscreen;
+    public int Quality;
+    public int Resolution;
 
     public bool Equals(OptionsSetup other)
     {
-        if (other.fullscreen == fullscreen
-            && other.quality == quality
-            && other.resolution == resolution
-            && other.MasterVolume == MasterVolume
-            && other.MusicVolume == MusicVolume
-            && other.SFXVolume == SFXVolume
-            && other.VoiceVolume == VoiceVolume
+        Debug.Log("Comparing settings:");
+        if (other.Fullscreen == Fullscreen
+            && other.Quality == Quality
+            && other.Resolution == Resolution
             )
         {
+            Debug.Log("Identical");
             return true;
         }
 
+        Debug.Log("Different");
         return false;
+    }
+
+    public void CopyValues(OptionsSetup setup)
+    {
+        Fullscreen = setup.Fullscreen;
+        Quality = setup.Quality;
+        Resolution = setup.Resolution;
     }
 }
