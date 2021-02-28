@@ -1069,7 +1069,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1054699919}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2198,6 +2198,16 @@ PrefabInstance:
     - target: {fileID: 8017466922102958199, guid: 6e81696c988708a49a1b60e1094c1bf3,
         type: 3}
       propertyPath: MyCanvas
+      value: 
+      objectReference: {fileID: 419016524}
+    - target: {fileID: 8017466922102958199, guid: 6e81696c988708a49a1b60e1094c1bf3,
+        type: 3}
+      propertyPath: m_EventSystem
+      value: 
+      objectReference: {fileID: 2055656787}
+    - target: {fileID: 8017466922102958199, guid: 6e81696c988708a49a1b60e1094c1bf3,
+        type: 3}
+      propertyPath: myCanvas
       value: 
       objectReference: {fileID: 419016524}
     - target: {fileID: 8148306016187188419, guid: 6e81696c988708a49a1b60e1094c1bf3,
