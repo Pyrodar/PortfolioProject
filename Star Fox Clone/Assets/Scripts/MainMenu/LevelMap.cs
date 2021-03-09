@@ -52,7 +52,7 @@ public class LevelMap : MonoBehaviour
             marker.position += value * Time.deltaTime * markerSpeed;
         }
 
-        if (Input.GetButtonDown("MenuEnter-2"))
+        if (Input.GetButtonDown("MenuEnter-2") || Input.GetMouseButtonDown(0))
         {
             //Set up the new Pointer Event
             PointerEventData m_PointerEventData = new PointerEventData(m_EventSystem);

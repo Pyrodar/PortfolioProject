@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 
 public interface IVehicle
 {
@@ -27,7 +28,7 @@ public enum TargetType
 #endregion
 
 [RequireComponent(typeof(Rigidbody))]
-public class Target : MonoBehaviour , IVehicle
+public class Target : NetworkBehaviour , IVehicle
 {
     #region Type
     protected TargetType type;
@@ -66,6 +67,8 @@ public class Target : MonoBehaviour , IVehicle
 
             changeTarget();
         }
+
+        setWeaponParent();
     }
 
     protected void changeTarget()
@@ -133,7 +136,24 @@ public class Target : MonoBehaviour , IVehicle
     {
         foreach (StationaryWeapon SW in GetComponentsInChildren<StationaryWeapon>())
         {
-            SW.destroySelf();
+            SW.SetParent(this);
         }
     }
+
+    #region NetworkSpawning
+    [Command]
+    public void CmdSpawn(GameObject projectile)
+    {
+        if (!isServer) return;
+
+        NetworkServer.Spawn(projectile);
+        RpcSpawn(projectile);
+    }
+
+    [ClientRpc]
+    void RpcSpawn(GameObject projectile)
+    {
+        NetworkServer.Spawn(projectile);
+    }
+    #endregion
 }

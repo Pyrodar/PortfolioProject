@@ -46,7 +46,7 @@ public class TurretMount : MonoBehaviour, IVehicle
     }
 
     Player playerReferenz;  //Referenz to get Player Velocity
-    public Player PlayerReferenz { set { playerReferenz = value; } }
+    public Player PlayerReferenz { get { return playerReferenz; } set { playerReferenz = value; } }
     public Vector3 PlayerVelocity
     {
         get { return playerReferenz.Velocity; }

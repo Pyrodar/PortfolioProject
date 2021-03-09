@@ -55,6 +55,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -137,10 +138,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae6fa609b8e0a194aaa569060a2911eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myMount: {fileID: 0}
   data: {fileID: 11400000, guid: ec73a79f9ea60df4d87eaeb485f505f8, type: 2}
-  bulletData: {fileID: 11400000, guid: c9346d8db8067ab4ba8a85d3a15577b9, type: 2}
-  bullet: {fileID: 3157765972114974939, guid: de11529405eab7047b2ad6e69e3c9eee, type: 3}
-  TurretRange: 60
 --- !u!1 &8347921153731058990
 GameObject:
   m_ObjectHideFlags: 0
@@ -196,6 +195,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

@@ -1,21 +1,22 @@
 ﻿using UnityEngine;
+using Mirror;
 
 public class Turret : MonoBehaviour
 {
     [SerializeField]protected TurretMount myMount;
 
     [SerializeField]protected TurretData data;
+
     public TurretData Data
     {
         get { return data; }
         set { data = value; }
     }
 
-    public TurretType TurretType
-    {
-        get { return data.turretType; }
-    }
+    public TurretType TurretType { get { return data.turretType; } }
 
+
+    protected Player myPlayer { get { return myMount.PlayerReferenz; } }
     protected TurretIcon myHudIcon;
     protected float cooldownEnd = 0f;
 
@@ -30,7 +31,9 @@ public class Turret : MonoBehaviour
     {
         HelperFunctions.LookAt(transform, target, data.turretSpeed, myMount.transform.up);
     }
-
+    /// <summary>
+    /// Will be overwritten for each turret subtype
+    /// </summary>
     public virtual void Fire()
     {
         //Debug.Log("Firing");

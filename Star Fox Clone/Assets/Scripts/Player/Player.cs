@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using Mirror;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour , IVehicle
+public class Player : NetworkBehaviour , IVehicle
 {
     /// <summary>
     /// Everything needed for the game to work
@@ -19,6 +20,7 @@ public class Player : MonoBehaviour , IVehicle
     {
         set { cam = value; }
     }
+    [SyncVar]
     bool inGame;
     public bool IsInGame
     {
@@ -85,7 +87,9 @@ public class Player : MonoBehaviour , IVehicle
     #endregion
 
     #region Combat
-    [SerializeField] float maxHealth = 100;
+    [SerializeField][SyncVar]
+    float maxHealth = 100;
+    [SyncVar]
     float currentHealth;
     public float CurrentHealth
     {
@@ -243,6 +247,7 @@ public class Player : MonoBehaviour , IVehicle
 
     public void ApplyMovement(Vector3 input)
     {
+        if (!hasAuthority) return;
         myRigid.AddForce(input * moveSpeed);
         updateFokusPoint(input);
 
@@ -266,6 +271,7 @@ public class Player : MonoBehaviour , IVehicle
 
     public void ApplyRotation(float addedRotation)
     {
+        if (!hasAuthority) return;
         addedRotation *= rotationSpeed;
         largeCrossHair.Rotate(Vector3.forward, addedRotation);
         playerRotationVisuals.Rotate(Vector3.forward, addedRotation);
@@ -344,6 +350,8 @@ public class Player : MonoBehaviour , IVehicle
 
     public void applyCombatInputs(INPUTS input)
     {
+        if (!hasAuthority) return;
+
         switch (input)
         {
             case INPUTS.Scan:
@@ -629,6 +637,8 @@ public class Player : MonoBehaviour , IVehicle
     
     public void FireMissle(int target)
     {
+        if (!hasAuthority) return;
+
         if (Targets.Count < target + 1) return;
         //shoots a missle if there is a single turret with missles left
         for (int i = 0; i < MissleTurrets.Count; i++)
@@ -747,6 +757,59 @@ public class Player : MonoBehaviour , IVehicle
         hud.MissleIcon.UpdateMissle(currentMissles);
     }
 
+
+    #endregion
+
+    #region NetworkSpawning
+    [Command]
+    public void CmdSpawnBullet(SmallTurretData data, Vector3 position, Quaternion rotation, float flakDelay)
+    {
+        GameObject b = GameObject.Instantiate(data.bulletData.visuals);
+        b.transform.position = position;
+        b.transform.rotation = rotation;
+
+        Bullet bullet = b.AddComponent<Bullet>();
+        bullet.tag = "AMSBullet";
+
+        if (data.bulletData.damageType == DamageType.flak)                                                          //TODO: add player Velocity to bullet
+        {
+            bullet.Initialize(data.bulletData, data.bulletSpread, BulletOrigin.Player, Vector3.zero, flakDelay);    //setting bullet timer manually for flak ammunition
+        }
+        else bullet.Initialize(data.bulletData, data.bulletSpread, BulletOrigin.Player, Vector3.zero);              //using regular bullet timer
+
+
+        NetworkServer.Spawn(b.gameObject);
+        //RpcSpawn(projectile);
+    }
+
+    [ClientRpc]
+    void RpcSpawnBullet(SmallTurretData data, Vector3 position, Quaternion rotation, float flakDelay)
+    {
+
+    }
+
+    [Command]
+    public void CmdSpawnMissle(SmallTurretData data, Vector3 position, Quaternion rotation, AquiredTarget target)
+    {
+        GameObject M = GameObject.Instantiate(data.missleData.visuals);
+        PlayerMissle PM = M.AddComponent<PlayerMissle>();
+        PM.Initialize(target, data.missleData);
+
+        M.transform.position = position;
+        M.transform.rotation = rotation;
+
+
+        float spreadF = data.ejectSpeed / 8;
+        Vector3 spread = new Vector3(Random.Range(-spreadF, spreadF), Random.Range(-spreadF, spreadF), Random.Range(-spreadF, spreadF));
+
+        M.GetComponent<Rigidbody>().AddForce(M.transform.forward * data.ejectSpeed + spread + Velocity, ForceMode.Impulse);
+    }
+
+    [ClientRpc]
+    void RpcSpawnMissle(SmallTurretData data, Vector3 position, Quaternion rotation, AquiredTarget target)
+    {
+
+    }
 
     #endregion
 }

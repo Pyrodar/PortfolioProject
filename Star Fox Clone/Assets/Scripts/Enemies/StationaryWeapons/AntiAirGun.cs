@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mirror;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -38,7 +39,8 @@ public class AntiAirGun : StationaryWeapon
 
             if(data.bulletData.damageType == DamageType.flak) bullet.Initialize(data.bulletData, data.bulletspread, BulletOrigin.Enemy, MyVelocity, flakDelay);
             else bullet.Initialize(data.bulletData, data.bulletspread, BulletOrigin.Enemy, MyVelocity);
-            
+
+            spawnProjectile(bullet.gameObject);
 
             yield return new WaitForSeconds(data.ejectSpeed);
         }

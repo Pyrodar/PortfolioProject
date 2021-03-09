@@ -24,6 +24,31 @@ public class TurretData : ScriptableObject
 
     public Sprite Icon;
     public string Description = "No description currently available";
+
+    public SmallTurretData GetSmallData()
+    {
+        SmallTurretData data = new SmallTurretData();
+        data.turretType = this.turretType;
+        data.turretRange = this.turretRange;
+        data.bulletSpread = this.bulletSpread;
+        data.ejectSpeed = this.ejectSpeed;
+        data.missleData = this.missleData;
+        data.bulletData = this.bulletData;
+
+        return data;
+    }
+}
+/// <summary>
+/// used for mirror, since it can't process Sprites and doesn't need all information anyway
+/// </summary>
+public class SmallTurretData
+{
+    public TurretType turretType;
+    public float turretRange;
+    public float bulletSpread;
+    public float ejectSpeed;
+    public MissleData missleData;
+    public BulletData bulletData;
 }
 
 public enum TurretType

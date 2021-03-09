@@ -9,7 +9,7 @@ public class MovementEvent : UnityEvent<Vector3> { }
 [System.Serializable]
 public class RotationEvent : UnityEvent<float> { }
 [System.Serializable]
-public class FireMissleEvent : UnityEvent<int> { }
+public class IntegerEvent : UnityEvent<int> { }
 [System.Serializable]
 public class InputEvent : UnityEvent<INPUTS> { }
 #endregion
@@ -25,8 +25,8 @@ public class InputManagment : MonoBehaviour
 
 
     InputEvent CombatInputs = new InputEvent();
-    FireMissleEvent FireMissle = new FireMissleEvent();
-    UnityEvent SwitchPositions = new UnityEvent();
+    IntegerEvent FireMissle = new IntegerEvent();
+    IntegerEvent SwitchPositions = new IntegerEvent();
 
 
     MovementEvent Movement2 = new MovementEvent();
@@ -34,8 +34,8 @@ public class InputManagment : MonoBehaviour
 
 
     InputEvent CombatInputs2 = new InputEvent();
-    FireMissleEvent FireMissle2 = new FireMissleEvent();
-    UnityEvent SwitchPositions2 = new UnityEvent();
+    IntegerEvent FireMissle2 = new IntegerEvent();
+    IntegerEvent SwitchPositions2 = new IntegerEvent();
 
     #endregion
 
@@ -43,7 +43,6 @@ public class InputManagment : MonoBehaviour
 
     public void ConnectInputs() 
     {
-        return;
         #region clearing Events
         Movement.RemoveAllListeners();
         Rotation.RemoveAllListeners();
@@ -65,7 +64,7 @@ public class InputManagment : MonoBehaviour
 
 
 
-        //DEBUGGING: Set Events based on player
+        //DEBUGGING: Later set Events based on playerNumber
         Movement.AddListener(state.Players[0].ApplyMovement);
         Rotation.AddListener(state.Players[0].ApplyRotation);
         CombatInputs.AddListener(state.Players[0].applyCombatInputs);
@@ -89,7 +88,7 @@ public class InputManagment : MonoBehaviour
 
         if (state.Players != null)
         {
-            if (state.Players[0].IsInGame)
+            if (state.Players[0] != null && state.Players[0].IsInGame)
             {
                 if (inputMovementKeyboard().magnitude > 0) Movement?.Invoke(inputMovementKeyboard());
                 if (inputRotationKeyboard() != 0) Rotation?.Invoke(inputRotationKeyboard());
@@ -97,7 +96,7 @@ public class InputManagment : MonoBehaviour
                 combatInputsKeyboard();
             }
 
-            if (state.Players.Length > 1 && state.Players[1].IsInGame)
+            if (state.Players.Length > 1 && state.Players[1] != null && state.Players[1].IsInGame)
             {
                 if (inputMovementController().magnitude > 0) Movement2?.Invoke(inputMovementController());
                 if (inputRotationController() != 0) Rotation2?.Invoke(inputRotationController());
@@ -175,7 +174,7 @@ public class InputManagment : MonoBehaviour
 
         if (Input.GetButtonDown("SwitchTargets")) CombatInputs?.Invoke(INPUTS.SwitchTargets);
         if (Input.GetButtonDown("SwitchMissles")) CombatInputs?.Invoke(INPUTS.SwitchMissle);
-        if (Input.GetButtonDown("FallBack")) SwitchPositions?.Invoke();
+        if (Input.GetButtonDown("FallBack")) SwitchPositions?.Invoke(0);    //Playernumber
 
 
         //NumButtons
@@ -190,7 +189,7 @@ public class InputManagment : MonoBehaviour
 
         if (Input.GetButtonDown("SwitchTargets-2")) CombatInputs2?.Invoke(INPUTS.SwitchTargets);
         if (Input.GetButtonDown("SwitchMissles-2")) CombatInputs2?.Invoke(INPUTS.SwitchMissle);
-        if (Input.GetButtonDown("FallBack-2")) SwitchPositions2.Invoke();
+        if (Input.GetButtonDown("FallBack-2")) SwitchPositions2.Invoke(1);  //Playernumber
 
 
         //Dpad axis

@@ -55,6 +55,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -103,7 +104,7 @@ GameObject:
   - component: {fileID: 5529101393252604924}
   - component: {fileID: 674877717815289135}
   m_Layer: 2
-  m_Name: AntiGroundTurret
+  m_Name: AirToGroundTurret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -137,9 +138,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 887460fdd65357345ad05f4c7b7c3dcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myMount: {fileID: 0}
   data: {fileID: 11400000, guid: 2d685853f9605794bbef9312fb401c3f, type: 2}
-  bulletData: {fileID: 11400000, guid: a540e21f03a57fc40ba2f26b4a20a30a, type: 2}
-  bullet: {fileID: 3157765972114974939, guid: 82dd97365acc5be4493a03b746f0ebda, type: 3}
 --- !u!1 &5529101394247744837
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,6 +195,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

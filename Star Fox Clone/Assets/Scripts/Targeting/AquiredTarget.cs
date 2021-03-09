@@ -15,6 +15,18 @@ public class AquiredTarget
         CurrentQuarter = quarter;
         Type = type;
     }
+    
+    /// <summary>
+    /// Only exists for Mirror
+    /// </summary>
+    public AquiredTarget()
+    {
+        Debug.LogWarning("Undefined Target created");
+        transform = null;
+        Velocity = Vector3.zero;
+        CurrentQuarter = 0;
+        Type = TargetType.missle;
+    }
 
     public void UpdateVelocity()
     {

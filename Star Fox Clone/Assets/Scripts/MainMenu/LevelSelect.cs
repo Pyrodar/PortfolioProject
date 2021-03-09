@@ -32,7 +32,7 @@ public class LevelSelect : MonoBehaviour
 
     public void StartButton()
     {
-        Debug.Log(selectedLevel.LevelName);
+        //Debug.Log(selectedLevel.LevelName);
         GameStateConnection.Instance.LevelSelectedAndStartPressed(selectedLevel);
     }
 

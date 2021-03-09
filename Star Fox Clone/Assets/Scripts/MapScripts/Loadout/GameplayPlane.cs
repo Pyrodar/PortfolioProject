@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using Mirror;
 [RequireComponent(typeof(Rigidbody))]
 public class GameplayPlane : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class GameplayPlane : MonoBehaviour
                                                   //Front                //Back
     Vector3[] desiredPositions = new Vector3[2] { new Vector3(0, 0, 0) , new Vector3(0, 0, -15) };
     bool inPosition;
-    float lerpPosition;
+    float lerpValue;
     float switchTime = 5f; //how long to reach new position
 
     public int MaxWidth
@@ -44,7 +45,7 @@ public class GameplayPlane : MonoBehaviour
     void loadGameStateCon()
     {
         GameStateConnection game = Instantiate(gamePrefab);
-        game.SetPlayerNumber(1);
+        game.SetConnectionType(ConnectionType.SinglePlayer);
         game.StartGameMap();
     }
     //#############################
@@ -78,7 +79,7 @@ public class GameplayPlane : MonoBehaviour
         #endregion
 
         inPosition = false;
-        lerpPosition = 0;
+        lerpValue = 0;
     }
 
     /// <summary>
@@ -91,11 +92,11 @@ public class GameplayPlane : MonoBehaviour
 
         for (int i = 0; i < playerpositions.Length; i++)
         {
-            playerpositions[i].localPosition = Vector3.Lerp(desiredPositions[(i + 1) % 2], desiredPositions[i], lerpPosition);
+            playerpositions[i].localPosition = Vector3.Lerp(desiredPositions[(i + 1) % 2], desiredPositions[i], lerpValue);
         }
 
-        lerpPosition += (Time.deltaTime / switchTime);
-        if (lerpPosition >= 1)
+        lerpValue += (Time.deltaTime / switchTime);
+        if (lerpValue >= 1)
         {
             inPosition = true;
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Mirror;
+using System.Collections;
 using UnityEngine;
 
 public class MissleLauncher : StationaryWeapon
@@ -19,7 +20,6 @@ public class MissleLauncher : StationaryWeapon
     /// <summary>
     /// uses Missle speed
     /// </summary>
-    /// <returns></returns>
     protected override Vector3 getInterceptPoint()
     {
         return HelperFunctions.Intercept(transform.position, Vector3.zero, data.missleData.speed, myTarget.transform.position, myTarget.Velocity);
@@ -27,7 +27,7 @@ public class MissleLauncher : StationaryWeapon
 
     protected override IEnumerator Fire()
     {
-        startReloading();       //Has to be set to reload to avoid calling 2 or more instances of this Coroutine
+        startReloading();       //Has to be set to reload immidiately to avoid calling 2 or more instances of this Coroutine
 
         Vector3 ic = getInterceptPoint();
 
@@ -56,6 +56,8 @@ public class MissleLauncher : StationaryWeapon
 
                 Vector3 spread = new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f));
                 M.GetComponent<Rigidbody>().AddForce(transform.forward * data.ejectSpeed + spread, ForceMode.Impulse);
+
+                spawnProjectile(M.gameObject);
 
                 yield return new WaitForSeconds(0.5f);
             }

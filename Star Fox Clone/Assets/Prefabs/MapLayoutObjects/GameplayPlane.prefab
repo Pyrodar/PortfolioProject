@@ -549,6 +549,8 @@ GameObject:
   - component: {fileID: 269898189591589324}
   - component: {fileID: 269898189591589314}
   - component: {fileID: 269898189591589315}
+  - component: {fileID: 1586276775460316219}
+  - component: {fileID: 6919024781041454487}
   m_Layer: 0
   m_Name: GameplayPlane
   m_TagString: Untagged
@@ -585,6 +587,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6ef0fcd7656a234e978f7d0f183cc21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  gamePrefab: {fileID: 0}
   maxWidth: 8
   maxHeight: 5
   playerpositions:
@@ -619,11 +624,44 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 8
-  cart: {fileID: 0}
-  Go: 0
+  Path: {fileID: 0}
   trackEnded:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1586276775460316219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 269898189591589326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  m_AssetId: 
+  hasSpawned: 0
+--- !u!114 &6919024781041454487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 269898189591589326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  clientAuthority: 0
+  localPositionSensitivity: 0.01
+  localRotationSensitivity: 0.01
+  localScaleSensitivity: 0.01
 --- !u!1 &269898189596074392
 GameObject:
   m_ObjectHideFlags: 0

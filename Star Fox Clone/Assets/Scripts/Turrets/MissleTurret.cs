@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 
 public class MissleTurret : Turret
 {
@@ -36,22 +37,27 @@ public class MissleTurret : Turret
     {
         if (myMount.Recharging) return;
 
-        GameObject M = GameObject.Instantiate(data.missleData.visuals);
-        PlayerMissle PM = M.AddComponent<PlayerMissle>(); 
-        PM.Initialize(target, data.missleData);
-
-        M.transform.position = transform.position;
-        M.transform.rotation = transform.rotation;
-
-
-        float spreadF = data.ejectSpeed / 8;
-        Vector3 spread = new Vector3(Random.Range(-spreadF, spreadF), Random.Range(-spreadF, spreadF), Random.Range(-spreadF, spreadF));
-
         //TODO: rotate through location of rockettubes
         Transform tube = transform.GetChild(0);
         //############################################
 
-        M.GetComponent<Rigidbody>().AddForce(tube.forward * data.ejectSpeed + spread, ForceMode.Impulse); //TODO: add plane Velocity
+        //GameObject M = GameObject.Instantiate(data.missleData.visuals);
+        //PlayerMissle PM = M.AddComponent<PlayerMissle>(); 
+        //PM.Initialize(target, data.missleData);
+
+        //M.transform.position = tube.position;
+        //M.transform.rotation = tube.rotation;
+
+
+        //float spreadF = data.ejectSpeed / 8;
+        //Vector3 spread = new Vector3(Random.Range(-spreadF, spreadF), Random.Range(-spreadF, spreadF), Random.Range(-spreadF, spreadF));
+
+        //M.GetComponent<Rigidbody>().AddForce(tube.forward * data.ejectSpeed + spread + myPlayer.Velocity, ForceMode.Impulse);
+
+        //Networking////////////////////
+        var smallData = data.GetSmallData();
+        myPlayer.CmdSpawnMissle(smallData, tube.position, tube.rotation, target);
+        ////////////////////////////////
 
         startReloading();
     }

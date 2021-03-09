@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Mirror;
+using System.Collections;
 using UnityEngine;
 
 public class StationaryWeapon : MonoBehaviour
@@ -67,6 +68,16 @@ public class StationaryWeapon : MonoBehaviour
     protected virtual IEnumerator Fire()
     {
         yield return new WaitForSeconds(1);
+    }
+
+    /// <summary>
+    /// used as the network command to spawn each projectile
+    /// the spawn information is passed to the Target since it is the only NetworkIdentity in this prefab
+    /// </summary>
+    protected virtual void spawnProjectile(GameObject projectile)
+    {
+        myHost.CmdSpawn(projectile);
+        Destroy(projectile);
     }
     /// <summary>
     /// Aims directly for the player. Should be overwritten in each subtype

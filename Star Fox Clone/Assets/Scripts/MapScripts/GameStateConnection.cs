@@ -4,27 +4,41 @@ using UnityEngine.SceneManagement;
 public class GameStateConnection : MonoBehaviour
 {
     #region singleton and Awake
-    static GameStateConnection instance;
 
+    MyNetworkManager myNetworkManager;
+    
+    static GameStateConnection instance;
     public static GameStateConnection Instance
     {
         get { return instance; }
     }
 
+    /// <summary>
+    /// Creates a Singleton,
+    /// connects to the NetworkManager,
+    /// prepares the levelloaded function
+    /// and loads the Gamestateinfo
+    /// </summary>
     private void Awake()
     {
+        #region Singleton
         if (GameStateConnection.instance != null)
         {
             Debug.LogWarning("more than one instance of GameStateConnection");
             return;
         }
         instance = this;
-
         DontDestroyOnLoad(this);
+        #endregion
+
+        #region Load GamestateInfo
         gameStateInfo = new GameStateInfo("path");
         Debug.Log("Loaded Gamestate");
+        #endregion
 
         SceneManager.sceneLoaded += OnLevelLoaded;
+        
+        myNetworkManager = GetComponent<MyNetworkManager>();
     }
     #endregion
 
@@ -42,7 +56,7 @@ public class GameStateConnection : MonoBehaviour
     #region Players
     Player[] players;
     public Player[] Players { get { return players; } }
-    public int NumberOfPlayers { get { return gameStateInfo.PlayerNumber; } }
+    public int NumberOfPlayers { get { return gameStateInfo.NumberOfLocalPlayers; } }
 
     Player frontlinePlayer;
     GameplayPlane gameplayPlane;
@@ -50,6 +64,11 @@ public class GameStateConnection : MonoBehaviour
     {
         get { return gameplayPlane; }
     }
+
+    /// <summary>
+    /// Tells the server wether or not to load a network player or if a local player will be loaded
+    /// </summary>
+    public bool LoadPlayerOnServer { get { return gameStateInfo.Connection == ConnectionType.Host || gameStateInfo.Connection == ConnectionType.Client; } }
     #endregion
 
     #region LoadingLevel
@@ -62,19 +81,9 @@ public class GameStateConnection : MonoBehaviour
 
     #endregion
 
-    /// <summary>
-    /// called in Main menu when opening singleplayer or coop
-    /// </summary>
-    #region setPlayerNumber
-    public void SetPlayerNumber(int i)
-    {
-        gameStateInfo.PlayerNumber = i;
-    }
-    #endregion
-
     #region Loading maps
     //#######################################
-    //Debugging
+    //Debugging. This will later be loaded via Gamestate
     [SerializeField]Player[] playerprefabs;
     public Player[] Playerprefabs
     {
@@ -82,16 +91,42 @@ public class GameStateConnection : MonoBehaviour
     }
     //#######################################
 
+    public void SetConnectionType(ConnectionType type)
+    {
+        gameStateInfo.Connection = type;
+    }
+
+    /// <summary>
+    /// Loads the loading screen scene, where the "LoadingScreen"-script automatically loads the scene saved in "levelData" in the background while showing a progress bar
+    /// </summary>
     void StartLoadingScreen()
     {
-        SceneManager.LoadScene(0);
+        //SceneManager.LoadScene(0);
+        string newSceneName = SceneManager.GetSceneByBuildIndex(levelToLoad).name;  //Returns null?!
+
+        //TODO: GetSceneByBuildindex returns a scene but that scene does not contain a name for some reason?
+        //DEBUGGING#########################################
+        switch (levelToLoad)
+        {
+            case 2:
+                newSceneName = "ChangeLoadout";
+                break;
+            case 3:
+                newSceneName = "TutorialScene";
+                break;
+            default:
+                newSceneName = "MainMenu";
+                break;
+        }
+        //#################################################
+
+        myNetworkManager.ServerChangeScene(newSceneName);
     }
 
     private void OnLevelLoaded(Scene level, LoadSceneMode loadSceneMode)
     {
         if (level.buildIndex == 0) return;     //skipping loading screen
 
-        //Debug.Log("Done Loading");
         DoneLoading();
     }
 
@@ -129,45 +164,13 @@ public class GameStateConnection : MonoBehaviour
     void StartLoadoutMap()
     {
         Debug.Log("Starting up Loadout map");
-        MapLayoutInfo mapLayoutInfo = MapLayoutInfo.Instance;
-        if (mapLayoutInfo == null)
-        {
-            Debug.LogError("ERROR: No 'mapLayoutInfo' detected");
-            return;
-        }
 
-        players = new Player[gameStateInfo.PlayerNumber];
+        players = new Player[gameStateInfo.NumberOfTotalPlayers];
         frontlinePlayer = players[0];
 
-        for (int i = 0; i < gameStateInfo.PlayerNumber; i++)
-        {
-            //Create Object
-            //spawnPlayer(i);               //calling spawnPlayer funktion has proven to be a bit slow, it should no longer cause bugs but I'll keep it like this for now just in case
-            players[i] = Instantiate(gameStateInfo.PlayerObjects[i]);
-            players[i].SetPlayerNumber(i);
-
-            players[i].transform.position = mapLayoutInfo.LoadoutMapPlayerPositions[i].position;
-            DontDestroyOnLoad(players[i]);
-
-            //Load Modules
-            players[i].AddTurretModules((LoadoutHUD)mapLayoutInfo.HUD[i]);
-
-            //Set up cameras
-            mapLayoutInfo.HUD[i].gameObject.SetActive(true);
-            mapLayoutInfo.HUD[i].PlayerNumber = i;
-            mapLayoutInfo.HUD[i].GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceCamera;
-            mapLayoutInfo.HUD[i].GetComponent<Canvas>().worldCamera = mapLayoutInfo.Cameras[i];
-            setupCameraViewport(mapLayoutInfo.Cameras[i], i);
-
-        }
+        spawnPlayerInLoadout();
     }
     #endregion
-
-    void spawnPlayer(int i)
-    {
-        players[i] = Instantiate(gameStateInfo.PlayerObjects[i]);
-        players[i].SetPlayerNumber(i);
-    }
 
     #region GameMap
     public void LoadGameMap()
@@ -190,26 +193,26 @@ public class GameStateConnection : MonoBehaviour
 
         gameplayPlane = mapLayoutInfo.Plane;
 
-        for (int i = 0; i < gameStateInfo.PlayerNumber; i++)
+        for (int i = 0; i < gameStateInfo.NumberOfLocalPlayers; i++)
         {
             if (players == null)
             {
-                players = new Player[gameStateInfo.PlayerNumber];
+                players = new Player[gameStateInfo.NumberOfTotalPlayers];
                 frontlinePlayer = players[0];
 
                 Debug.LogWarning("Player " + i + " had to be loaded but should already exist");
-                spawnPlayer(i);
+                spawnPlayerInGame(i);
                 players[i].RemoveTurretModules();
             }
 
             GetComponent<InputManagment>().ConnectInputs();     //Setting up PlayerInputs
 
-            Debug.Log("Setting HUD " + i);
             //Set player connections
             players[i].transform.SetParent(gameplayPlane.Playerpositions[i]);
             players[i].transform.localPosition = Vector3.zero;//gameplayPlane.Playerpositions[i].position;
             players[i].Plane = gameplayPlane;
 
+            //Debug.Log("Setting HUD " + i);
             players[i].Cam = mapLayoutInfo.Cameras[i];
             mapLayoutInfo.Cameras[i].gameObject.SetActive(true);
             players[i].HUD = (InGameHUD)mapLayoutInfo.HUD[i];
@@ -235,7 +238,7 @@ public class GameStateConnection : MonoBehaviour
 
     void StartGame()
     {
-        for (int i = 0; i < gameStateInfo.PlayerNumber; i++)
+        for (int i = 0; i < gameStateInfo.NumberOfLocalPlayers; i++)
         {
             players[i].StartGame();
         }
@@ -268,6 +271,76 @@ public class GameStateConnection : MonoBehaviour
 
     #endregion
 
+    #region spawning players
+    /// <summary>
+    /// Either starts/joins the Server as Host/client or spawns players locally
+    /// </summary>
+    public void spawnPlayerInLoadout()
+    {
+        switch (gameStateInfo.Connection)
+        {
+            case ConnectionType.Client:
+                myNetworkManager.StartClient();
+                break;
+            case ConnectionType.Host:
+                myNetworkManager.StartHost();
+                break;
+            default:
+                for (int i = 0; i < gameStateInfo.NumberOfLocalPlayers; i++)
+                {
+                    Player player = Instantiate(playerprefabs[0]);
+                    AddPlayerToLoadoutScene(player);
+                }
+                myNetworkManager.StartHost();
+                break;
+        }
+    }
+
+    public void AddPlayerToLoadoutScene(Player player)
+    {
+        int i = 0;
+        if (players[0] != null) i = 1;
+
+        players[i] = player;
+        players[i].SetPlayerNumber(i);
+
+        #region preparing Map
+
+        MapLayoutInfo mapLayoutInfo = MapLayoutInfo.Instance;
+        if (mapLayoutInfo == null)
+        {
+            Debug.LogError("ERROR: No 'mapLayoutInfo' detected");
+            return;
+        }
+
+        players[i].transform.position = mapLayoutInfo.LoadoutMapPlayerPositions[i].position;
+        DontDestroyOnLoad(players[i]);
+
+        //Load Modules
+        players[i].AddTurretModules((LoadoutHUD)mapLayoutInfo.HUD[i]);
+
+        //Set up cameras
+        mapLayoutInfo.HUD[i].gameObject.SetActive(true);
+        mapLayoutInfo.HUD[i].PlayerNumber = i;
+        mapLayoutInfo.HUD[i].GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceCamera;
+        mapLayoutInfo.HUD[i].GetComponent<Canvas>().worldCamera = mapLayoutInfo.Cameras[i];
+        setupCameraViewport(mapLayoutInfo.Cameras[i], i);
+
+        #endregion
+    }
+    
+    public void spawnPlayerInGame(int playerNumber)
+    {
+        Player player = Instantiate(playerprefabs[0]);
+        AddPlayerToGameScene(player);
+    }
+
+    public void AddPlayerToGameScene(Player player)
+    {
+        Debug.LogError("ADDING PLAYER TO GAME SCENE IS NOT YET IMPLEMENTED");
+    }
+    #endregion
+
     #endregion
 
     #region menus
@@ -292,23 +365,25 @@ public class GameStateConnection : MonoBehaviour
         return frontlinePlayer;
     }
 
-    public void SwitchPlayerPositions()
+    public void SwitchPlayerPositions(int playerNumber)
     {
-        if (gameStateInfo.PlayerNumber < 2) return;
+        if (gameStateInfo.NumberOfLocalPlayers < 2) return;
 
         if (frontlinePlayer == null)
         {
             frontlinePlayer = players[0];
             return;
         }
+        if (frontlinePlayer != players[playerNumber]) return;   //only the player in front can decide to fall back
+
 
         else if (frontlinePlayer == players[0])
         {
             if (players[1] == null || players[1].IsInGame == false) return;
-            if (gameplayPlane.requestPlayerSwitch(1)) 
-            { 
+            if (gameplayPlane.requestPlayerSwitch(1))
+            {
                 frontlinePlayer = players[1];
-                switchingPlayers();
+                switchingPlayers?.Invoke();
             }
         }
 
@@ -318,7 +393,7 @@ public class GameStateConnection : MonoBehaviour
             if (gameplayPlane.requestPlayerSwitch(0))
             {
                 frontlinePlayer = players[0];
-                switchingPlayers();
+                switchingPlayers?.Invoke();
             }
         }
     }
@@ -374,21 +449,71 @@ public class GameStateConnection : MonoBehaviour
 
 class GameStateInfo
 {
-    #region Player
-    int playerNumber;
-    public int PlayerNumber
+    #region ConnectionType
+
+    int positionInHirarchie = 0;
+    ConnectionType connectionType = ConnectionType.Host;
+
+    //public string NetworkAdress;
+
+    public int PositionInHirarchie { get { return positionInHirarchie; } }
+    public ConnectionType Connection
     {
-        get { return playerNumber; }
-        set { playerNumber = Mathf.Clamp(value, 1, 2); }
+        get { return connectionType; }
+        set {
+            switch (value)
+            {
+                case ConnectionType.SinglePlayer:
+                    connectionType = value;
+                    positionInHirarchie = 0;
+                    numberOfTotalPlayers = 1;
+                    numberOfLocalPlayers = 1;
+                    break;
+                case ConnectionType.LocalCoop:
+                    connectionType = value;
+                    positionInHirarchie = 0;
+                    numberOfTotalPlayers = 2;
+                    numberOfLocalPlayers = 2;
+                    break;
+                case ConnectionType.Host:
+                    connectionType = value;
+                    positionInHirarchie = 0;
+                    numberOfTotalPlayers = 2;
+                    numberOfLocalPlayers = 1;
+                    break;
+                case ConnectionType.Client:
+                    connectionType = value;
+                    positionInHirarchie = 1;
+                    numberOfTotalPlayers = 2;
+                    numberOfLocalPlayers = 1;
+                    break;
+            }
+        }
+    }
+
+    #endregion
+
+    #region Player
+    string playerName;
+    int numberOfTotalPlayers;
+    public int NumberOfTotalPlayers
+    {
+        get { return numberOfTotalPlayers; }
+    }
+
+    int numberOfLocalPlayers;
+    public int NumberOfLocalPlayers
+    {
+        get { return numberOfLocalPlayers; }
     }
 
     //Maybe saved as strings instead of Player class
-    Player[] playerObjects;
+    /*Player[] playerObjects;
     public Player[] PlayerObjects
     {
         get { return playerObjects; }
         set { playerObjects = value; }
-    }
+    }*/
     #endregion
 
     #region saveFile
@@ -409,11 +534,19 @@ class GameStateInfo
 
 
         //Debugging:#######
-        //playerNumber = 1;
+        /*playerNumber = 1;
 
         playerObjects = new Player[2];
         playerObjects[0] = GameStateConnection.Instance.Playerprefabs[0];
-        playerObjects[1] = GameStateConnection.Instance.Playerprefabs[0];
+        playerObjects[1] = GameStateConnection.Instance.Playerprefabs[0];*/
         //#################
     }
+}
+
+public enum ConnectionType
+{
+    SinglePlayer,
+    LocalCoop,
+    Host,
+    Client
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Mirror;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +8,6 @@ public class BombDrops : StationaryWeapon
     protected override IEnumerator Fire()
     {
         startReloading();
-
         //Debugging
         yield return new WaitForSeconds(3f);
 
@@ -19,8 +19,11 @@ public class BombDrops : StationaryWeapon
         EnemyBomb bomb = b.AddComponent<EnemyBomb>();
         bomb.Initialize(data.bombData);
 
+        spawnProjectile(bomb.gameObject);
+
         yield return new WaitForSeconds(0.1f);
     }
+
 
     protected override void aim()
     {

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 [RequireComponent(typeof(TurretMount))]
 public class TurretModule : MonoBehaviour, IManeuverableListEntry
 {
@@ -8,6 +9,7 @@ public class TurretModule : MonoBehaviour, IManeuverableListEntry
     SphereCollider coll;
 
     LoadoutHUD HUD;
+    Player myPlayer;
     TurretData currentTurret;
     public TurretData CurrentTurret { get { return currentTurret; } }
 
@@ -18,6 +20,7 @@ public class TurretModule : MonoBehaviour, IManeuverableListEntry
     public void Instantiate(int i)
     {
         HUD = (LoadoutHUD)MapLayoutInfo.Instance.HUD[i];
+        myPlayer = GameStateConnection.Instance.Players[i];
 
         //Materials
         RegularAM = Resources.Load("Materials/LoadoutHUD/RegularAM") as Material;
@@ -35,6 +38,9 @@ public class TurretModule : MonoBehaviour, IManeuverableListEntry
         gameObject.layer = 0;               //DefaultLayer
         coll = gameObject.AddComponent<SphereCollider>();
         coll.radius = 0.325f;
+
+        var turretTransform = gameObject.GetComponent<TurretMount>().MyTurret.transform;
+        AddTurretNetworkComponent(turretTransform);
 
         refreshTurret();
     }
@@ -81,6 +87,7 @@ public class TurretModule : MonoBehaviour, IManeuverableListEntry
         #region set Mesh
         clearTurret();
         
+        //TODO: Spawn turret from Server and give clientAuthority
         GameObject T = Instantiate(turret.TurretMesh);
         T.transform.parent = transform;
         T.transform.position = transform.position;
@@ -108,7 +115,17 @@ public class TurretModule : MonoBehaviour, IManeuverableListEntry
         }
         #endregion
 
+        AddTurretNetworkComponent(T.transform);
+
         refreshTurret();
+    }
+
+    void AddTurretNetworkComponent(Transform turretTransform)
+    {
+        var netTrf = myPlayer.gameObject.AddComponent<NetworkTransformChild>();
+        netTrf.target = turretTransform;
+        netTrf.clientAuthority = true;
+
     }
 
     /// <summary>
@@ -116,12 +133,26 @@ public class TurretModule : MonoBehaviour, IManeuverableListEntry
     /// </summary>
     void clearTurret()
     {
+        var turretTransform = gameObject.GetComponent<TurretMount>().MyTurret.transform;
+        removeTurretNetworkComponent(turretTransform);
+
         foreach (Transform child in transform)
         {
             GameObject.Destroy(child.gameObject);
         }
 
         refreshTurret();
+    }
+
+    void removeTurretNetworkComponent(Transform turretTransform)
+    {
+        foreach (var item in myPlayer.gameObject.GetComponentsInChildren<NetworkTransformChild>())
+        {
+            if (item.target == turretTransform)
+            {
+                Destroy(item);
+            }
+        }
     }
 
     /// <summary>

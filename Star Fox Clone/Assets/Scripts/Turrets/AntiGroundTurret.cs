@@ -1,8 +1,11 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 
 public class AntiGroundTurret : Turret
 {
     protected bool hasTarget = false;
+
+    float flakDelay;
 
     void Update()
     {
@@ -46,8 +49,15 @@ public class AntiGroundTurret : Turret
         #endregion
 
         t.UpdateVelocity();
-        Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, Vector3.zero, data.bulletData.speed, t.transform.position, t.Velocity);
-        LookAt(interceptCourse);
+        Vector3 interceptPoint = HelperFunctions.Intercept(transform.position, Vector3.zero, data.bulletData.speed, t.transform.position, t.Velocity);
+        LookAt(interceptPoint);
+
+        //Check Target Distance
+        float distance = Vector3.Distance(transform.position, interceptPoint);
+        if (data.bulletData.damageType == DamageType.flak)
+        {
+            flakDelay = distance / data.bulletData.speed;
+        }
     }
 
     bool checkSights()
@@ -66,12 +76,17 @@ public class AntiGroundTurret : Turret
             addCooldown(data.cooldown);
             //Debug.Log(this.name + " is firing!");
 
-            GameObject b = GameObject.Instantiate(data.bulletData.visuals);
-            b.transform.position = transform.position;
-            b.transform.rotation = transform.rotation;
+            //GameObject b = GameObject.Instantiate(data.bulletData.visuals);
+            //b.transform.position = transform.position;
+            //b.transform.rotation = transform.rotation;
 
-            Bullet bullet = b.AddComponent<Bullet>();
-            bullet.Initialize(data.bulletData, data.bulletSpread, BulletOrigin.Player, Vector3.zero); //Not yet using velocity here
+            //Bullet bullet = b.AddComponent<Bullet>();
+            //bullet.Initialize(data.bulletData, data.bulletSpread, BulletOrigin.Player, Vector3.zero); //Not yet using velocity here
+
+            //Networking/////////////////////////
+            var smallData = data.GetSmallData();
+            myPlayer.CmdSpawnBullet(smallData, transform.position, transform.rotation, flakDelay);
+            /////////////////////////////////////
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 
 public class AMSTurret : Turret
 {
@@ -56,11 +57,11 @@ public class AMSTurret : Turret
         //Play Sound
 
         M.UpdateVelocity();
-        Vector3 targetInterception = HelperFunctions.Intercept(transform.position, Vector3.zero, data.bulletData.speed, M.transform.position, M.Velocity);
-        LookAt(targetInterception);//TODO: add rotation to Intercept funktion
+        Vector3 interceptPoint = HelperFunctions.Intercept(transform.position, Vector3.zero, data.bulletData.speed, M.transform.position, M.Velocity);
+        LookAt(interceptPoint);//TODO: add rotation to Intercept funktion
 
         //Check Target Distance
-        float distance = Vector3.Distance(transform.position, targetInterception);
+        float distance = Vector3.Distance(transform.position, interceptPoint);
         if (data.bulletData.damageType == DamageType.flak)
         {
             flakDelay = distance / data.bulletData.speed;
@@ -74,7 +75,6 @@ public class AMSTurret : Turret
     #endregion
 
     #region shoot
-    
     public override void Fire()
     {
         if (Time.time > cooldownEnd && !overheated)
@@ -82,18 +82,23 @@ public class AMSTurret : Turret
 
             addCooldown(data.cooldown);
 
-            GameObject b = GameObject.Instantiate(data.bulletData.visuals);
-            b.transform.position = transform.position;
-            b.transform.rotation = transform.rotation;
+            //GameObject b = GameObject.Instantiate(data.bulletData.visuals);
+            //b.transform.position = transform.position;
+            //b.transform.rotation = transform.rotation;
 
-            Bullet bullet = b.AddComponent<Bullet>();
-            bullet.tag = "AMSBullet";
-            
-            if (data.bulletData.damageType == DamageType.flak)                                                          //TODO: add player Velocity to bullet
-            {
-                bullet.Initialize(data.bulletData, data.bulletSpread, BulletOrigin.Player, Vector3.zero, flakDelay);    //setting bullet timer manually for flak ammunition
-            }
-            else bullet.Initialize(data.bulletData, data.bulletSpread, BulletOrigin.Player, Vector3.zero);              //using regular bullet timer
+            //Bullet bullet = b.AddComponent<Bullet>();
+            //bullet.tag = "AMSBullet";
+
+            //if (data.bulletData.damageType == DamageType.flak)                                                          //TODO: add player Velocity to bullet
+            //{
+            //    bullet.Initialize(data.bulletData, data.bulletSpread, BulletOrigin.Player, Vector3.zero, flakDelay);    //setting bullet timer manually for flak ammunition
+            //}
+            //else bullet.Initialize(data.bulletData, data.bulletSpread, BulletOrigin.Player, Vector3.zero);              //using regular bullet timer
+
+            //Networking/////////////////////////
+            var smallData = data.GetSmallData();
+            myPlayer.CmdSpawnBullet(smallData, transform.position, transform.rotation, flakDelay);
+            /////////////////////////////////////
 
             applyHeat();
         }
