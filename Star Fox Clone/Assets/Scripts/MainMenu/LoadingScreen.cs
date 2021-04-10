@@ -10,14 +10,14 @@ public class LoadingScreen : MonoBehaviour
 
     private void Start()
     {
-        if (GameStateConnection.Instance == null)
+        if (GameConnection.Instance == null)
         {
             Debug.LogError("no GameStateConnection Object Found");
             LoadScene(1);
         }
         else
         {
-            LoadScene(GameStateConnection.Instance.LevelToLoad);
+            LoadScene(GameConnection.Instance.LevelToLoad);
         }
     }
 

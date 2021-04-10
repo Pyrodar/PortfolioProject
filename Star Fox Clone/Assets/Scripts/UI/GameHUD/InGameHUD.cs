@@ -45,12 +45,12 @@ public class InGameHUD : UIBaseClass
 
     public void ReturnToMenuButton()
     {
-        GameStateConnection.Instance.ReturnToMenu();
+        GameConnection.Instance.ReturnToMenu();
     }
 
     public void RestartButton()
     {
-        GameStateConnection.Instance.RestartMap();
+        GameConnection.Instance.RestartMap();
     }
 
     #endregion

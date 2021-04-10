@@ -196,10 +196,10 @@ public class TurretMount : MonoBehaviour, IVehicle
     #endregion
 
     #region MissleTurret
-    public MissleTurret getMissleTurret()
+    public MSLTurret getMissleTurret()
     {
-        if(myTurret.TurretType != TurretType.Missiles) return null;
-        return myTurret.GetComponent<MissleTurret>();
+        if(myTurret.TurretType != TurretType.MSL) return null;
+        return myTurret.GetComponent<MSLTurret>();
     }
     #endregion
 

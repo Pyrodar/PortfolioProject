@@ -1,11 +1,10 @@
 ﻿using System;
 using UnityEngine;
-using Mirror;
 [RequireComponent(typeof(Rigidbody))]
 public class GameplayPlane : MonoBehaviour
 {
     //Debugging############
-    [SerializeField] GameStateConnection gamePrefab;
+    [SerializeField] GameConnection gamePrefab;
     //######################
 
     [SerializeField] int maxWidth = 10;
@@ -34,7 +33,7 @@ public class GameplayPlane : MonoBehaviour
     private void Start()
     {
         //Debugging############
-        if (GameStateConnection.Instance == null) loadGameStateCon();
+        if (GameConnection.Instance == null) loadGameStateCon();
         //######################
 
         rigid = GetComponent<Rigidbody>();
@@ -44,7 +43,7 @@ public class GameplayPlane : MonoBehaviour
     //Debugging#####################
     void loadGameStateCon()
     {
-        GameStateConnection game = Instantiate(gamePrefab);
+        GameConnection game = Instantiate(gamePrefab);
         game.SetConnectionType(ConnectionType.SinglePlayer);
         game.StartGameMap();
     }

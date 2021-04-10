@@ -12,7 +12,7 @@ public class TrackTrigger : MonoBehaviour
 
     void Start()
     {
-        plane = GameStateConnection.Instance.Plane;
+        plane = GameConnection.Instance.Plane;
     }
 
     void Update()

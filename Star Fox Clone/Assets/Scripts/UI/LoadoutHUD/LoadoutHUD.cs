@@ -10,9 +10,7 @@ public class LoadoutHUD : UIBaseClass
 
     #region ListingTurrets
 
-    [SerializeField] List<TurretData> availableTurretsATG;
-    [SerializeField] List<TurretData> availableTurretsAMS;
-    [SerializeField] List<TurretData> availableTurretsMSL;
+    LoadoutList loadoutList;
     [SerializeField] TurretMenuButton TurretListPrefabs;
     [SerializeField] Transform turretListParent;
 
@@ -20,6 +18,7 @@ public class LoadoutHUD : UIBaseClass
 
     private void Start()
     {
+        loadoutList = Resources.Load("LoadoutList") as LoadoutList;
         turretButtons = new List<TurretMenuButton>();
         turretsListed = new CyclingLists();
         clearList();
@@ -42,8 +41,8 @@ public class LoadoutHUD : UIBaseClass
         Debug.Log("Listing All");
 
         fillList(TurretType.AMS);
-        fillList(TurretType.AntiGround);
-        fillList(TurretType.Missiles);
+        fillList(TurretType.ATG);
+        fillList(TurretType.MSL);
     }
 
     void fillList(TurretType type)
@@ -54,7 +53,7 @@ public class LoadoutHUD : UIBaseClass
         {
             case TurretType.AMS:
 
-                foreach (TurretData turret in availableTurretsAMS)
+                foreach (TurretData turret in loadoutList.AMS_Turrets)
                 {
                     TurretMenuButton tb = Instantiate(TurretListPrefabs);
                     tb.Initialize(turret, this);
@@ -65,9 +64,9 @@ public class LoadoutHUD : UIBaseClass
                 }
 
                 break;
-            case TurretType.AntiGround:
+            case TurretType.ATG:
 
-                foreach (TurretData turret in availableTurretsATG)
+                foreach (TurretData turret in loadoutList.ATG_Turrets)
                 {
                     TurretMenuButton tb = Instantiate(TurretListPrefabs);
                     tb.Initialize(turret, this);
@@ -78,9 +77,9 @@ public class LoadoutHUD : UIBaseClass
                 }
 
                 break;
-            case TurretType.Missiles:
+            case TurretType.MSL:
 
-                foreach (TurretData turret in availableTurretsMSL)
+                foreach (TurretData turret in loadoutList.MSL_Turrets)
                 {
                     TurretMenuButton tb = Instantiate(TurretListPrefabs);
                     tb.Initialize(turret, this);
@@ -99,10 +98,12 @@ public class LoadoutHUD : UIBaseClass
     }
 
     //After assigning new parent RectTransform seems to get messed up
+    //Afterwards the rotation seems to be making trouble éverytime it's reloaded
     void resetScale(TurretMenuButton t)
     {
         t.GetComponent<RectTransform>().localPosition = Vector3.zero;
         t.transform.localScale = Vector3.one;
+        t.transform.rotation = Camera.main.transform.rotation;
     }
 
     public void ShowAllTurrets()
@@ -118,16 +119,15 @@ public class LoadoutHUD : UIBaseClass
     public void ShowTurretsATG()
     {
         clearList();
-        fillList(TurretType.AntiGround);
+        fillList(TurretType.ATG);
     }
     public void ShowTurretsMSL()
     {
         clearList();
-        fillList(TurretType.Missiles);
+        fillList(TurretType.MSL);
     }
 
     #endregion
-
 
     #region selectingTurret
 
@@ -363,9 +363,9 @@ public class LoadoutHUD : UIBaseClass
 
     #region SwitchTurret
     
-    public void SwitchTurret(TurretData td)
+    public void SwitchTurret(TurretData data)
     {
-        selectedModule.AddTurret(td);
+        selectedModule.ChangeTurret(data);
         CurrentTurret.SetDescription(selectedModule.CurrentTurret);
     }
 

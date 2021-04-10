@@ -29,10 +29,10 @@ public class TurretMenuButton : MonoBehaviour, IManeuverableListEntry
             case TurretType.AMS:
                 Type.sprite = TypeAMS;
                 break;
-            case TurretType.AntiGround:
+            case TurretType.ATG:
                 Type.sprite = TypeATG;
                 break;
-            case TurretType.Missiles:
+            case TurretType.MSL:
                 Type.sprite = TypeMSL;
                 break;
             default:

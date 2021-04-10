@@ -17,9 +17,21 @@ public class LevelSelect : MonoBehaviour
     [SerializeField] Text StartLevelPopUpText;
 
     LevelData selectedLevel;
+    List<LevelSelectButton> unlockedButtons = new List<LevelSelectButton>();
 
     private void Start()
     {
+        DislplayLevels();
+    }
+
+    public void RefreshLevels()
+    {
+        foreach (var button in unlockedButtons)
+        {
+            Destroy(button.gameObject);
+        }
+        unlockedButtons.Clear();
+
         DislplayLevels();
     }
 
@@ -33,7 +45,7 @@ public class LevelSelect : MonoBehaviour
     public void StartButton()
     {
         //Debug.Log(selectedLevel.LevelName);
-        GameStateConnection.Instance.LevelSelectedAndStartPressed(selectedLevel);
+        GameConnection.Instance.LevelSelectedAndStartPressed(selectedLevel);
     }
 
     public void CancelButton() 
@@ -44,14 +56,13 @@ public class LevelSelect : MonoBehaviour
 
     void DislplayLevels()
     {
-        /*
-        foreach (LevelData ld in levelsAvailable)
+        int levelsUnlocked = GameConnection.Instance.LevelsUnlocked;
+        if (levelsUnlocked > levelsAvailable.Count)
         {
-            LevelSelectButton lsb = Instantiate(levelButtonPrefab);
-            lsb.Instantiate(ld, this);
-            lsb.transform.SetParent(levelGrid.transform);
-        }*/
-        for (int i = 0; i < levelsAvailable.Count; i++)
+            throw new System.ArgumentOutOfRangeException("levelsUnlocked", "More levels have been unlocked than are in total available!");
+        }
+
+        for (int i = 0; i < levelsUnlocked; i++)
         {
             LevelSelectButton lsb = Instantiate(levelButtonPrefab);
             lsb.Instantiate(levelsAvailable[i], this);
@@ -63,6 +74,7 @@ public class LevelSelect : MonoBehaviour
             }
             lsb.transform.SetParent(map.getLevelPosition(i));
             lsb.transform.localPosition = Vector3.zero;
+            unlockedButtons.Add(lsb);
         }
     }
 }

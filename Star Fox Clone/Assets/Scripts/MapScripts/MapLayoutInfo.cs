@@ -33,7 +33,7 @@ public class MapLayoutInfo : MonoBehaviour
 
     public void StartGame()
     {
-        GameStateConnection.Instance.LoadGameMap();
+        GameConnection.Instance.LoadGameMap();
     }
     #endregion
 

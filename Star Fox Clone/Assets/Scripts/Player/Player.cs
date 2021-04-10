@@ -1,14 +1,18 @@
-﻿using Mirror;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : NetworkBehaviour , IVehicle
+public class Player : MonoBehaviour , IVehicle
 {
     /// <summary>
     /// Everything needed for the game to work
     /// </summary>
     #region SetOnLevelLoaded
+
+    bool isPuppet;
+    public bool IsPuppet { get { return isPuppet; } }
+    public bool MakePuppet { set { isPuppet = value; } }
+
     [SerializeField]GameplayPlane plane;
     public GameplayPlane Plane
     {
@@ -20,7 +24,6 @@ public class Player : NetworkBehaviour , IVehicle
     {
         set { cam = value; }
     }
-    [SyncVar]
     bool inGame;
     public bool IsInGame
     {
@@ -40,8 +43,14 @@ public class Player : NetworkBehaviour , IVehicle
     #endregion
 
     /// <summary>
+    /// All variables that affect the Gameplay feeling
+    /// TODO: NEEDS TO BE INTERCHANGABLE BASED ON SHIPTYPE!!!
+    /// </summary>
+    #region Shiptype dependent
+
+    /// <summary>
     ///Required for the game to work and saved before starting the game in the prefab
-    ///TODO: Visuals and HItbox must be interchangable based on ship type
+    ///TODO: Visuals and Hitbox must be interchangable based on ship type
     /// </summary>
     #region SetManuallyInEditor
     [SerializeField] TurretMount[] turretMounts;
@@ -60,12 +69,9 @@ public class Player : NetworkBehaviour , IVehicle
     Rigidbody myRigid;
     #endregion
 
-    /// <summary>
-    /// All variables that affect the Gameplay feeling
-    /// TODO: NEEDS TO BE INTERCHANGABLE BASED ON SHIPTYPE!!!
-    /// </summary>
-    #region Shiptype dependent
-
+    [SerializeField] ShipData shipData;
+    public ShipData ShipData { get { return shipData; } }
+    /*
     #region Movement
     [SerializeField] float moveSpeed = 4.6f;
     [SerializeField] float rotationSpeed = 0.7f;
@@ -85,30 +91,28 @@ public class Player : NetworkBehaviour , IVehicle
 
     [SerializeField] Vector3 crosshairOffset;
     #endregion
-
-    #region Combat
-    [SerializeField][SyncVar]
+    [SerializeField]
     float maxHealth = 100;
-    [SyncVar]
+    [SerializeField] float invulnTime = 1;
+    */
+    #region Combat
     float currentHealth;
     public float CurrentHealth
     {
         get { return currentHealth; }
     }
-
-    [SerializeField] float invulnTime = 1;
     float invulnTimeEnd = 1;
     #endregion
-
+    
     #endregion
 
     /// <summary>
     /// will be set automatically when the Game starts
     /// </summary>
     #region Targets and Turrets
-    List<TurretMount> ATGTurrets = new List<TurretMount>();
     List<TurretMount> AMSTurrets = new List<TurretMount>();
-    List<MissleTurret> MissleTurrets = new List<MissleTurret>();
+    List<TurretMount> ATGTurrets = new List<TurretMount>();
+    List<MSLTurret> MSLTurrets = new List<MSLTurret>();
     int lastTurret = 0; //Used to cycle MissleTurrets
 
     List<MissleData> misslesAvailable = new List<MissleData>();
@@ -149,12 +153,12 @@ public class Player : NetworkBehaviour , IVehicle
     public void StartGame()
     {
         #region HUD Setup
-        currentHealth = maxHealth;
+        currentHealth = shipData.maxHealth;
         healthbars = hud.Healthbars;
 
         foreach (VerticalBar item in healthbars)
         {
-            item.Initialize(maxHealth);
+            item.Initialize(shipData.maxHealth);
         }
 
 
@@ -184,16 +188,15 @@ public class Player : NetworkBehaviour , IVehicle
         #region Turrets Setup
         Debug.Log("Listing Turrets");
 
-
         foreach (var tur in turretMounts)
         {
             list.AddTurretToList(tur);
             tur.PlayerReferenz = this;      //Referenz to get Player Velocity
-            if (tur.MyTurretType == TurretType.AntiGround) ATGTurrets.Add(tur);
+            if (tur.MyTurretType == TurretType.ATG) ATGTurrets.Add(tur);
             if (tur.MyTurretType == TurretType.AMS) AMSTurrets.Add(tur);
-            if (tur.MyTurretType == TurretType.Missiles)
+            if (tur.MyTurretType == TurretType.MSL)
             {
-                MissleTurrets.Add(tur.getMissleTurret());
+                MSLTurrets.Add(tur.getMissleTurret());
 
                 //Listing all available MissleTypes
                 if (!misslesAvailable.Contains(tur.getMissleTurret().Data.missleData))
@@ -217,9 +220,6 @@ public class Player : NetworkBehaviour , IVehicle
     }
 
     /// <summary>
-    /// processing Inputs 
-    /// TODO: move to Input Managing Script
-    /// 
     /// Adjusting plane transform based on Fokuspoint position
     /// recalculates target locations and updates HUD accordingly
     /// applies gravity and lift
@@ -228,7 +228,7 @@ public class Player : NetworkBehaviour , IVehicle
     {
         if (!inGame) return;
 
-        HelperFunctions.LookAt(playerVisuals, shipFokusPoint.position, fokusPointDamping);
+        HelperFunctions.LookAt(playerVisuals, shipFokusPoint.position, shipData.fokusPointDamping);
 
         gravityAndLiftEffect();
 
@@ -247,8 +247,8 @@ public class Player : NetworkBehaviour , IVehicle
 
     public void ApplyMovement(Vector3 input)
     {
-        if (!hasAuthority) return;
-        myRigid.AddForce(input * moveSpeed);
+        if (isPuppet) return;
+        myRigid.AddForce(input * shipData.moveSpeed);
         updateFokusPoint(input);
 
         checkBoundaries();
@@ -271,8 +271,8 @@ public class Player : NetworkBehaviour , IVehicle
 
     public void ApplyRotation(float addedRotation)
     {
-        if (!hasAuthority) return;
-        addedRotation *= rotationSpeed;
+        if (isPuppet) return;
+        addedRotation *= shipData.rotationSpeed;
         largeCrossHair.Rotate(Vector3.forward, addedRotation);
         playerRotationVisuals.Rotate(Vector3.forward, addedRotation);
     }
@@ -280,17 +280,17 @@ public class Player : NetworkBehaviour , IVehicle
     void updateFokusPoint(Vector3 input)
     {
         input.z = 0;
-        shipFokusPoint.localPosition += input * fokusPointSpeed;
+        shipFokusPoint.localPosition += input * shipData.fokusPointSpeed;
 
 
         //moving back towards (0,0):
-        if (Mathf.Abs(shipFokusPoint.localPosition.x) > fokusPointCenteringTolerance && input.x == 0)
+        if (Mathf.Abs(shipFokusPoint.localPosition.x) > shipData.fokusPointCenteringTolerance && input.x == 0)
         {
-            shipFokusPoint.localPosition = new Vector3(shipFokusPoint.localPosition.x * fokusPointCenteringSpeed, shipFokusPoint.localPosition.y, shipFokusPoint.localPosition.z);
+            shipFokusPoint.localPosition = new Vector3(shipFokusPoint.localPosition.x * shipData.fokusPointCenteringSpeed, shipFokusPoint.localPosition.y, shipFokusPoint.localPosition.z);
         }
-        if (Mathf.Abs(shipFokusPoint.localPosition.y) > fokusPointCenteringTolerance && input.y == 0)
+        if (Mathf.Abs(shipFokusPoint.localPosition.y) > shipData.fokusPointCenteringTolerance && input.y == 0)
         {
-            shipFokusPoint.localPosition = new Vector3(shipFokusPoint.localPosition.x, shipFokusPoint.localPosition.y * fokusPointCenteringSpeed, shipFokusPoint.localPosition.z);
+            shipFokusPoint.localPosition = new Vector3(shipFokusPoint.localPosition.x, shipFokusPoint.localPosition.y * shipData.fokusPointCenteringSpeed, shipFokusPoint.localPosition.z);
         }
 
         updateCrosshairPositions();
@@ -298,8 +298,8 @@ public class Player : NetworkBehaviour , IVehicle
 
     void updateCrosshairPositions()
     {
-        largeCrossHair.localPosition = shipFokusPoint.localPosition + crosshairOffset;
-        smallCrossHair.localPosition = shipFokusPoint.localPosition * 2 + crosshairOffset;
+        largeCrossHair.localPosition = shipFokusPoint.localPosition + shipData.crosshairOffset;
+        smallCrossHair.localPosition = shipFokusPoint.localPosition * 2 + shipData.crosshairOffset;
 
         /*smallCrossHair.localPosition += mouseInputs() * 0.1f;
 
@@ -312,15 +312,15 @@ public class Player : NetworkBehaviour , IVehicle
 
     private void clampFokusPointPosition()
     {
-        shipFokusPoint.localPosition = new Vector3(Mathf.Clamp(shipFokusPoint.localPosition.x, -fokusPointRange, fokusPointRange), Mathf.Clamp(shipFokusPoint.localPosition.y, -fokusPointRange, fokusPointRange), shipFokusPoint.localPosition.z);
+        shipFokusPoint.localPosition = new Vector3(Mathf.Clamp(shipFokusPoint.localPosition.x, -shipData.fokusPointRange, shipData.fokusPointRange), Mathf.Clamp(shipFokusPoint.localPosition.y, -shipData.fokusPointRange, shipData.fokusPointRange), shipFokusPoint.localPosition.z);
     }
 
     void gravityAndLiftEffect()
     {
-        Vector3 gravity = Vector3.down * gravityAndLift;
+        Vector3 gravity = Vector3.down * shipData.gravityAndLift;
         ApplyMovement(gravity);
 
-        Vector3 lift = playerRotationVisuals.TransformDirection(Vector3.up) * gravityAndLift;
+        Vector3 lift = playerRotationVisuals.TransformDirection(Vector3.up) * shipData.gravityAndLift;
         ApplyMovement(lift);
     }
 
@@ -333,24 +333,10 @@ public class Player : NetworkBehaviour , IVehicle
     #region combat
 
     #region Inputs
-    /*
-    Vector3 mouseInputs()
-    {
-        Vector3 retVal = Vector3.zero;
-        if (Input.GetAxis("Mouse X") != 0)
-        {
-            retVal.x += Input.GetAxis("Mouse X");
-        } 
-        if (Input.GetAxis("Mouse Y") != 0)
-        {
-            retVal.y += Input.GetAxis("Mouse Y");
-        }
-        return retVal;
-    }*/
 
     public void applyCombatInputs(INPUTS input)
     {
-        if (!hasAuthority) return;
+        if (isPuppet) return;
 
         switch (input)
         {
@@ -380,7 +366,7 @@ public class Player : NetworkBehaviour , IVehicle
 
     public void gainHealth(float repairValue)
     {
-        currentHealth = Mathf.Clamp(currentHealth  + repairValue, 0, maxHealth);
+        currentHealth = Mathf.Clamp(currentHealth  + repairValue, 0, shipData.maxHealth);
         UpdateHealthbar();
     }
 
@@ -400,11 +386,11 @@ public class Player : NetworkBehaviour , IVehicle
         {
             case DamageType.highExplosive:
                 takeDamage(damage);
-                becomeInvulnerable(invulnTime);
+                becomeInvulnerable(shipData.invulnTime);
                 break;
             case DamageType.collision:
                 takeDamage(damage);
-                becomeInvulnerable(invulnTime);
+                becomeInvulnerable(shipData.invulnTime);
                 break;
             case DamageType.repairs:
                 gainHealth(damage);
@@ -429,7 +415,7 @@ public class Player : NetworkBehaviour , IVehicle
 
         inGame = false;
         Invoke("destroySelf", 5);
-        GameStateConnection.Instance.loosePlayer(this);
+        GameConnection.Instance.loosePlayer(this);
 
         myRigid.drag = 0;
         myRigid.AddForce(transform.forward * 12, ForceMode.Impulse);
@@ -637,19 +623,19 @@ public class Player : NetworkBehaviour , IVehicle
     
     public void FireMissle(int target)
     {
-        if (!hasAuthority) return;
+        if (isPuppet) return;
 
         if (Targets.Count < target + 1) return;
         //shoots a missle if there is a single turret with missles left
-        for (int i = 0; i < MissleTurrets.Count; i++)
+        for (int i = 0; i < MSLTurrets.Count; i++)
         {
-            if (MissleTurrets[lastTurret].isLoaded() && MissleTurrets[lastTurret].Data.missleData == currentMissles)
+            if (MSLTurrets[lastTurret].isLoaded() && MSLTurrets[lastTurret].Data.missleData == currentMissles)
             {
-                MissleTurrets[lastTurret].Fire(Targets[target]);
-                lastTurret = (lastTurret + 1) % MissleTurrets.Count;
+                MSLTurrets[lastTurret].Fire(Targets[target]);
+                lastTurret = (lastTurret + 1) % MSLTurrets.Count;
                 return;
             }
-            lastTurret = (lastTurret + 1) % MissleTurrets.Count;
+            lastTurret = (lastTurret + 1) % MSLTurrets.Count;
         }
     }
 
@@ -670,16 +656,22 @@ public class Player : NetworkBehaviour , IVehicle
 
 
     /// <summary>
+    /// creates a list of all Modules and numerates them
     /// used in Loadout map to change turrets
+    /// ModuleNumbers are used for the savefiles
     /// </summary>
     #region Loadout
     public void AddTurretModules(LoadoutHUD HUD)
     {
         List<TurretModule> mods = new List<TurretModule>();
+
+        int moduleNumber = 0;
         foreach (TurretMount tm in turretMounts)
         {
             TurretModule mod = tm.gameObject.AddComponent<TurretModule>();
             mod.Instantiate(playerNumber);
+
+            mod.ModuleNumber = moduleNumber++;
 
             mods.Add(mod);
         }
@@ -713,7 +705,6 @@ public class Player : NetworkBehaviour , IVehicle
 
 
             Vector2 screenPos = cam.WorldToScreenPoint(t.transform.position);
-            //Debug.Log(screenPos);
 
             //used for vertical splitscreen. using if since only 2 players are possible
             if (playerNumber != 0) screenPos.x -= canvas.rect.width;// * playerNumber;
@@ -761,7 +752,6 @@ public class Player : NetworkBehaviour , IVehicle
     #endregion
 
     #region NetworkSpawning
-    [Command]
     public void CmdSpawnBullet(SmallTurretData data, Vector3 position, Quaternion rotation, float flakDelay)
     {
         GameObject b = GameObject.Instantiate(data.bulletData.visuals);
@@ -778,17 +768,15 @@ public class Player : NetworkBehaviour , IVehicle
         else bullet.Initialize(data.bulletData, data.bulletSpread, BulletOrigin.Player, Vector3.zero);              //using regular bullet timer
 
 
-        NetworkServer.Spawn(b.gameObject);
+        //NetworkServer.Spawn(b.gameObject);
         //RpcSpawn(projectile);
     }
 
-    [ClientRpc]
     void RpcSpawnBullet(SmallTurretData data, Vector3 position, Quaternion rotation, float flakDelay)
     {
 
     }
 
-    [Command]
     public void CmdSpawnMissle(SmallTurretData data, Vector3 position, Quaternion rotation, AquiredTarget target)
     {
         GameObject M = GameObject.Instantiate(data.missleData.visuals);
@@ -805,7 +793,6 @@ public class Player : NetworkBehaviour , IVehicle
         M.GetComponent<Rigidbody>().AddForce(M.transform.forward * data.ejectSpeed + spread + Velocity, ForceMode.Impulse);
     }
 
-    [ClientRpc]
     void RpcSpawnMissle(SmallTurretData data, Vector3 position, Quaternion rotation, AquiredTarget target)
     {
 

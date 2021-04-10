@@ -19,14 +19,14 @@ public class AquiredTarget
     /// <summary>
     /// Only exists for Mirror
     /// </summary>
-    public AquiredTarget()
-    {
-        Debug.LogWarning("Undefined Target created");
-        transform = null;
-        Velocity = Vector3.zero;
-        CurrentQuarter = 0;
-        Type = TargetType.missle;
-    }
+    //public AquiredTarget()
+    //{
+    //    Debug.LogWarning("Undefined Target created");
+    //    transform = null;
+    //    Velocity = Vector3.zero;
+    //    CurrentQuarter = 0;
+    //    Type = TargetType.missle;
+    //}
 
     public void UpdateVelocity()
     {

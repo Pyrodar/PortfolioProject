@@ -1,15 +1,14 @@
-﻿using Mirror;
-using UnityEngine;
+﻿using UnityEngine;
 [RequireComponent(typeof(TurretMount))]
 public class TurretModule : MonoBehaviour, IManeuverableListEntry
 {
     //Empty sphere Object to mark where to click
-    //[SerializeField] GameObject clickableAreaMarker;
     GameObject areaMarker;
     SphereCollider coll;
 
     LoadoutHUD HUD;
     Player myPlayer;
+    public int ModuleNumber;    //used to create a ship loadout save file, set in the Player script
     TurretData currentTurret;
     public TurretData CurrentTurret { get { return currentTurret; } }
 
@@ -20,7 +19,7 @@ public class TurretModule : MonoBehaviour, IManeuverableListEntry
     public void Instantiate(int i)
     {
         HUD = (LoadoutHUD)MapLayoutInfo.Instance.HUD[i];
-        myPlayer = GameStateConnection.Instance.Players[i];
+        myPlayer = GameConnection.Instance.Players[i];
 
         //Materials
         RegularAM = Resources.Load("Materials/LoadoutHUD/RegularAM") as Material;
@@ -38,9 +37,6 @@ public class TurretModule : MonoBehaviour, IManeuverableListEntry
         gameObject.layer = 0;               //DefaultLayer
         coll = gameObject.AddComponent<SphereCollider>();
         coll.radius = 0.325f;
-
-        var turretTransform = gameObject.GetComponent<TurretMount>().MyTurret.transform;
-        AddTurretNetworkComponent(turretTransform);
 
         refreshTurret();
     }
@@ -74,21 +70,30 @@ public class TurretModule : MonoBehaviour, IManeuverableListEntry
 
         //HUD.UnmarkModule(this);
     }
-
-
     #endregion
+
+    #region changing turrets
+    /// <summary>
+    /// removes the old turret and adds the new one
+    /// </summary>
+    /// <param name="data">Is a reference to the turretType via a TurretData script that is used to create the new turret </param>
+    public void ChangeTurret(TurretData data)
+    {
+        clearTurret();
+
+        AddTurret(data);
+
+        refreshTurret();
+    }
 
     /// <summary>
     /// creates the Turret as child of this transform based on a scriptableObject of type TurretData given to it
     /// </summary>
-    /// <param name="turret">Is a reference to the turretType via a TurretData script that is used to create the new turret </param>
-    public void AddTurret(TurretData turret)
+    /// <param name="data"></param>
+    void AddTurret(TurretData data)
     {
         #region set Mesh
-        clearTurret();
-        
-        //TODO: Spawn turret from Server and give clientAuthority
-        GameObject T = Instantiate(turret.TurretMesh);
+        GameObject T = Instantiate(data.TurretMesh);
         T.transform.parent = transform;
         T.transform.position = transform.position;
         T.transform.rotation = transform.rotation;
@@ -97,45 +102,31 @@ public class TurretModule : MonoBehaviour, IManeuverableListEntry
 
         #region set Script
         Turret TurretScript;
-        
-        switch (turret.turretType)
+
+        switch (data.turretType)
         {
             case TurretType.AMS:
                 TurretScript = T.AddComponent<AMSTurret>();
-                TurretScript.Data = turret;
+                TurretScript.Data = data;
                 break;
-            case TurretType.AntiGround:
-                TurretScript = T.AddComponent<AntiGroundTurret>();
-                TurretScript.Data = turret;
+            case TurretType.ATG:
+                TurretScript = T.AddComponent<ATGTurret>();
+                TurretScript.Data = data;
                 break;
-            case TurretType.Missiles:
-                TurretScript = T.AddComponent<MissleTurret>();
-                TurretScript.Data = turret;
+            case TurretType.MSL:
+                TurretScript = T.AddComponent<MSLTurret>();
+                TurretScript.Data = data;
                 break;
         }
         #endregion
-
-        AddTurretNetworkComponent(T.transform);
-
-        refreshTurret();
     }
 
-    void AddTurretNetworkComponent(Transform turretTransform)
-    {
-        var netTrf = myPlayer.gameObject.AddComponent<NetworkTransformChild>();
-        netTrf.target = turretTransform;
-        netTrf.clientAuthority = true;
-
-    }
 
     /// <summary>
     /// removes currently equipped Turret
     /// </summary>
     void clearTurret()
     {
-        var turretTransform = gameObject.GetComponent<TurretMount>().MyTurret.transform;
-        removeTurretNetworkComponent(turretTransform);
-
         foreach (Transform child in transform)
         {
             GameObject.Destroy(child.gameObject);
@@ -143,18 +134,9 @@ public class TurretModule : MonoBehaviour, IManeuverableListEntry
 
         refreshTurret();
     }
+    #endregion
 
-    void removeTurretNetworkComponent(Transform turretTransform)
-    {
-        foreach (var item in myPlayer.gameObject.GetComponentsInChildren<NetworkTransformChild>())
-        {
-            if (item.target == turretTransform)
-            {
-                Destroy(item);
-            }
-        }
-    }
-
+    #region start game
     /// <summary>
     /// removes marker and this script
     /// </summary>
@@ -165,6 +147,7 @@ public class TurretModule : MonoBehaviour, IManeuverableListEntry
         gameObject.layer = 2;       //IgnoreRaycastLayer
         Destroy(this);
     }
+    #endregion
 
     #region Interface
 

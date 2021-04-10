@@ -1,5 +1,4 @@
-﻿using Mirror;
-using UnityEngine;
+﻿using UnityEngine;
 
 public interface IVehicle
 {
@@ -28,7 +27,7 @@ public enum TargetType
 #endregion
 
 [RequireComponent(typeof(Rigidbody))]
-public class Target : NetworkBehaviour , IVehicle
+public class Target : MonoBehaviour , IVehicle
 {
     #region Type
     protected TargetType type;
@@ -53,7 +52,7 @@ public class Target : NetworkBehaviour , IVehicle
     #endregion
 
     protected Player myTarget;
-    protected Player[] Players { get { return GameStateConnection.Instance.Players; } }
+    protected Player[] Players { get { return GameConnection.Instance.Players; } }
 
 
     protected virtual void Start()
@@ -61,9 +60,9 @@ public class Target : NetworkBehaviour , IVehicle
         currentHealth = maxHealth;
         rigid = GetComponent<Rigidbody>();
 
-        if (GameStateConnection.Instance != null)
+        if (GameConnection.Instance != null)
         {
-            GameStateConnection.Instance.switchingPlayers += changeTarget;
+            GameConnection.Instance.switchingPlayers += changeTarget;
 
             changeTarget();
         }
@@ -73,12 +72,12 @@ public class Target : NetworkBehaviour , IVehicle
 
     protected void changeTarget()
     {
-        if (GameStateConnection.Instance == null)
+        if (GameConnection.Instance == null)
         {
             myTarget = null;
             return;
         }
-        myTarget = GameStateConnection.Instance.getFrontlinePlayer();
+        myTarget = GameConnection.Instance.getFrontlinePlayer();
     }
 
     protected virtual void addScoreAndDestroy()
@@ -113,7 +112,7 @@ public class Target : NetworkBehaviour , IVehicle
 
     public virtual void destroySelf()
     {
-        GameStateConnection.Instance.switchingPlayers -= changeTarget;
+        GameConnection.Instance.switchingPlayers -= changeTarget;
 
         foreach (StationaryWeapon SW in GetComponentsInChildren<StationaryWeapon>())
         {
@@ -141,19 +140,12 @@ public class Target : NetworkBehaviour , IVehicle
     }
 
     #region NetworkSpawning
-    [Command]
     public void CmdSpawn(GameObject projectile)
     {
-        if (!isServer) return;
-
-        NetworkServer.Spawn(projectile);
-        RpcSpawn(projectile);
     }
 
-    [ClientRpc]
     void RpcSpawn(GameObject projectile)
     {
-        NetworkServer.Spawn(projectile);
     }
     #endregion
 }

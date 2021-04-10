@@ -39,10 +39,10 @@ public class TurretIconList : MonoBehaviour
             case TurretType.AMS:
                 sprite = AMSTurrretIcon;
                 break;
-            case TurretType.AntiGround:
+            case TurretType.ATG:
                 sprite = AtGTurrretIcon;
                 break;
-            case TurretType.Missiles:
+            case TurretType.MSL:
                 sprite = MSSTurrretIcon;
                 break;
             default:

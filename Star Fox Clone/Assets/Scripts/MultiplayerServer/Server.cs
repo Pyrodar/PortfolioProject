@@ -2,119 +2,48 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Server : MonoBehaviour
+public class Server : MonoBehaviour, ServerInterface
 {
-    #region Singleton
-    public static Server Instance;
-    public void Awake()
-    {
-        if (Server.Instance != null)
-        {
-            Debug.LogError("More than one Server exists!");
-            return;
-        }
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
-    #endregion
-
-    #region PlaneSynchronisation
-    public void SynchronizePlanePosition(float ditanceTraveled)
-    {
-
-    }
-    #endregion
-
     #region Players
-    public void UpdatePlayerPosition(Player player)
-    {
-
-    }
-
     public void PlayerConnected(Player player)
     {
-        
+        throw new System.NotImplementedException();
     }
 
     public void PlayerDestroyed(Player player)
     {
-        
+        throw new System.NotImplementedException();
+    }
+
+    public void UpdatePlayerPosition(Player player)
+    {
+        throw new System.NotImplementedException();
+    }
+    #endregion
+
+    #region Plane
+    public void SynchronizePlanePosition(float distanceTraveled)
+    {
+        throw new System.NotImplementedException();
     }
     #endregion
 
     #region Targets
     public void TargetCreated(Target target)
     {
-
+        throw new System.NotImplementedException();
     }
 
     public void TargetDestroyed(Target target)
     {
-
+        throw new System.NotImplementedException();
     }
     #endregion
 
-    #region bullets
+    #region Bullets
     public void SpawnBullet(BulletData data, Vector3 spawnlocation, Vector3 bulletVelocity, BulletOrigin origin)
     {
-
+        throw new System.NotImplementedException();
     }
     #endregion
 }
-
-#region structs
-
-public struct PlayerInfo
-{
-    #region Position
-    float PosX;
-    float PosY;
-    float PosZ;
-    #endregion
-
-    #region Rotation Euler
-    float RotX;
-    float RotY;
-    float RotZ;
-    #endregion
-
-    #region Turrets
-    #endregion
-}
-
-public struct TargetInfo
-{
-
-}
-
-public struct BulletInfo
-{
-    #region Data String
-    string data;
-    #endregion
-
-    #region Position
-    float PosX;
-    float PosY;
-    float PosZ;
-    #endregion
-
-    #region Rotation Euler
-    float RotX;
-    float RotY;
-    float RotZ;
-    #endregion
-
-    #region Velocity
-    float VelX;
-    float VelY;
-    float VelZ;
-    #endregion
-}
-
-public struct MissleInfo
-{
-
-}
-
-#endregion

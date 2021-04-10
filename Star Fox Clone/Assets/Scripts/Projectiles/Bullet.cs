@@ -25,7 +25,7 @@ public class Bullet : MonoBehaviour
         r.AddForce(vel, ForceMode.Impulse);
 
         //Tell Server about new Bullet
-        if (Server.Instance != null) Server.Instance.SpawnBullet(data, transform.position, vel, origin);
+        //if (Server.Instance != null) Server.Instance.SpawnBullet(data, transform.position, vel, origin);
     }
 
     public void Initialize(BulletData _data, float bulletSpread, BulletOrigin origin, Vector3 startingVelocity, float flaktime)

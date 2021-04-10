@@ -16,7 +16,7 @@ public class InputEvent : UnityEvent<INPUTS> { }
 
 public class InputManagment : MonoBehaviour
 {
-    GameStateConnection state;
+    GameConnection state;
 
     #region Events
 
@@ -56,7 +56,7 @@ public class InputManagment : MonoBehaviour
         SwitchPositions2.RemoveAllListeners();
         #endregion
 
-        state = GameStateConnection.Instance;
+        state = GameConnection.Instance;
         if (state == null) return;
 
         SwitchPositions.AddListener(state.SwitchPlayerPositions);
@@ -80,6 +80,22 @@ public class InputManagment : MonoBehaviour
 
     void Update()
     {
+        #region debugging
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            GameConnection.Instance.Save();
+        }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            GameConnection.Instance.Load();
+        }
+
+        #endregion
+
+
+
         if (state == null)
         {
             ConnectInputs();
@@ -88,7 +104,7 @@ public class InputManagment : MonoBehaviour
 
         if (state.Players != null)
         {
-            if (state.Players[0] != null && state.Players[0].IsInGame)
+            if (state.Players[0].IsInGame)
             {
                 if (inputMovementKeyboard().magnitude > 0) Movement?.Invoke(inputMovementKeyboard());
                 if (inputRotationKeyboard() != 0) Rotation?.Invoke(inputRotationKeyboard());
@@ -96,7 +112,7 @@ public class InputManagment : MonoBehaviour
                 combatInputsKeyboard();
             }
 
-            if (state.Players.Length > 1 && state.Players[1] != null && state.Players[1].IsInGame)
+            if (state.Players.Length > 1 && state.Players[1].IsInGame)
             {
                 if (inputMovementController().magnitude > 0) Movement2?.Invoke(inputMovementController());
                 if (inputRotationController() != 0) Rotation2?.Invoke(inputRotationController());

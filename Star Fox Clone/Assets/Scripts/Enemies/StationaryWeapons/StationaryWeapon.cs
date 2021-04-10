@@ -1,5 +1,4 @@
-﻿using Mirror;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class StationaryWeapon : MonoBehaviour
@@ -43,7 +42,7 @@ public class StationaryWeapon : MonoBehaviour
         {
             RotationParent = transform.parent;
         }
-        GameStateConnection.Instance.switchingPlayers += changeTarget;
+        GameConnection.Instance.switchingPlayers += changeTarget;
         //Debug.Log("Added object: " + name + " to list of switch player delegate");
 
         changeTarget();
@@ -51,12 +50,12 @@ public class StationaryWeapon : MonoBehaviour
 
     void changeTarget()
     {
-        if (GameStateConnection.Instance == null)
+        if (GameConnection.Instance == null)
         {
             myTarget = null;
             return;
         }
-        myTarget = GameStateConnection.Instance.getFrontlinePlayer();
+        myTarget = GameConnection.Instance.getFrontlinePlayer();
     }
     #endregion
 
@@ -150,7 +149,7 @@ public class StationaryWeapon : MonoBehaviour
     #region destruction
     public virtual void destroySelf()
     {
-        GameStateConnection.Instance.switchingPlayers -= changeTarget;
+        GameConnection.Instance.switchingPlayers -= changeTarget;
         //Debug.Log("Removed object: " + name + " to list of switch player delegate");
         Destroy(this.gameObject);
     }

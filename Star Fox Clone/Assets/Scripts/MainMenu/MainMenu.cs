@@ -22,36 +22,36 @@ public class MainMenu : MonoBehaviour
     {
         Main.SetActive(false);
         Return.SetActive(true);
-        Levels.SetActive(true);
+        openLevelScreen();
 
-        GameStateConnection.Instance.SetConnectionType(ConnectionType.SinglePlayer);
+        GameConnection.Instance.SetConnectionType(ConnectionType.SinglePlayer);
     }
 
     public void LocalCoopButton()
     {
         Return.SetActive(true);
         Main.SetActive(false);
-        Levels.SetActive(true);
+        openLevelScreen();
 
-        GameStateConnection.Instance.SetConnectionType(ConnectionType.LocalCoop);
+        GameConnection.Instance.SetConnectionType(ConnectionType.LocalCoop);
     }
 
     public void HostCoopButton()
     {
         Return.SetActive(true);
         Main.SetActive(false);
-        Levels.SetActive(true);
+        openLevelScreen();
 
-        GameStateConnection.Instance.SetConnectionType(ConnectionType.Host);
+        GameConnection.Instance.SetConnectionType(ConnectionType.Host);
     }
 
     public void JoinCoopButton()
     {
         Return.SetActive(true);
         Main.SetActive(false);
-        Levels.SetActive(true);
+        openLevelScreen();
 
-        GameStateConnection.Instance.SetConnectionType(ConnectionType.Client);
+        GameConnection.Instance.SetConnectionType(ConnectionType.Client);
     }
 
     public void SettingsButton()
@@ -81,4 +81,37 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
 #endif
     }
+
+    void openLevelScreen()
+    {
+        Levels.SetActive(true);
+        Levels.GetComponent<LevelSelect>().RefreshLevels();
+    }
+
+
+
+
+
+    #region Debugging
+    public void LevelUnlock(int value)
+    {
+        GameConnection.Instance.LevelUnlock(value);
+    }
+
+    public void AMSUnlock(int value)
+    {
+        GameConnection.Instance.AMSUnlock(value);
+
+    }
+    public void ATGUnlock(int value)
+    {
+        GameConnection.Instance.ATGUnlock(value);
+
+    }
+    public void MSLUnlock(int value)
+    {
+        GameConnection.Instance.MSLUnlock(value);
+
+    }
+    #endregion
 }

@@ -46,11 +46,11 @@ public class TurretDetails : MonoBehaviour
                 typeName.text = "Anti Missle System";
                 Type.sprite = IconAMS;
                 break;
-            case TurretType.AntiGround:
+            case TurretType.ATG:
                 typeName.text = "Air to Ground";
                 Type.sprite = IconATG;
                 break;
-            case TurretType.Missiles:
+            case TurretType.MSL:
                 typeName.text = "Missles";
                 Type.sprite = IconMSL;
                 break;
@@ -65,7 +65,7 @@ public class TurretDetails : MonoBehaviour
 
         switch (data.turretType)
         {
-            case TurretType.Missiles:
+            case TurretType.MSL:
                 ammoType.text = data.missleData.name;
                 
                 Stat4Name.text = "Missle Capacity:";

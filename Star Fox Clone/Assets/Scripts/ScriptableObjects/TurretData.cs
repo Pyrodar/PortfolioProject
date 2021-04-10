@@ -54,8 +54,8 @@ public class SmallTurretData
 public enum TurretType
 {
     AMS
-    , AntiGround
-    , Missiles
+    , ATG
+    , MSL
 }
 
 [CustomEditor(typeof(TurretData))]
@@ -71,14 +71,14 @@ public class TurretDataEditor : Editor
         var t = target as TurretData;
         t.turretType = (TurretType)EditorGUILayout.EnumPopup("Turret Type", t.turretType);
         t.TurretMesh = EditorGUILayout.ObjectField("Mesh", t.TurretMesh, typeof(GameObject), true) as GameObject;
-        if (t.turretType == TurretType.Missiles)
+        if (t.turretType == TurretType.MSL)
         {
             t.missleData = EditorGUILayout.ObjectField("MissleData", t.missleData, typeof(MissleData), true) as MissleData;
             t.missleSpace = EditorGUILayout.IntField("Missle Space", t.missleSpace);
             t.cooldown = EditorGUILayout.FloatField("Missle Reload Time", t.cooldown);
             t.ejectSpeed = EditorGUILayout.FloatField("Missle Eject Speed", t.ejectSpeed);
         }
-        else if(t.turretType == TurretType.AntiGround)
+        else if(t.turretType == TurretType.ATG)
         {
             t.bulletData = EditorGUILayout.ObjectField("BulletData", t.bulletData, typeof(BulletData), true) as BulletData;
             t.bulletSpread = EditorGUILayout.Slider("Bullet Spread", t.bulletSpread, 0f, 1f);
