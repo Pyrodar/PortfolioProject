@@ -53,43 +53,75 @@ public class LoadoutHUD : UIBaseClass
         {
             case TurretType.AMS:
 
-                foreach (TurretData turret in loadoutList.AMS_Turrets)
+                for (int i = 0; i < GameConnection.Instance.AMS_Unlocked; i++)
                 {
+                    #region find turret
+                    if (i > loadoutList.AMS_Turrets.Count)
+                    {
+                        Debug.LogError($"Number of unlocked AMS turrets is greater than number of total turrets: {i}");
+                        i = 0;
+                    }
+                    TurretData turret = loadoutList.AMS_Turrets[i];
+                    #endregion
+
+                    #region spawn button
                     TurretMenuButton tb = Instantiate(TurretListPrefabs);
                     tb.Initialize(turret, this);
                     tb.transform.SetParent(turretListParent);
                     turretButtons.Add(tb);
 
                     resetScale(tb);
+                    #endregion
                 }
-
                 break;
+
             case TurretType.ATG:
-
-                foreach (TurretData turret in loadoutList.ATG_Turrets)
+                for (int i = 0; i < GameConnection.Instance.ATG_Unlocked; i++)
                 {
+                    #region find turret
+                    if (i > loadoutList.ATG_Turrets.Count)
+                    {
+                        Debug.LogError($"Number of unlocked ATG turrets is greater than number of total turrets: {i}");
+                        i = 0;
+                    }
+                    TurretData turret = loadoutList.ATG_Turrets[i];
+                    #endregion
+
+                    #region spawn button
                     TurretMenuButton tb = Instantiate(TurretListPrefabs);
                     tb.Initialize(turret, this);
                     tb.transform.SetParent(turretListParent);
                     turretButtons.Add(tb);
 
                     resetScale(tb);
+                    #endregion
                 }
-
                 break;
+
             case TurretType.MSL:
 
-                foreach (TurretData turret in loadoutList.MSL_Turrets)
+                for (int i = 0; i < GameConnection.Instance.MSL_Unlocked; i++)
                 {
+                    #region find turret
+                    if (i > loadoutList.MSL_Turrets.Count)
+                    {
+                        Debug.LogError($"Number of unlocked MSL turrets is greater than number of total turrets: {i}");
+                        i = 0;
+                    }
+                    TurretData turret = loadoutList.MSL_Turrets[i];
+                    #endregion
+
+                    #region spawn button
                     TurretMenuButton tb = Instantiate(TurretListPrefabs);
                     tb.Initialize(turret, this);
                     tb.transform.SetParent(turretListParent);
                     turretButtons.Add(tb);
 
                     resetScale(tb);
+                    #endregion
                 }
-
                 break;
+
             default:
                 break;
         }
@@ -97,8 +129,11 @@ public class LoadoutHUD : UIBaseClass
         turretsListed.ResetLists(turretButtons.ToList<IManeuverableListEntry>());
     }
 
-    //After assigning new parent RectTransform seems to get messed up
-    //Afterwards the rotation seems to be making trouble éverytime it's reloaded
+    /// <summary>
+    ///After assigning new parent RectTransform seems to get messed up
+    ///Afterwards the rotation seems to be making trouble éverytime it's reloaded
+    /// </summary>
+    /// <param name="t"></param>
     void resetScale(TurretMenuButton t)
     {
         t.GetComponent<RectTransform>().localPosition = Vector3.zero;
@@ -106,6 +141,7 @@ public class LoadoutHUD : UIBaseClass
         t.transform.rotation = Camera.main.transform.rotation;
     }
 
+    #region public "show" funktions
     public void ShowAllTurrets()
     {
         clearList();
@@ -126,6 +162,7 @@ public class LoadoutHUD : UIBaseClass
         clearList();
         fillList(TurretType.MSL);
     }
+    #endregion
 
     #endregion
 
