@@ -1927,7 +1927,7 @@ GameObject:
   - component: {fileID: 3212747278172850654}
   - component: {fileID: 3212747278172850642}
   m_Layer: 5
-  m_Name: UICanvas
+  m_Name: InGameHUD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

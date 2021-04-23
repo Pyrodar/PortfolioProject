@@ -232,7 +232,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2988620085212833098}
-  - component: {fileID: 7787991878300498128}
+  - component: {fileID: 616108845677750443}
   m_Layer: 2
   m_Name: MissleTurret
   m_TagString: Untagged
@@ -255,7 +255,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7787991878300498128
+--- !u!114 &616108845677750443
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -264,7 +264,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2988620085212833097}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ae3ac19686eedc409aad4c50a16c25e, type: 3}
+  m_Script: {fileID: 11500000, guid: a65354e8a33fb874f81d5e9eedb6b06b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   myMount: {fileID: 0}

@@ -18,6 +18,7 @@ public class LoadoutHUD : UIBaseClass
 
     private void Start()
     {
+        manageLoadouts.LoadRessources();
         loadoutList = Resources.Load("LoadoutList") as LoadoutList;
         turretButtons = new List<TurretMenuButton>();
         turretsListed = new CyclingLists();
@@ -348,7 +349,7 @@ public class LoadoutHUD : UIBaseClass
         #region Switch maneuvered List to available Turrets
 
         maneuveredList = turretsListed;
-        maneuveredList.moveSteps(0);                        //Mark current entry
+        //maneuveredList.moveSteps(0);                        //Mark current entry
         Debug.Log($"Maneuvered List is now: turretsListed");
 
         #endregion
@@ -381,6 +382,11 @@ public class LoadoutHUD : UIBaseClass
 
     public void MarkModule(TurretModule tm)
     {
+        if (maneuveredList != modulesListed)
+        {
+            return;
+        }
+
         for (int i = 0; i < modules.Count; i++)
         {
             if(modules[i] == tm)
@@ -402,9 +408,32 @@ public class LoadoutHUD : UIBaseClass
     
     public void SwitchTurret(TurretData data)
     {
-        selectedModule.ChangeTurret(data);
+        changeTurretAndSaveFile(data);
         CurrentTurret.SetDescription(selectedModule.CurrentTurret);
     }
 
+    #endregion
+
+    #region saveFile
+    ManageLoadouts manageLoadouts = new ManageLoadouts();
+    void changeTurretAndSaveFile(TurretData data)
+    {
+        manageLoadouts.changeTurret(playerNumber, selectedModule, data);
+    }
+    void LoadSaveFile()
+    {
+        manageLoadouts.loadLoadoutFromFile(playerNumber, playerNumber, modules);
+    }
+
+    public override void Initialize()
+    {
+        base.Initialize();
+        LoadSaveFile();
+    }
+
+    public void SaveCurrentLoadout()
+    {
+        manageLoadouts.SaveCurrentLoadout(playerNumber, modules);
+    }
     #endregion
 }

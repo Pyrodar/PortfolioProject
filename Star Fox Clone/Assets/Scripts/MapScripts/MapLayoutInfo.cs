@@ -6,6 +6,7 @@ public class MapLayoutInfo : MonoBehaviour
 {
     #region singleton
     static MapLayoutInfo instance;
+    [SerializeField] InGameMenu menu;
 
     public static MapLayoutInfo Instance
     {
@@ -20,6 +21,8 @@ public class MapLayoutInfo : MonoBehaviour
             return;
         }
         instance = this;
+
+        //menu = gameObject.GetComponentInChildren<InGameMenu>();
     }
     #endregion
 
@@ -65,5 +68,13 @@ public class MapLayoutInfo : MonoBehaviour
 
     #endregion
 
+    #endregion
+
+    #region IngameMenu
+    public void OpenMenu()
+    {
+        Debug.Log("Toggeling Menu");
+        menu.ToggleMenu();
+    }
     #endregion
 }

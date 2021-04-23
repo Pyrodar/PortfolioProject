@@ -31,7 +31,7 @@ public class GameConnection : MonoBehaviour
 
         #region Load GameInfo
         gameInfo = new GameInfo("File_01");
-        Debug.Log("Loaded Gamestate");
+        //Debug.Log("Gamestate created");
         #endregion
 
         SceneManager.sceneLoaded += OnLevelLoaded;
@@ -382,6 +382,7 @@ public class GameConnection : MonoBehaviour
         mapLayoutInfo.HUD[playerNumber].PlayerNumber = playerNumber;
         mapLayoutInfo.HUD[playerNumber].GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceCamera;
         mapLayoutInfo.HUD[playerNumber].GetComponent<Canvas>().worldCamera = mapLayoutInfo.Cameras[playerNumber];
+        mapLayoutInfo.HUD[playerNumber].Invoke("Initialize", 1f);   //Waiting for turrets to be loaded
         setupCameraViewport(mapLayoutInfo.Cameras[playerNumber], playerNumber);
 
         #endregion
@@ -435,7 +436,7 @@ public class GameConnection : MonoBehaviour
     {
         foreach (Player player in players)
         {
-            Destroy(player);
+            Destroy(player.gameObject);
         }
 
         gameplayPlane = null;

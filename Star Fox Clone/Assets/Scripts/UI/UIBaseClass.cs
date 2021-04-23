@@ -11,6 +11,8 @@ public class UIBaseClass : MonoBehaviour
     //required for splitscreen
     [SerializeField]protected int playerNumber;
     public int PlayerNumber { set { playerNumber = value; } }
+
+    public virtual void Initialize(){}
 }
 
 public enum UIType

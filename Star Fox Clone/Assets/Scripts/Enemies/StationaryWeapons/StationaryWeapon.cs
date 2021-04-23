@@ -75,8 +75,8 @@ public class StationaryWeapon : MonoBehaviour
     /// </summary>
     protected virtual void spawnProjectile(GameObject projectile)
     {
-        myHost.CmdSpawn(projectile);
-        Destroy(projectile);
+        //myHost.CmdSpawn(projectile);
+        //Destroy(projectile);
     }
     /// <summary>
     /// Aims directly for the player. Should be overwritten in each subtype

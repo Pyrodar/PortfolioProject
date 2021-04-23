@@ -77,6 +77,8 @@ public class LoadoutList : ScriptableObject
         type = 0;
         number = 0;
 
+        Debug.Log(data);
+
         switch (data.turretType)
         {
             case TurretType.AMS:

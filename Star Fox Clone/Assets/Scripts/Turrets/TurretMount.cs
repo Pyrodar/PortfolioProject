@@ -70,7 +70,7 @@ public class TurretMount : MonoBehaviour, IVehicle
         if (lowerRight) quarters.Add(1);
         if (lowerLeft) quarters.Add(2);
         if (upperLeft) quarters.Add(3);
-        if (GetComponentInChildren<Turret>() != null)
+        //if (GetComponentInChildren<Turret>() != null)
         {
             myTurret = GetComponentInChildren<Turret>();
         }

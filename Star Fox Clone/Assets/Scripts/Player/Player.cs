@@ -248,7 +248,7 @@ public class Player : MonoBehaviour , IVehicle
     public void ApplyMovement(Vector3 input)
     {
         if (isPuppet) return;
-        myRigid.AddForce(input * shipData.moveSpeed);
+        myRigid.AddRelativeForce(input * shipData.moveSpeed);
         updateFokusPoint(input);
 
         checkBoundaries();
@@ -266,7 +266,7 @@ public class Player : MonoBehaviour , IVehicle
         if (transform.localPosition.y <= -Plane.MaxHeight + y) myRigid.velocity = new Vector3(myRigid.velocity.x,0, myRigid.velocity.z);
 
         //clamping position
-        transform.localPosition = new Vector3(Mathf.Clamp(transform.localPosition.x, -Plane.MaxWidth + x, Plane.MaxWidth + x), Mathf.Clamp(transform.localPosition.y, -Plane.MaxHeight + y, Plane.MaxHeight + y));
+        //transform.localPosition = new Vector3(Mathf.Clamp(transform.localPosition.x, -Plane.MaxWidth + x, Plane.MaxWidth + x), Mathf.Clamp(transform.localPosition.y, -Plane.MaxHeight + y, Plane.MaxHeight + y));
     }
 
     public void ApplyRotation(float addedRotation)

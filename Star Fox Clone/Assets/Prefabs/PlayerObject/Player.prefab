@@ -1166,6 +1166,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: AirToGroundTurret
       objectReference: {fileID: 0}
+    - target: {fileID: 6070088499061741479, guid: f7d15222963a4a84c9e188e2be1d3609,
+        type: 3}
+      propertyPath: data
+      value: 
+      objectReference: {fileID: 11400000, guid: 3f975a5db2170f84d8ac42d5634abc3e,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7d15222963a4a84c9e188e2be1d3609, type: 3}
 --- !u!1001 &2498319111535999155
@@ -2199,5 +2205,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: AirToGroundTurret
       objectReference: {fileID: 0}
+    - target: {fileID: 6070088499061741479, guid: f7d15222963a4a84c9e188e2be1d3609,
+        type: 3}
+      propertyPath: data
+      value: 
+      objectReference: {fileID: 11400000, guid: 3f975a5db2170f84d8ac42d5634abc3e,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7d15222963a4a84c9e188e2be1d3609, type: 3}

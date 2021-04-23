@@ -92,6 +92,11 @@ public class InputManagment : MonoBehaviour
             GameConnection.Instance.Load();
         }
 
+        if (Input.GetButtonDown("Cancel"))
+        {
+            MapLayoutInfo map = MapLayoutInfo.Instance;
+            if (map != null) map.OpenMenu();
+        }
         #endregion
 
 
@@ -104,7 +109,7 @@ public class InputManagment : MonoBehaviour
 
         if (state.Players != null)
         {
-            if (state.Players[0].IsInGame)
+            if (state.Players[0] != null && state.Players[0].IsInGame)
             {
                 if (inputMovementKeyboard().magnitude > 0) Movement?.Invoke(inputMovementKeyboard());
                 if (inputRotationKeyboard() != 0) Rotation?.Invoke(inputRotationKeyboard());
