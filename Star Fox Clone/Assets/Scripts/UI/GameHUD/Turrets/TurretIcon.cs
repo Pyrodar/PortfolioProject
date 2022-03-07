@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ProtocFiles;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,7 +32,7 @@ public class TurretIcon : MonoBehaviour
 
         respawnTime = turretMount.RespawnTime;
 
-        if (turretMount.MyTurretType == TurretType.MSL)
+        if (turretMount.MyTurretType == TurretClass_P.Msl)
         {
             missles.gameObject.SetActive(true);
             reloadTime = turretMount.MyTurret.Data.cooldown;

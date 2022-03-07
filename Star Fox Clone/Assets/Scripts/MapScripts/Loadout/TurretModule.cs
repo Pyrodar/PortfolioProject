@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ProtocFiles;
+using UnityEngine;
 [RequireComponent(typeof(TurretMount))]
 public class TurretModule : MonoBehaviour, IManeuverableListEntry
 {
@@ -105,15 +106,15 @@ public class TurretModule : MonoBehaviour, IManeuverableListEntry
 
         switch (data.turretType)
         {
-            case TurretType.AMS:
+            case TurretClass_P.Ams:
                 TurretScript = T.AddComponent<AMSTurret>();
                 TurretScript.Data = data;
                 break;
-            case TurretType.ATG:
+            case TurretClass_P.Atg:
                 TurretScript = T.AddComponent<ATGTurret>();
                 TurretScript.Data = data;
                 break;
-            case TurretType.MSL:
+            case TurretClass_P.Msl:
                 TurretScript = T.AddComponent<MSLTurret>();
                 TurretScript.Data = data;
                 break;

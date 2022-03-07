@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ProtocFiles;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TurretMount : MonoBehaviour, IVehicle
@@ -40,7 +41,7 @@ public class TurretMount : MonoBehaviour, IVehicle
     {
         get { return myTurret; }
     }
-    public TurretType MyTurretType
+    public TurretClass_P MyTurretType
     {
         get { return myTurret.TurretType; }
     }
@@ -198,7 +199,7 @@ public class TurretMount : MonoBehaviour, IVehicle
     #region MissleTurret
     public MSLTurret getMissleTurret()
     {
-        if(myTurret.TurretType != TurretType.MSL) return null;
+        if(myTurret.TurretType != TurretClass_P.Msl) return null;
         return myTurret.GetComponent<MSLTurret>();
     }
     #endregion

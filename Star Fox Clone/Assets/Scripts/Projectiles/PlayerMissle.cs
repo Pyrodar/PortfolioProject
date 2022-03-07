@@ -23,7 +23,6 @@ public class PlayerMissle : MonoBehaviour, IVehicle
         data = _data;
         myRigid = GetComponent<Rigidbody>();
         myRigid.drag = _data.drag;
-        gameObject.layer = 12;
 
         hitPoints = data.hitpoints * 3;                             //Playermissles get more health so they don't get shot down too easy
     }

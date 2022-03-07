@@ -25,20 +25,23 @@ public class AntiAirGun : StationaryWeapon
         yield return new WaitForSeconds(2f);
         placeMarker(getInterceptPoint());
 
+        BulletFactory factory = MapLayoutInfo.Instance.BulletFactory;
 
         for (int i = 0; i < data.bulletsPerSalvo; i++)
         {
-            GameObject b = GameObject.Instantiate(data.bulletData.visuals);
-            b.transform.position = transform.position;
-            b.transform.rotation = transform.rotation;
-            b.layer = 11;
+            factory.CmdSpawnBullet(BulletOrigin.Enemy, data.bulletData, transform.position, transform.rotation, data.bulletspread, flakDelay, MyVelocity);
 
-            Bullet bullet = b.AddComponent<Bullet>();
+            //GameObject b = GameObject.Instantiate(data.bulletData.visuals);
+            //b.transform.position = transform.position;
+            //b.transform.rotation = transform.rotation;
+            //b.layer = 11;
 
-            if(data.bulletData.damageType == DamageType.flak) bullet.Initialize(data.bulletData, data.bulletspread, BulletOrigin.Enemy, MyVelocity, flakDelay);
-            else bullet.Initialize(data.bulletData, data.bulletspread, BulletOrigin.Enemy, MyVelocity);
+            //Bullet bullet = b.AddComponent<Bullet>();
 
-            spawnProjectile(bullet.gameObject);
+            //if(data.bulletData.damageType == DamageType.flak) bullet.Initialize(data.bulletData, data.bulletspread, BulletOrigin.Enemy, MyVelocity, flakDelay);
+            //else bullet.Initialize(data.bulletData, data.bulletspread, BulletOrigin.Enemy, MyVelocity);
+
+            //spawnProjectile(bullet.gameObject);
 
             yield return new WaitForSeconds(data.ejectSpeed);
         }

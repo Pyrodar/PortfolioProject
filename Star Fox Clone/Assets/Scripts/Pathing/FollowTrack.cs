@@ -15,7 +15,11 @@ public class FollowTrack : MonoBehaviour
     float pathPosition = 0;
     Vector3 PathPosition
     {
-        get { return Path.path.GetPointAtDistance(pathPosition); }
+        get {
+            if (!go) return Vector3.zero;
+            
+            return Path.path.GetPointAtDistance(pathPosition); 
+        }
     }
     bool go = false;
 
@@ -27,12 +31,6 @@ public class FollowTrack : MonoBehaviour
     private void Awake()
     {
         rigid = GetComponent<Rigidbody>();
-    }
-
-    private void Start()
-    {
-        transform.position = PathPosition;
-        pathPosition = 8;
     }
 
     private void Update()
@@ -75,8 +73,10 @@ public class FollowTrack : MonoBehaviour
 
     public void StartFollow()
     {
+        pathPosition = 8;
         go = true;
         gameObject.SetActive(true);
+        transform.position = PathPosition;
 
         if (rigid != null) rigid.drag = 0f;
     }

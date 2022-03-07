@@ -46,17 +46,20 @@ public class MissleLauncher : StationaryWeapon
 
             for (int i = 0; i < data.bulletsPerSalvo; i++)
             {
-                GameObject M = GameObject.Instantiate(data.missleData.visuals);
-                EnemyMissle MC = M.AddComponent<EnemyMissle>();
-                MC.Initialize(data.missleData);
+                BulletFactory factory = MapLayoutInfo.Instance.BulletFactory;
+                factory.CmdSpawnEnemyMissle(data.missleData, transform.position, transform.rotation, MyVelocity, data.ejectSpeed);
 
-                M.transform.position = transform.position;
-                M.transform.rotation = transform.rotation;
+                //GameObject M = GameObject.Instantiate(data.missleData.visuals);
+                //EnemyMissle MC = M.AddComponent<EnemyMissle>();
+                //MC.Initialize(data.missleData);
 
-                Vector3 spread = new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f));
-                M.GetComponent<Rigidbody>().AddForce(transform.forward * data.ejectSpeed + spread, ForceMode.Impulse);
+                //M.transform.position = transform.position;
+                //M.transform.rotation = transform.rotation;
 
-                spawnProjectile(M.gameObject);
+                //Vector3 spread = new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f));
+                //M.GetComponent<Rigidbody>().AddForce(transform.forward * data.ejectSpeed + spread, ForceMode.Impulse);
+
+                //spawnProjectile(M.gameObject);
 
                 yield return new WaitForSeconds(0.5f);
             }

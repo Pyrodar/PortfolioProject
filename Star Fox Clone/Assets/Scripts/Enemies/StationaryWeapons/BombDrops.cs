@@ -10,15 +10,17 @@ public class BombDrops : StationaryWeapon
         //Debugging
         yield return new WaitForSeconds(3f);
 
-        GameObject b = GameObject.Instantiate(data.bombData.visuals);
-        b.transform.position = transform.position;
-        b.transform.rotation = transform.rotation;
-        b.layer = 11;
+        BulletFactory factory = MapLayoutInfo.Instance.BulletFactory;
 
-        EnemyBomb bomb = b.AddComponent<EnemyBomb>();
-        bomb.Initialize(data.bombData);
+        factory.CmdSpawnBomb(data.bombData, transform.position, transform.rotation, MyVelocity);
 
-        spawnProjectile(bomb.gameObject);
+        //GameObject b = GameObject.Instantiate(data.bombData.visuals);
+        //b.transform.position = transform.position;
+        //b.transform.rotation = transform.rotation;
+        //b.layer = 11;
+
+        //EnemyBomb bomb = b.AddComponent<EnemyBomb>();
+        //bomb.Initialize(data.bombData);
 
         yield return new WaitForSeconds(0.1f);
     }

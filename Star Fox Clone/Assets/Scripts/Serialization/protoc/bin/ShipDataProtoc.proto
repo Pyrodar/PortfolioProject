@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package ProtocFiles;
+
+message ShipSaveFile_P{
+    int32 ShipChassis_Index = 1;
+    repeated TurretMount_P TurretMounts = 2;
+}
+
+message TurretMount_P{
+
+    TurretClass_P TurretType = 1;
+    int32 Turret_Index = 2;
+}
+
+enum TurretClass_P{
+    AMS = 0;
+    ATG = 1;
+    MSL = 2;
+    OTHER = 3;
+}

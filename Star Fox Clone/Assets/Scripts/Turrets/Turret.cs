@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ProtocFiles;
+using UnityEngine;
 
 public class Turret : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class Turret : MonoBehaviour
         set { data = value; }
     }
 
-    public TurretType TurretType { get { return data.turretType; } }
+    public TurretClass_P TurretType { get { return data.turretType; } }
 
 
     protected Player myPlayer { get { return myMount.PlayerReferenz; } }

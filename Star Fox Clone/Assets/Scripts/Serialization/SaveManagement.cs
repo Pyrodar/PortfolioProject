@@ -1,29 +1,26 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Google.Protobuf;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using UnityEditor;
 using UnityEngine;
 
 public class SaveManagement
 {
-    #region BinaryFormatter
+    #region JsonFormatter
+    //Important for later
+    JsonParser parser = new JsonParser(JsonParser.Settings.Default);
+    JsonFormatter formatter = new JsonFormatter(JsonFormatter.Settings.Default);
+
+
     public static void Save(object objectToSave, string fileName)
     {
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream stream = new FileStream($"Assets/SaveData/{fileName}.sav", FileMode.Create);
-        bf.Serialize(stream, objectToSave);
-        stream.Close();
+        var json = JsonUtility.ToJson(objectToSave);
+        System.IO.File.WriteAllText($"Assets/SaveData/{fileName}.sav", json);
     }
 
     public static object Load(string fileName)
     {
-        BinaryFormatter bf = new BinaryFormatter();
         try
         {
-            FileStream stream = new FileStream($"Assets/SaveData/{fileName}.sav", FileMode.Open);
-            object result = bf.Deserialize(stream);
-            stream.Close();
+            object result = File.ReadAllText($"Assets/SaveData/{fileName}.sav");
             return result;
         }
         catch (System.Exception)
@@ -31,7 +28,6 @@ public class SaveManagement
             Debug.LogError($"Couldn't load file {fileName}.sav");
             return null;
         }
-
     }
     #endregion
 
@@ -64,13 +60,13 @@ public class SaveManagement
 
         foreach (var ship in file.shipFiles)
         {
-            Debug.Log($"Current Ship: {ship.ShipData}");
+            Debug.Log($"Current Ship: {ship.ShipChassisIndex}");
 
-            Debug.Log($"Current Turrettypes:");
+            //Debug.Log($"Current Turrettypes:");
 
-            foreach (var turret in ship.TurretDatas)
+            foreach (var turret in ship.TurretMounts)
             {
-                Debug.Log(turret);
+                //Debug.Log(turret);
             }
         }
     }

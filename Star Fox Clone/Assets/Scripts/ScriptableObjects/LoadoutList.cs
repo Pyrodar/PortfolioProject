@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ProtocFiles;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ public class LoadoutList : ScriptableObject
     public List<TurretData> AMS_Turrets;
     public List<TurretData> ATG_Turrets;
     public List<TurretData> MSL_Turrets;
+    public List<TurretData> OTH_Turrets;
 
 
 
@@ -36,8 +38,8 @@ public class LoadoutList : ScriptableObject
 
         if (shipNumber < 0)
         {
-            throw new System.ArgumentOutOfRangeException(shipNumber.ToString(), "there is no ship with that number in the loadout list");
             shipNumber = 0;
+            throw new System.ArgumentOutOfRangeException(shipNumber.ToString(), "there is no ship with that number in the loadout list");
         }
 
         return shipNumber;
@@ -72,7 +74,7 @@ public class LoadoutList : ScriptableObject
         return data;
     }
 
-    public void GetIntFromTurretData(TurretData data, out int type, out int number)
+    public void GetClassIndexFromTurretData(TurretData data, out TurretClass_P type, out int number)
     {
         type = 0;
         number = 0;
@@ -81,8 +83,8 @@ public class LoadoutList : ScriptableObject
 
         switch (data.turretType)
         {
-            case TurretType.AMS:
-                type = 0;
+            case TurretClass_P.Ams:
+                type = TurretClass_P.Ams;
                 for (int i = 0; i < AMS_Turrets.Count; i++)
                 {
                     if (data == AMS_Turrets[i])
@@ -93,8 +95,8 @@ public class LoadoutList : ScriptableObject
                 }
                 break;
 
-            case TurretType.ATG:
-                type = 1;
+            case TurretClass_P.Atg:
+                type = TurretClass_P.Atg;
                 for (int i = 0; i < ATG_Turrets.Count; i++)
                 {
                     if (data == ATG_Turrets[i])
@@ -105,11 +107,23 @@ public class LoadoutList : ScriptableObject
                 }
                 break;
 
-            case TurretType.MSL:
-                type = 2;
+            case TurretClass_P.Msl:
+                type = TurretClass_P.Msl;
                 for (int i = 0; i < MSL_Turrets.Count; i++)
                 {
                     if (data == MSL_Turrets[i])
+                    {
+                        number = i;
+                        continue;
+                    }
+                }
+                break;
+
+            case TurretClass_P.Other:
+                type = TurretClass_P.Other;
+                for (int i = 0; i < OTH_Turrets.Count; i++)
+                {
+                    if (data == OTH_Turrets[i])
                     {
                         number = i;
                         continue;

@@ -61,6 +61,12 @@ public class MapLayoutInfo : MonoBehaviour
         get { return hud; }
     }
 
+    [SerializeField] BulletFactory bulletFactory;
+    public BulletFactory BulletFactory
+    {
+        get { return bulletFactory; }
+    }
+
     #region Score
 
     int targetsDestroyed;

@@ -1,7 +1,10 @@
-﻿using System.Collections;
+﻿using ProtocFiles;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
+//Maybe rename to chassis and remove Input stuff
 public class Player : MonoBehaviour , IVehicle
 {
     /// <summary>
@@ -66,35 +69,17 @@ public class Player : MonoBehaviour , IVehicle
     [SerializeField] Transform largeCrossHair;
     public Transform LargeCrosshair { get { return largeCrossHair; } }
     [SerializeField] GameObject crashExplosion;
-    Rigidbody myRigid;
     #endregion
 
     [SerializeField] ShipData shipData;
     public ShipData ShipData { get { return shipData; } }
-    /*
-    #region Movement
-    [SerializeField] float moveSpeed = 4.6f;
-    [SerializeField] float rotationSpeed = 0.7f;
 
-    [SerializeField] float fokusPointRange = 2f;
-    [SerializeField] float fokusPointSpeed = 0.04f;
-    [SerializeField] float fokusPointDamping = 3f; 
-    //[SerializeField]
-    [Tooltip("how fast the ship returns to looking straight forward again. fastest: 0.0 slowest: 1.0")]
-    [Range(0.5f, 1f)]
-    float fokusPointCenteringSpeed = 0.995f;
-    [SerializeField]
-    [Tooltip("how close to the ships front the crosshair returns after stopping the inputs")]
-    float fokusPointCenteringTolerance = 0.01f;
+    #region private variables
+    Rigidbody myRigid;
 
-    [SerializeField] float gravityAndLift = 0.4f;
-
-    [SerializeField] Vector3 crosshairOffset;
+    
     #endregion
-    [SerializeField]
-    float maxHealth = 100;
-    [SerializeField] float invulnTime = 1;
-    */
+
     #region Combat
     float currentHealth;
     public float CurrentHealth
@@ -192,9 +177,9 @@ public class Player : MonoBehaviour , IVehicle
         {
             list.AddTurretToList(tur);
             tur.PlayerReferenz = this;      //Referenz to get Player Velocity
-            if (tur.MyTurretType == TurretType.ATG) ATGTurrets.Add(tur);
-            if (tur.MyTurretType == TurretType.AMS) AMSTurrets.Add(tur);
-            if (tur.MyTurretType == TurretType.MSL)
+            if (tur.MyTurretType == TurretClass_P.Atg) ATGTurrets.Add(tur);
+            if (tur.MyTurretType == TurretClass_P.Ams) AMSTurrets.Add(tur);
+            if (tur.MyTurretType == TurretClass_P.Msl)
             {
                 MSLTurrets.Add(tur.getMissleTurret());
 
@@ -248,6 +233,9 @@ public class Player : MonoBehaviour , IVehicle
     public void ApplyMovement(Vector3 input)
     {
         if (isPuppet) return;
+
+        //Input is set relative to framerate
+        input *= Time.deltaTime;
         myRigid.AddRelativeForce(input * shipData.moveSpeed);
         updateFokusPoint(input);
 
@@ -257,21 +245,31 @@ public class Player : MonoBehaviour , IVehicle
 
     void checkBoundaries()
     {
-        //setting velocity to 0 when hitting boundries so enemy Missles and AA don't get confused
+
+        //setting velocity to 0 slowly when hitting boundries so enemy Missles and AA don't get confused
         float x = cam.transform.localPosition.x;
-        if (transform.localPosition.x >= Plane.MaxWidth + x) myRigid.velocity = new Vector3(0, myRigid.velocity.y, myRigid.velocity.z);
-        if (transform.localPosition.x <= -Plane.MaxWidth + x) myRigid.velocity = new Vector3(0, myRigid.velocity.y, myRigid.velocity.z);
+        if (transform.localPosition.x >= Plane.MaxWidth + x) myRigid.velocity = new Vector3(myRigid.velocity.x - (myRigid.velocity.x * Time.deltaTime), myRigid.velocity.y, myRigid.velocity.z);
+        if (transform.localPosition.x <= -Plane.MaxWidth + x) myRigid.velocity = new Vector3(myRigid.velocity.x - (myRigid.velocity.x * Time.deltaTime), myRigid.velocity.y, myRigid.velocity.z);
         float y = cam.transform.localPosition.y;
-        if (transform.localPosition.y >= Plane.MaxHeight + y) myRigid.velocity = new Vector3(myRigid.velocity.x, 0, myRigid.velocity.z);
-        if (transform.localPosition.y <= -Plane.MaxHeight + y) myRigid.velocity = new Vector3(myRigid.velocity.x,0, myRigid.velocity.z);
+        if (transform.localPosition.y >= Plane.MaxHeight + y) myRigid.velocity = new Vector3(myRigid.velocity.x, myRigid.velocity.y - (myRigid.velocity.y * Time.deltaTime), myRigid.velocity.z);
+        if (transform.localPosition.y <= -Plane.MaxHeight + y) myRigid.velocity = new Vector3(myRigid.velocity.x, myRigid.velocity.y - (myRigid.velocity.y * Time.deltaTime), myRigid.velocity.z);
 
         //clamping position
-        //transform.localPosition = new Vector3(Mathf.Clamp(transform.localPosition.x, -Plane.MaxWidth + x, Plane.MaxWidth + x), Mathf.Clamp(transform.localPosition.y, -Plane.MaxHeight + y, Plane.MaxHeight + y));
+        transform.localPosition = new Vector3(Mathf.Clamp(transform.localPosition.x, -Plane.MaxWidth * 2, Plane.MaxWidth * 2), Mathf.Clamp(transform.localPosition.y, -Plane.MaxHeight * 2, Plane.MaxHeight * 2));
+
+
+        //if (transform.localPosition.z != 0)
+        //{
+        //    transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, plane.Playerpositions[0].position.z);
+        //}
     }
 
     public void ApplyRotation(float addedRotation)
     {
         if (isPuppet) return;
+
+        //Input is made relative to framerate
+        addedRotation *= Time.deltaTime;
         addedRotation *= shipData.rotationSpeed;
         largeCrossHair.Rotate(Vector3.forward, addedRotation);
         playerRotationVisuals.Rotate(Vector3.forward, addedRotation);
@@ -283,14 +281,21 @@ public class Player : MonoBehaviour , IVehicle
         shipFokusPoint.localPosition += input * shipData.fokusPointSpeed;
 
 
-        //moving back towards (0,0):
-        if (Mathf.Abs(shipFokusPoint.localPosition.x) > shipData.fokusPointCenteringTolerance && input.x == 0)
+        //moving focus point back towards local (0,0):
+
+        if (Mathf.Abs(shipFokusPoint.localPosition.x) > shipData.fokusPointCenteringTolerance && Mathf.Abs(input.x) < .1f)
         {
-            shipFokusPoint.localPosition = new Vector3(shipFokusPoint.localPosition.x * shipData.fokusPointCenteringSpeed, shipFokusPoint.localPosition.y, shipFokusPoint.localPosition.z);
+            shipFokusPoint.localPosition = new Vector3( shipFokusPoint.localPosition.x - ((shipFokusPoint.localPosition.x * shipData.fokusPointCenteringSpeed) * Time.deltaTime), 
+                                                        shipFokusPoint.localPosition.y, 
+                                                        shipFokusPoint.localPosition.z);
         }
-        if (Mathf.Abs(shipFokusPoint.localPosition.y) > shipData.fokusPointCenteringTolerance && input.y == 0)
+
+
+        if (Mathf.Abs(shipFokusPoint.localPosition.y) > shipData.fokusPointCenteringTolerance && Mathf.Abs(input.y) < .1f)
         {
-            shipFokusPoint.localPosition = new Vector3(shipFokusPoint.localPosition.x, shipFokusPoint.localPosition.y * shipData.fokusPointCenteringSpeed, shipFokusPoint.localPosition.z);
+            shipFokusPoint.localPosition = new Vector3( shipFokusPoint.localPosition.x, 
+                                                        shipFokusPoint.localPosition.y - ((shipFokusPoint.localPosition.y * shipData.fokusPointCenteringSpeed) * Time.deltaTime), 
+                                                        shipFokusPoint.localPosition.z);
         }
 
         updateCrosshairPositions();
@@ -300,14 +305,6 @@ public class Player : MonoBehaviour , IVehicle
     {
         largeCrossHair.localPosition = shipFokusPoint.localPosition + shipData.crosshairOffset;
         smallCrossHair.localPosition = shipFokusPoint.localPosition * 2 + shipData.crosshairOffset;
-
-        /*smallCrossHair.localPosition += mouseInputs() * 0.1f;
-
-        if (smallCrossHair.localPosition.x < -plane.maxWidth) smallCrossHair.localPosition = new Vector3(-plane.maxWidth, smallCrossHair.localPosition.y, smallCrossHair.localPosition.z);
-        if (smallCrossHair.localPosition.x > plane.maxWidth) smallCrossHair.localPosition = new Vector3(plane.maxWidth, smallCrossHair.localPosition.y, smallCrossHair.localPosition.z);
-        if (smallCrossHair.localPosition.y < -plane.maxHeight) smallCrossHair.localPosition = new Vector3(- smallCrossHair.localPosition.x, -plane.maxHeight, smallCrossHair.localPosition.z);
-        if (smallCrossHair.localPosition.y > plane.maxHeight) smallCrossHair.localPosition = new Vector3(smallCrossHair.localPosition.x, plane.maxHeight, smallCrossHair.localPosition.z);
-        */
     }
 
     private void clampFokusPointPosition()
@@ -317,10 +314,10 @@ public class Player : MonoBehaviour , IVehicle
 
     void gravityAndLiftEffect()
     {
-        Vector3 gravity = Vector3.down * shipData.gravityAndLift;
+        Vector3 gravity = Vector3.down * shipData.gravityAndLift * Time.deltaTime;
         ApplyMovement(gravity);
 
-        Vector3 lift = playerRotationVisuals.TransformDirection(Vector3.up) * shipData.gravityAndLift;
+        Vector3 lift = playerRotationVisuals.TransformDirection(Vector3.up) * shipData.gravityAndLift * Time.deltaTime;
         ApplyMovement(lift);
     }
 
@@ -706,7 +703,7 @@ public class Player : MonoBehaviour , IVehicle
 
             Vector2 screenPos = cam.WorldToScreenPoint(t.transform.position);
 
-            //used for vertical splitscreen. using if since only 2 players are possible
+            //used for vertical splitscreen. using "if" instead of "switch" since only 2 players are possible
             if (playerNumber != 0) screenPos.x -= canvas.rect.width;// * playerNumber;
 
             //TODO: set up for horizontal splitscreen 
@@ -729,7 +726,7 @@ public class Player : MonoBehaviour , IVehicle
     {
         foreach (var marker in TargetMarker)
         {
-            marker.anchoredPosition = new Vector3(-20, -20);
+            marker.anchoredPosition = new Vector3(-2000, -2000);
         }
     }
     #endregion
@@ -754,22 +751,24 @@ public class Player : MonoBehaviour , IVehicle
     #region NetworkSpawning
     public void CmdSpawnBullet(SmallTurretData data, Vector3 position, Quaternion rotation, float flakDelay)
     {
-        GameObject b = GameObject.Instantiate(data.bulletData.visuals);
-        b.transform.position = position;
-        b.transform.rotation = rotation;
 
-        Bullet bullet = b.AddComponent<Bullet>();
-        bullet.tag = "AMSBullet";
+        BulletFactory factory = MapLayoutInfo.Instance.BulletFactory;
 
-        if (data.bulletData.damageType == DamageType.flak)                                                          //TODO: add player Velocity to bullet
-        {
-            bullet.Initialize(data.bulletData, data.bulletSpread, BulletOrigin.Player, Vector3.zero, flakDelay);    //setting bullet timer manually for flak ammunition
-        }
-        else bullet.Initialize(data.bulletData, data.bulletSpread, BulletOrigin.Player, Vector3.zero);              //using regular bullet timer
+        factory.CmdSpawnBullet(BulletOrigin.AMS, data.bulletData, position, rotation, data.bulletSpread, flakDelay);
 
+        //GameObject b = GameObject.Instantiate(data.bulletData.visuals);
+        //b.transform.position = position;
+        //b.transform.rotation = rotation;
 
-        //NetworkServer.Spawn(b.gameObject);
-        //RpcSpawn(projectile);
+        //Bullet bullet = b.AddComponent<Bullet>();
+        //bullet.tag = "AMSBullet";
+
+        //if (data.bulletData.damageType == DamageType.flak)                                                          //TODO: add player Velocity to bullet
+        //{
+        //    bullet.Initialize(data.bulletData, data.bulletSpread, BulletOrigin.Player, Vector3.zero, flakDelay);    //setting bullet timer manually for flak ammunition
+        //}
+        //else bullet.Initialize(data.bulletData, data.bulletSpread, BulletOrigin.Player, Vector3.zero);              //using regular bullet timer
+
     }
 
     void RpcSpawnBullet(SmallTurretData data, Vector3 position, Quaternion rotation, float flakDelay)

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ProtocFiles;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +17,7 @@ public class TurretDetails : MonoBehaviour
     //Last two stat can be either firing speed or missle capacity
     [SerializeField] Text Stat4Name;
     [SerializeField] Text Stat5Name;
+
     //General Description of the turret
     [SerializeField] Text Description;
 
@@ -26,6 +28,7 @@ public class TurretDetails : MonoBehaviour
     [SerializeField] Sprite IconATG;
     [SerializeField] Sprite IconAMS;
     [SerializeField] Sprite IconMSL;
+    [SerializeField] Sprite IconOTH;
 
     TurretData data;
 
@@ -42,16 +45,20 @@ public class TurretDetails : MonoBehaviour
         Icon.sprite = data.Icon;
         switch (data.turretType)
         {
-            case TurretType.AMS:
+            case TurretClass_P.Ams:
                 typeName.text = "Anti Missle System";
                 Type.sprite = IconAMS;
                 break;
-            case TurretType.ATG:
+            case TurretClass_P.Atg:
                 typeName.text = "Air to Ground";
                 Type.sprite = IconATG;
                 break;
-            case TurretType.MSL:
+            case TurretClass_P.Msl:
                 typeName.text = "Missles";
+                Type.sprite = IconMSL;
+                break;
+            case TurretClass_P.Other:
+                typeName.text = "Other";
                 Type.sprite = IconMSL;
                 break;
             default:
@@ -65,7 +72,7 @@ public class TurretDetails : MonoBehaviour
 
         switch (data.turretType)
         {
-            case TurretType.MSL:
+            case TurretClass_P.Msl:
                 ammoType.text = data.missleData.name;
                 
                 Stat4Name.text = "Missle Capacity:";

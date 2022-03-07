@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ProtocFiles;
 
 public class GameInfo
 {
     #region Player
     string playerName;
+
+    const string versionNumber = "0.0";
+    
     int myPlayer = 0;
     public int MyPlayer { get { return myPlayer; } }
 
@@ -75,7 +79,6 @@ public class GameInfo
     {
         LoadSaveFile(filename);
     }
-
     public void LoadSaveFile(string filename)
     {
         SaveManagement saveMan = new SaveManagement();
@@ -105,10 +108,11 @@ public class SaveFile
     public int ATGTurretsUnlocked;
     public int MSLTurretsUnlocked;
 
-    public ShipSaveFile[] shipFiles;
+    public ShipSaveFile_P[] shipFiles;
 
     /// <summary>
-    /// creating default SaveFile
+    /// For creating default SaveFile
+    /// unlocks the first three turrets of each type and saves 2 default ships.
     /// </summary>
     public SaveFile()
     {
@@ -117,31 +121,48 @@ public class SaveFile
         ATGTurretsUnlocked = 3;
         MSLTurretsUnlocked = 3;
 
-        shipFiles = new ShipSaveFile[2];
-        shipFiles[0] = new ShipSaveFile(0, new int[,] { { 0, 0 }, { 0, 0 }, { 1, 0 }, { 1, 0 }, { 2, 0 }, { 2, 0 } });
-        shipFiles[1] = new ShipSaveFile(0, new int[,] { { 0, 0 }, { 0, 0 }, { 1, 0 }, { 1, 0 }, { 2, 0 }, { 2, 0 } });
-    }
+        shipFiles = new ShipSaveFile_P[2];
+        shipFiles[0] = new ShipSaveFile_P() {   ShipChassisIndex = 0,
+                                                TurretMounts = { 
+                                                new TurretMount_P() { TurretType = TurretClass_P.Ams , TurretIndex = 0}, 
+                                                new TurretMount_P() { TurretType = TurretClass_P.Ams, TurretIndex = 0 }, 
+                                                new TurretMount_P() { TurretType = TurretClass_P.Atg, TurretIndex = 0 }, 
+                                                new TurretMount_P() { TurretType = TurretClass_P.Atg, TurretIndex = 0 }, 
+                                                new TurretMount_P() { TurretType = TurretClass_P.Msl, TurretIndex = 0 }, 
+                                                new TurretMount_P() { TurretType = TurretClass_P.Msl, TurretIndex = 0 } }
+        };
 
+        shipFiles[1] = new ShipSaveFile_P() {   ShipChassisIndex = 0,
+                                                TurretMounts = { 
+                                                new TurretMount_P() { TurretType = TurretClass_P.Ams , TurretIndex = 0},
+                                                new TurretMount_P() { TurretType = TurretClass_P.Ams, TurretIndex = 0 },
+                                                new TurretMount_P() { TurretType = TurretClass_P.Atg, TurretIndex = 0 },
+                                                new TurretMount_P() { TurretType = TurretClass_P.Atg, TurretIndex = 0 },
+                                                new TurretMount_P() { TurretType = TurretClass_P.Msl, TurretIndex = 0 },
+                                                new TurretMount_P() { TurretType = TurretClass_P.Msl, TurretIndex = 0 } }
+        };
+    }
     //TODO: add funktions to unlock stuff 
 }
 
 /// <summary>
+/// DEPRECATED: now as Protoc file available
 /// saving ship loadouts.
 /// edited directly in the ManageLoadouts script
 /// </summary>
-[System.Serializable]
-public struct ShipSaveFile
-{
-    public int ShipData;
+//[System.Serializable]
+//public struct ShipSaveFile
+//{
+//    public int ShipChassis;
 
-    public int[,] TurretDatas;
+//    public int[,] TurretDatas;
 
-    public ShipSaveFile(int ship, int[,] turrets)
-    {
-        ShipData = ship;
-        TurretDatas = turrets;
-    }
-}
+//    public ShipSaveFile(int ship, int[,] turrets)
+//    {
+//        ShipChassis = ship;
+//        TurretDatas = turrets;
+//    }
+//}
 
 public enum ConnectionType
 {

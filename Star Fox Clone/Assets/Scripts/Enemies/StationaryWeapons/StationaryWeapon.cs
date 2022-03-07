@@ -70,15 +70,6 @@ public class StationaryWeapon : MonoBehaviour
     }
 
     /// <summary>
-    /// used as the network command to spawn each projectile
-    /// the spawn information is passed to the Target since it is the only NetworkIdentity in this prefab
-    /// </summary>
-    protected virtual void spawnProjectile(GameObject projectile)
-    {
-        //myHost.CmdSpawn(projectile);
-        //Destroy(projectile);
-    }
-    /// <summary>
     /// Aims directly for the player. Should be overwritten in each subtype
     /// Missles have their own funktion, since they are designed to shoot above the player and descend afterwards
     /// </summary>

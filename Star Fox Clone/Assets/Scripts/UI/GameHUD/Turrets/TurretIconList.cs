@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ProtocFiles;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,7 +10,8 @@ public class TurretIconList : MonoBehaviour
 
     [SerializeField] Sprite AMSTurrretIcon;
     [SerializeField] Sprite AtGTurrretIcon;
-    [SerializeField] Sprite MSSTurrretIcon;
+    [SerializeField] Sprite MSLTurrretIcon;
+    [SerializeField] Sprite OTHTurrretIcon;
 
     //List<TurretIcon> TurretIcons = new List<TurretIcon>();
 
@@ -30,20 +32,23 @@ public class TurretIconList : MonoBehaviour
         t.transform.localScale = Vector3.one;
     }
 
-    Sprite generateSprite(TurretType type)
+    Sprite generateSprite(TurretClass_P type)
     {
         Sprite sprite;
 
         switch (type)
         {
-            case TurretType.AMS:
+            case TurretClass_P.Ams:
                 sprite = AMSTurrretIcon;
                 break;
-            case TurretType.ATG:
+            case TurretClass_P.Atg:
                 sprite = AtGTurrretIcon;
                 break;
-            case TurretType.MSL:
-                sprite = MSSTurrretIcon;
+            case TurretClass_P.Msl:
+                sprite = MSLTurrretIcon;
+                break;
+            case TurretClass_P.Other:
+                sprite = OTHTurrretIcon;
                 break;
             default:
                 sprite = AMSTurrretIcon;

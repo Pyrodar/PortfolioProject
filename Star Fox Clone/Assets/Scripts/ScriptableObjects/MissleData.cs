@@ -2,6 +2,8 @@
 [CreateAssetMenu(fileName = "Missle Data", menuName = "Custom SO / Missle Data")]
 public class MissleData : ScriptableObject
 {
+    public Sprite MissleIcon;
+
     public float damage;
     public float hitpoints;
 

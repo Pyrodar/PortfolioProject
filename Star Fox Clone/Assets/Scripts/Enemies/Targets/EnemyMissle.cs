@@ -19,8 +19,6 @@ public class EnemyMissle : Target
         collisionDamage = data.damage;
         rigid = GetComponent<Rigidbody>();
         rigid.drag = data.drag;
-
-        gameObject.layer = 11;
     }
 
     protected override void Start()

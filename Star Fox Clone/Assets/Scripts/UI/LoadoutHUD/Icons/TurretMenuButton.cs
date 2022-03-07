@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ProtocFiles;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,13 +27,13 @@ public class TurretMenuButton : MonoBehaviour, IManeuverableListEntry
 
         switch (data.turretType)
         {
-            case TurretType.AMS:
+            case TurretClass_P.Ams:
                 Type.sprite = TypeAMS;
                 break;
-            case TurretType.ATG:
+            case TurretClass_P.Atg:
                 Type.sprite = TypeATG;
                 break;
-            case TurretType.MSL:
+            case TurretClass_P.Msl:
                 Type.sprite = TypeMSL;
                 break;
             default:

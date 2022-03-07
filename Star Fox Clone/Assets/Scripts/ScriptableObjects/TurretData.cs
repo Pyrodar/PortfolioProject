@@ -1,9 +1,10 @@
-﻿using UnityEditor;
+﻿using ProtocFiles;
+using UnityEditor;
 using UnityEngine;
 [CreateAssetMenu(fileName = "Turret Data", menuName = "Custom SO / Turret Data")]
 public class TurretData : ScriptableObject
 {
-    public TurretType turretType;
+    public TurretClass_P turretType;
     public GameObject TurretMesh;
 
     public float turretRange;
@@ -43,7 +44,7 @@ public class TurretData : ScriptableObject
 /// </summary>
 public class SmallTurretData
 {
-    public TurretType turretType;
+    public TurretClass_P turretType;
     public float turretRange;
     public float bulletSpread;
     public float ejectSpeed;
@@ -51,12 +52,12 @@ public class SmallTurretData
     public BulletData bulletData;
 }
 
-public enum TurretType
-{
-    AMS
-    , ATG
-    , MSL
-}
+//public enum TurretType
+//{
+//    AMS
+//    , ATG
+//    , MSL
+//}
 
 [CustomEditor(typeof(TurretData))]
 [CanEditMultipleObjects]
@@ -69,16 +70,16 @@ public class TurretDataEditor : Editor
     public override void OnInspectorGUI()
     {
         var t = target as TurretData;
-        t.turretType = (TurretType)EditorGUILayout.EnumPopup("Turret Type", t.turretType);
+        t.turretType = (TurretClass_P)EditorGUILayout.EnumPopup("Turret Type", t.turretType);
         t.TurretMesh = EditorGUILayout.ObjectField("Mesh", t.TurretMesh, typeof(GameObject), true) as GameObject;
-        if (t.turretType == TurretType.MSL)
+        if (t.turretType == TurretClass_P.Msl)
         {
             t.missleData = EditorGUILayout.ObjectField("MissleData", t.missleData, typeof(MissleData), true) as MissleData;
             t.missleSpace = EditorGUILayout.IntField("Missle Space", t.missleSpace);
             t.cooldown = EditorGUILayout.FloatField("Missle Reload Time", t.cooldown);
             t.ejectSpeed = EditorGUILayout.FloatField("Missle Eject Speed", t.ejectSpeed);
         }
-        else if(t.turretType == TurretType.ATG)
+        else if(t.turretType == TurretClass_P.Atg)
         {
             t.bulletData = EditorGUILayout.ObjectField("BulletData", t.bulletData, typeof(BulletData), true) as BulletData;
             t.bulletSpread = EditorGUILayout.Slider("Bullet Spread", t.bulletSpread, 0f, 1f);

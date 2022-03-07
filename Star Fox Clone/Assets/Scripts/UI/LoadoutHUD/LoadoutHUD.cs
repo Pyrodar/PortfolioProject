@@ -1,18 +1,23 @@
-﻿using System.Collections;
+﻿using ProtocFiles;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class LoadoutHUD : UIBaseClass
 {
     private void Awake() { uiType = UIType.Loadout; }
+
+    [SerializeField]LoadoutSaveFileMenu LoadoutSaveFileMenu;
 
     #region ListingTurrets
 
     LoadoutList loadoutList;
     [SerializeField] TurretMenuButton TurretListPrefabs;
     [SerializeField] Transform turretListParent;
+    [SerializeField] Button StartButton;
 
     List<TurretMenuButton> turretButtons;
 
@@ -24,6 +29,11 @@ public class LoadoutHUD : UIBaseClass
         turretsListed = new CyclingLists();
         clearList();
         fillListAll();
+
+        LoadoutSaveFileMenu.Initialize(this);
+
+        //TODO: properly link the Start button to the gameConnection
+        StartButton.onClick.AddListener(() => { GameConnection.Instance.LoadGameMap(); });
     }
 
     void clearList()
@@ -41,18 +51,18 @@ public class LoadoutHUD : UIBaseClass
     {
         Debug.Log("Listing All");
 
-        fillList(TurretType.AMS);
-        fillList(TurretType.ATG);
-        fillList(TurretType.MSL);
+        fillList(TurretClass_P.Ams);
+        fillList(TurretClass_P.Atg);
+        fillList(TurretClass_P.Msl);
     }
 
-    void fillList(TurretType type)
+    void fillList(TurretClass_P type)
     {
         Debug.Log($"Listing {type}");
 
         switch (type)
         {
-            case TurretType.AMS:
+            case TurretClass_P.Ams:
 
                 for (int i = 0; i < GameConnection.Instance.AMS_Unlocked; i++)
                 {
@@ -76,7 +86,7 @@ public class LoadoutHUD : UIBaseClass
                 }
                 break;
 
-            case TurretType.ATG:
+            case TurretClass_P.Atg:
                 for (int i = 0; i < GameConnection.Instance.ATG_Unlocked; i++)
                 {
                     #region find turret
@@ -99,7 +109,7 @@ public class LoadoutHUD : UIBaseClass
                 }
                 break;
 
-            case TurretType.MSL:
+            case TurretClass_P.Msl:
 
                 for (int i = 0; i < GameConnection.Instance.MSL_Unlocked; i++)
                 {
@@ -138,8 +148,8 @@ public class LoadoutHUD : UIBaseClass
     void resetScale(TurretMenuButton t)
     {
         t.GetComponent<RectTransform>().localPosition = Vector3.zero;
-        t.transform.localScale = Vector3.one;
-        t.transform.rotation = Camera.main.transform.rotation;
+        t.GetComponent<RectTransform>().localScale = Vector3.one;
+        t.GetComponent<RectTransform>().localRotation = Quaternion.Euler(0,0,0);
     }
 
     #region public "show" funktions
@@ -151,17 +161,17 @@ public class LoadoutHUD : UIBaseClass
     public void ShowTurretsAMS()
     {
         clearList();
-        fillList(TurretType.AMS);
+        fillList(TurretClass_P.Ams);
     }
     public void ShowTurretsATG()
     {
         clearList();
-        fillList(TurretType.ATG);
+        fillList(TurretClass_P.Atg);
     }
     public void ShowTurretsMSL()
     {
         clearList();
-        fillList(TurretType.MSL);
+        fillList(TurretClass_P.Msl);
     }
     #endregion
 
@@ -415,25 +425,22 @@ public class LoadoutHUD : UIBaseClass
     #endregion
 
     #region saveFile
+
     ManageLoadouts manageLoadouts = new ManageLoadouts();
     void changeTurretAndSaveFile(TurretData data)
     {
         manageLoadouts.changeTurret(playerNumber, selectedModule, data);
     }
-    void LoadSaveFile()
+
+
+    public void LoadSaveFile(int saveSlot)
     {
-        manageLoadouts.loadLoadoutFromFile(playerNumber, playerNumber, modules);
+        manageLoadouts.loadLoadoutFromFile(saveSlot, playerNumber, modules);
     }
 
-    public override void Initialize()
+    public void SaveCurrentLoadout(int saveSlot)
     {
-        base.Initialize();
-        LoadSaveFile();
-    }
-
-    public void SaveCurrentLoadout()
-    {
-        manageLoadouts.SaveCurrentLoadout(playerNumber, modules);
+        manageLoadouts.SaveCurrentLoadout(saveSlot, modules);
     }
     #endregion
 }

@@ -5,32 +5,20 @@ public class Bullet : MonoBehaviour
     [SerializeField] private BulletData data;
     private float lifetimeEnd;
 
-    public void Initialize(BulletData _data, float bulletSpread, BulletOrigin origin, Vector3 startingVelocity)
+    public void Initialize(BulletData _data, float bulletSpread, Vector3 startingVelocity)
     {
         data = _data;
         lifetimeEnd = Time.time + data.lifetime;
         Rigidbody r = GetComponent<Rigidbody>();
-        switch (origin)
-        {
-            case BulletOrigin.Player:
-                gameObject.layer = 12; //Player
-                break;
-            default:
-                gameObject.layer = 11; //Enemies
-                break;
-        }
 
         Vector3 spread = new Vector3(Random.Range(-bulletSpread, bulletSpread), Random.Range(-bulletSpread, bulletSpread), Random.Range(-bulletSpread, bulletSpread));
         Vector3 vel = (transform.forward * data.speed + spread) + startingVelocity;
         r.AddForce(vel, ForceMode.Impulse);
-
-        //Tell Server about new Bullet
-        //if (Server.Instance != null) Server.Instance.SpawnBullet(data, transform.position, vel, origin);
     }
 
-    public void Initialize(BulletData _data, float bulletSpread, BulletOrigin origin, Vector3 startingVelocity, float flaktime)
+    public void Initialize(BulletData _data, float bulletSpread, Vector3 startingVelocity, float flaktime)
     {
-        Initialize(_data, bulletSpread, origin, startingVelocity);
+        Initialize(_data, bulletSpread,startingVelocity);
         lifetimeEnd = Time.time + flaktime;
     }
 
@@ -92,4 +80,5 @@ public enum BulletOrigin
 {
     Player
     ,Enemy
+    ,AMS
 }

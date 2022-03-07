@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UIBaseClass : MonoBehaviour
 {
-    //Currently only used to differ between InGameHUD and LoadoutHUD
+    //Currently only used to differentiate between InGameHUD and LoadoutHUD
     protected UIType uiType;
     public UIType UIType { get { return uiType; } }
 
