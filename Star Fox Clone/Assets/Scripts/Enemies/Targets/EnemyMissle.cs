@@ -33,7 +33,7 @@ public class EnemyMissle : Target
         timeWhenArmed = Time.time + data.timeBeforeArmed;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (lostTarget) return;
 
@@ -46,7 +46,7 @@ public class EnemyMissle : Target
 
     void addForwardMomentum()
     {
-        rigid.AddForce(transform.TransformDirection(Vector3.forward) * data.speed);
+        rigid.AddForce(transform.TransformDirection(Vector3.forward) * data.speed * Time.deltaTime);
     }
 
     void followPlayer()
@@ -54,15 +54,15 @@ public class EnemyMissle : Target
         if (isInArmingRange())
         {
             //calculating missle course with double player Velocity for better tracking
-            Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, Velocity, data.speed, lockedTarget.transform.position, lockedTarget.Velocity * 2);
-            HelperFunctions.LookAt(transform, interceptCourse, data.turnSpeed);
+            Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, Velocity, data.speed, lockedTarget.transform.position, lockedTarget.Velocity + Velocity);
+            HelperFunctions.LookAt(transform, interceptCourse, data.turnSpeed * Time.deltaTime);
         }
         else
         {
             //Aiming Above the player first for better AMS coverage
             Vector3 AMSArea = myTarget.transform.position + new Vector3(0, 5, 0);
             Vector3 interceptCourse = HelperFunctions.Intercept(transform.position, Velocity, data.speed, AMSArea, myTarget.Velocity);
-            HelperFunctions.LookAt(transform, interceptCourse, data.turnSpeed);
+            HelperFunctions.LookAt(transform, interceptCourse, data.turnSpeed * Time.deltaTime);
         }
     }
 

@@ -33,7 +33,7 @@ public class PlayerMissle : MonoBehaviour, IVehicle
         timeWhenArmed = Time.time + data.timeBeforeArmed;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (lostTarget) return;
         if (target.transform == null)
@@ -43,6 +43,8 @@ public class PlayerMissle : MonoBehaviour, IVehicle
         }
 
         followTarget();
+
+        LooseTarget();
     }
 
     #region followTarget
@@ -50,17 +52,17 @@ public class PlayerMissle : MonoBehaviour, IVehicle
     {
         if (Time.time < timeWhenArmed) 
         {
-            HelperFunctions.LookAt(transform, target.transform.position, data.turnSpeed / 5);                                                               //Starts slowly homing in on the Target
+            HelperFunctions.LookAt(transform, target.transform.position, (data.turnSpeed / 5) * Time.deltaTime);                                                               //Starts slowly homing in on the Target
             return;
         }
 
         Vector3 IntercepCourse = HelperFunctions.Intercept(transform.position, myRigid.velocity, data.speed, target.transform.position, target.Velocity);   //Starts homing in on the Target with regular speed
-        HelperFunctions.LookAt(transform, IntercepCourse, data.turnSpeed);
+        HelperFunctions.LookAt(transform, IntercepCourse, data.turnSpeed * Time.deltaTime);
 
-        myRigid.AddForce(transform.TransformDirection(Vector3.forward) * data.speed);                                                                       //Constant forward Momentum
+        myRigid.AddForce(transform.TransformDirection(Vector3.forward) * data.speed * Time.deltaTime);                                                                       //Constant forward Momentum
     }
 
-    private void LateUpdate()                                                                           //Looses Target after missing it
+    private void LooseTarget()                                                                           //Looses Target after missing it
     {
         if (Time.time < timeWhenArmed + 2f || lostTarget) return;                                       //always adding two seconds to the timer to gain some speed first
         float currentDistance = Vector3.Distance(transform.position, target.transform.position);

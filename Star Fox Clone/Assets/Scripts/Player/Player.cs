@@ -109,7 +109,7 @@ public class Player : MonoBehaviour , IVehicle
 
     public Vector3 Velocity
     {
-        get { return myRigid.velocity + Plane.getVelocity(); }
+        get { return myRigid.velocity + Plane.Velocity; }
     }
     #endregion
 

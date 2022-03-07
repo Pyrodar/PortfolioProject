@@ -10,6 +10,18 @@ public class EnemyPlane : Target
 
     FollowTrack track;
 
+    public Vector3 PlaneVelocity
+    {
+        get
+        {
+            if (track)
+            {
+                return rigid.velocity + track.Velocity;
+            }
+            return rigid.velocity;
+        }
+    }
+
     protected override void Start()
     {
         stationaryWeapons = new List<StationaryWeapon>();

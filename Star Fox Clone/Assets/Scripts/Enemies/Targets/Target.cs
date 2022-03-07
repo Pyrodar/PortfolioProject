@@ -47,7 +47,14 @@ public class Target : MonoBehaviour , IVehicle
 
     #region rigidbody
     protected Rigidbody rigid;
-    public Vector3 Velocity { get { return rigid.velocity; } }
+    public Vector3 Velocity {
+        get {
+            if (type == TargetType.plane)
+            {
+                return GetComponent<EnemyPlane>().PlaneVelocity;
+            }
+            return rigid.velocity; } 
+    }
     public Vector3 AVelocity { get { return rigid.angularVelocity; } }
     #endregion
 

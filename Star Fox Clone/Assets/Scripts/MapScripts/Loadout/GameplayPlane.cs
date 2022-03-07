@@ -29,6 +29,17 @@ public class GameplayPlane : MonoBehaviour
         get { return maxHeight; }
     }
 
+    public Vector3 Velocity
+    {
+        get {
+                FollowTrack followTrack = gameObject.GetComponent<FollowTrack>();
+                if (followTrack)
+                {
+                    return followTrack.Velocity;
+                }
+                return Vector3.zero; 
+            }
+    }
 
     private void Start()
     {
@@ -54,9 +65,10 @@ public class GameplayPlane : MonoBehaviour
         return relativePos.z;
     }
 
+    [Obsolete("Use GameplayPlane.Velocity instead")]
     internal Vector3 getVelocity()
     {
-        return rigid.velocity;
+        return Velocity;
     }
 
     public bool requestPlayerSwitch(int playerNumber)
@@ -82,11 +94,13 @@ public class GameplayPlane : MonoBehaviour
     }
 
     /// <summary>
-    /// Only for moving players
+    /// For moving players
     /// And debugging
     /// </summary>
     private void Update()
     {
+        #region Moving Players
+
         if (inPosition) return;
 
         for (int i = 0; i < playerpositions.Length; i++)
@@ -99,6 +113,7 @@ public class GameplayPlane : MonoBehaviour
         {
             inPosition = true;
         }
+        #endregion
     }
 
     public void PathEnded()

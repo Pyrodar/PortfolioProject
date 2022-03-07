@@ -5,6 +5,7 @@ using UnityEngine;
 public class MainMenu : MonoBehaviour
 {
     [SerializeField] GameObject Main;
+    [SerializeField] GameObject Multiplayer;
     [SerializeField] GameObject MainButtons;
     [SerializeField] GameObject CoopButtons;
     [SerializeField] GameObject Levels;
