@@ -36,22 +36,9 @@ public class MSLTurret : Turret
     {
         if (myMount.Recharging) return;
 
-        //TODO: rotate through location of rockettubes
+        //TODO: rotate through location of rockettubes and
         Transform tube = transform.GetChild(0);
         //############################################
-
-        //GameObject M = GameObject.Instantiate(data.missleData.visuals);
-        //PlayerMissle PM = M.AddComponent<PlayerMissle>(); 
-        //PM.Initialize(target, data.missleData);
-
-        //M.transform.position = tube.position;
-        //M.transform.rotation = tube.rotation;
-
-
-        //float spreadF = data.ejectSpeed / 8;
-        //Vector3 spread = new Vector3(Random.Range(-spreadF, spreadF), Random.Range(-spreadF, spreadF), Random.Range(-spreadF, spreadF));
-
-        //M.GetComponent<Rigidbody>().AddForce(tube.forward * data.ejectSpeed + spread + myPlayer.Velocity, ForceMode.Impulse);
 
         //Networking////////////////////
         var smallData = data.GetSmallData();
