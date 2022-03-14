@@ -41,7 +41,7 @@ public class MainMenu : MonoBehaviour
     {
         Return.SetActive(true);
         Main.SetActive(false);
-        openLevelScreen();
+        OnlineMultiplayerButton();
 
         GameConnection.Instance.SetConnectionType(ConnectionType.Host);
     }
@@ -50,7 +50,7 @@ public class MainMenu : MonoBehaviour
     {
         Return.SetActive(true);
         Main.SetActive(false);
-        openLevelScreen();
+        OnlineMultiplayerButton();
 
         GameConnection.Instance.SetConnectionType(ConnectionType.Client);
     }
@@ -62,11 +62,19 @@ public class MainMenu : MonoBehaviour
         Main.SetActive(false);
     }
 
+    public void OnlineMultiplayerButton()
+    {
+        Return.SetActive(true);
+        Multiplayer.SetActive(true);
+        Main.SetActive(false);
+    }
+
     public void ReturnButton()
     {
         Return.SetActive(false);
 
         Main.SetActive(true);
+        Multiplayer.SetActive(false);
         Settings.SetActive(false);
         Levels.SetActive(false);
 
@@ -114,5 +122,12 @@ public class MainMenu : MonoBehaviour
         GameConnection.Instance.MSLUnlock(value);
 
     }
+
+    //private void Start()
+    //{
+    //    HelperFunctions.LinedUp(new Vector3(6, 5, 5), new Vector3(2, 3, 1), new Vector3(2, 1, 2), 0);
+    //    HelperFunctions.LinedUp(new Vector3(1, -3, -3), new Vector3(2, 1, -3), new Vector3(-1, 3, 1), Mathf.Sqrt(6));
+    //    HelperFunctions.LinedUp(new Vector3(5, 0, 0), new Vector3(1, 1, 1), new Vector3(2, 1, 1), 2*Mathf.Sqrt(3));
+    //}
     #endregion
 }

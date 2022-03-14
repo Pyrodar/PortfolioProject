@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 50
   speed: 50
-  lifetime: 3
+  lifetime: 4
   visuals: {fileID: 2216417213750236737, guid: 3d9b15e113c2a5b43bcb6dfe6887984e, type: 3}
   damageType: 1
   radius: 0

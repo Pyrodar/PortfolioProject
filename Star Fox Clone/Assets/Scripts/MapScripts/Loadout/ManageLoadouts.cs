@@ -76,9 +76,16 @@ public class ManageLoadouts
         TurretClass_P type;
         int number;
         loadoutList.GetClassIndexFromTurretData(data, out type, out number);
-
-        saveFiles[file].TurretMounts[module.ModuleNumber].TurretType =  type;
-        saveFiles[file].TurretMounts[module.ModuleNumber].TurretIndex =  number;
+        try
+        {
+            saveFiles[file].TurretMounts[module.ModuleNumber].TurretType =  type;
+            saveFiles[file].TurretMounts[module.ModuleNumber].TurretIndex =  number;
+        }
+        catch (System.Exception)
+        {
+            Debug.LogError($"Can't save changes to Loadout:\nFileNo: {file}, Module: {module.ModuleNumber}, Turret: {data.turretType}");
+            throw;
+        }
     }
 
     void changeAllTurretsFromFile(int file, List<TurretModule> turretModules)

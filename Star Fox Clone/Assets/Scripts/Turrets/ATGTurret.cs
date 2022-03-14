@@ -5,6 +5,7 @@ public class ATGTurret : Turret
     protected bool hasTarget = false;
 
     float flakDelay;
+    Vector3 interceptPoint = Vector3.zero;
 
     void Update()
     {
@@ -48,7 +49,7 @@ public class ATGTurret : Turret
         #endregion
 
         t.UpdateVelocity();
-        Vector3 interceptPoint = HelperFunctions.Intercept(transform.position, Vector3.zero, data.bulletData.speed, t.transform.position, t.Velocity);
+        interceptPoint = HelperFunctions.Intercept(transform.position, Vector3.zero, data.bulletData.speed, t.transform.position, t.Velocity);
         LookAt(interceptPoint);
 
         //Check Target Distance
@@ -61,11 +62,12 @@ public class ATGTurret : Turret
 
     bool checkSights()
     {
-        Collider objInSights = HelperFunctions.GetObjectInSights(transform.position, transform.forward, data.turretRange);
+        return HelperFunctions.LinedUp(interceptPoint, transform.position, transform.forward);
+        //Collider objInSights = HelperFunctions.GetObjectInSights(transform.position, transform.forward, data.turretRange);
 
-        if(objInSights == null) return false;
-        if (objInSights.tag == "Enemy") return true;
-        return false;
+        //if(objInSights == null) return false;
+        //if (objInSights.tag == "Enemy") return true;
+        //return false;
     }
 
     public override void Fire()

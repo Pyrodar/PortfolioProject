@@ -135,6 +135,21 @@ public  class HelperFunctions
 		if (obj == null) return true;
 		return false;
     }
+
+	public static bool LinedUp(Vector3 Target, Vector3 Position, Vector3 Direction)
+    {
+		return LinedUp(Target, Position, Direction, .3f);
+    }
+
+
+	public static bool LinedUp(Vector3 Target, Vector3 Position, Vector3 Direction, float MinimumDistance)
+    {
+		float distance = Vector3.Magnitude(Vector3.Cross((Target - Position), Direction)) / Vector3.Magnitude(Direction);
+
+		//Debug.Log($"Target: {Target}, Position: {Position}, Direction: {Direction}\nDistance: {distance}, MinDistance: {MinimumDistance}");
+
+		return distance <= MinimumDistance;
+    }
 	#endregion
 
 	#region explosions

@@ -15,9 +15,9 @@ MonoBehaviour:
   turretType: 1
   TurretMesh: {fileID: 5529101393252604927, guid: b4a4635a800667d4e80eb137e73aebcc,
     type: 3}
-  turretRange: 200
+  turretRange: 400
   bulletSpread: 0.1
-  turretSpeed: 10
+  turretSpeed: 16
   cooldown: 0.75
   heatBuildup: 0
   heatDissipation: 0
