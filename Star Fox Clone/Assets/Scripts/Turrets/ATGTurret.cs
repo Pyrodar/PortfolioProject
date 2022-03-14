@@ -32,6 +32,7 @@ public class ATGTurret : Turret
     {
         #region rotationBuffer
         //prevents turrets from shooting before they had time to rotate towards new Target
+        //could be replaced by new improved checkSights function, but might take away from overall atmosphere
         if (t == null)
         {
             if (hasTarget) hasTarget = false;
@@ -49,7 +50,7 @@ public class ATGTurret : Turret
         #endregion
 
         t.UpdateVelocity();
-        interceptPoint = HelperFunctions.Intercept(transform.position, Vector3.zero, data.bulletData.speed, t.transform.position, t.Velocity);
+        interceptPoint = HelperFunctions.Intercept(transform.position, myPlayer.Velocity, data.bulletData.speed, t.transform.position, t.Velocity);
         LookAt(interceptPoint);
 
         //Check Target Distance
@@ -76,13 +77,6 @@ public class ATGTurret : Turret
         {
             addCooldown(data.cooldown);
             //Debug.Log(this.name + " is firing!");
-
-            //GameObject b = GameObject.Instantiate(data.bulletData.visuals);
-            //b.transform.position = transform.position;
-            //b.transform.rotation = transform.rotation;
-
-            //Bullet bullet = b.AddComponent<Bullet>();
-            //bullet.Initialize(data.bulletData, data.bulletSpread, BulletOrigin.Player, Vector3.zero); //Not yet using velocity here
 
             //Networking/////////////////////////
             var smallData = data.GetSmallData();

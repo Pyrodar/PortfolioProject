@@ -754,7 +754,7 @@ public class Player : MonoBehaviour , IVehicle
 
         BulletFactory factory = MapLayoutInfo.Instance.BulletFactory;
 
-        factory.CmdSpawnBullet(BulletOrigin.AMS, data.bulletData, position, rotation, data.bulletSpread, flakDelay);
+        factory.CmdSpawnBullet(BulletOrigin.AMS, data.bulletData, position, rotation, data.bulletSpread, flakDelay, Velocity);
 
         //GameObject b = GameObject.Instantiate(data.bulletData.visuals);
         //b.transform.position = position;
