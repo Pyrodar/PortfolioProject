@@ -10,10 +10,10 @@ public class MissleLauncher : StationaryWeapon
     {
         Vector3 offset = new Vector3(0, 5, 0);
 
-        Vector3 InterceptPoint = getInterceptPoint();
-        if (InterceptPoint.magnitude == 0) return;
+        Vector3 interceptPoint = getInterceptPoint();
+        if (interceptPoint.magnitude == 0) return;
 
-        HelperFunctions.LookAt(transform, InterceptPoint + offset, data.turretSpeed, RotationParent.up);
+        HelperFunctions.LookAt(transform, interceptPoint + offset, data.turretSpeed, RotationParent.up);
     }
 
     /// <summary>

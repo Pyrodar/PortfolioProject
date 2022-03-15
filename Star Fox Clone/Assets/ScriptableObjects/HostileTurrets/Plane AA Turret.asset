@@ -18,7 +18,7 @@ MonoBehaviour:
   turretSpeed: 12
   cooldown: 7
   bulletsPerSalvo: 1
-  ejectSpeed: 0
+  ejectSpeed: 0.01
   missleData: {fileID: 0}
   bulletData: {fileID: 11400000, guid: 96feaea53835baf4bbb162bcfbc7d7fb, type: 2}
   bombData: {fileID: 0}

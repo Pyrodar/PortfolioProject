@@ -442,7 +442,7 @@ public class LoadoutHUD : UIBaseClass
 
     public void SaveCurrentLoadout(int saveSlot)
     {
-        manageLoadouts.SaveCurrentLoadout(saveSlot, 0, modules);
+        manageLoadouts.SaveCurrentLoadout(saveSlot, 0, modules);    //TODO: insert proper ship chassis
         LoadoutSaveFileMenu.ShowSavedLoadouts();
         LoadoutSaveFileMenu.ToggleMenu();
     }

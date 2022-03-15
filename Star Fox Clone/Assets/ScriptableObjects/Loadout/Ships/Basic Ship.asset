@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb048df9b3f67cb44b634cd7550f8e10, type: 3}
   m_Name: Basic Ship
   m_EditorClassIdentifier: 
-  moveSpeed: 86
+  moveSpeed: 129
   rotationSpeed: 58
   fokusPointRange: 2
   fokusPointSpeed: 2.5

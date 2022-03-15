@@ -22,7 +22,17 @@ public class ManageLoadouts
 
     public void SaveCurrentLoadout(int file, int shipchassis, List<TurretModule> turretModules)
     {
+        ShipSaveFile_S saveFile = getShipSafeFile(shipchassis, turretModules);
 
+        saveFiles.RemoveAt(file);
+        saveFiles.Insert(file, saveFile);
+
+        Debug.LogWarning($"SaveFile has been overwritten with current Loadout");
+        GameConnection.Instance.Save();
+    }
+
+    public ShipSaveFile_S getShipSafeFile(int shipchassis, List<TurretModule> turretModules)
+    {
         ShipSaveFile_S saveFile = new ShipSaveFile_S(shipchassis, new List<TurretMount_S>());
 
         foreach (var module in turretModules)
@@ -30,11 +40,7 @@ public class ManageLoadouts
             saveFile.TurretMounts.Add(getTurret(module));
         }
 
-        saveFiles.RemoveAt(file);
-        saveFiles.Insert(file, saveFile);
-
-        Debug.LogWarning($"SaveFile has been overwritten with current Loadout");
-        GameConnection.Instance.Save();
+        return saveFile;
     }
 
     TurretMount_S getTurret(TurretModule module)

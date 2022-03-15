@@ -164,7 +164,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RotationParent: {fileID: 2702344784734378621}
-  data: {fileID: 11400000, guid: 08ee3f2b0c0456d40baca7181fa5d2a1, type: 2}
+  data: {fileID: 11400000, guid: a88778103516b564d9299245193fc8dc, type: 2}
   impactMarkersprite: {fileID: 21300000, guid: 0993bb797b95dad4098c1a7ee2ec4c7c, type: 3}
   synchronized: 0
 --- !u!1 &2702344785142053717

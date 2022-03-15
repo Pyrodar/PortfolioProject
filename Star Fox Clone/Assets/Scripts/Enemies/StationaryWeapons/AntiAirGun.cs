@@ -5,25 +5,37 @@ public class AntiAirGun : StationaryWeapon
 {
     protected float flakDelay;
 
+    [SerializeField]Vector3 interceptPoint;
+
+    protected override void Update()
+    {
+        if (!isActive) return;
+
+        if (isInRange())
+        {
+            aim();
+
+            if (isLoaded() && (InSights(interceptPoint) || synchronized)) StartCoroutine(Fire());
+        }
+    }
+
     /// <summary>
     /// Aims directly for the player and calculates bullet flight time for flak ammunition
     /// </summary>
     protected override void aim()
     {
-        Vector3 InterceptPoint = getInterceptPoint();
-        if (InterceptPoint.magnitude == 0) return;
+        interceptPoint = getInterceptPoint();
+        if (interceptPoint.magnitude == 0) return;
 
-        flakDelay = Vector3.Distance(transform.position, InterceptPoint) * data.bulletData.speed;
+        flakDelay = Vector3.Distance(transform.position, interceptPoint) * data.bulletData.speed;
 
-        HelperFunctions.LookAt(transform, InterceptPoint, data.turretSpeed, RotationParent.up);
+        HelperFunctions.LookAt(transform, interceptPoint, data.turretSpeed, RotationParent.up);
     }
 
     protected override IEnumerator Fire()
     {
         startReloading();
-        //waiting for the turret to turn
-        yield return new WaitForSeconds(2f);
-        placeMarker(getInterceptPoint());
+        placeMarker(interceptPoint);
 
         BulletFactory factory = MapLayoutInfo.Instance.BulletFactory;
 
@@ -33,5 +45,6 @@ public class AntiAirGun : StationaryWeapon
 
             yield return new WaitForSeconds(data.ejectSpeed);
         }
+
     }
 }

@@ -27,7 +27,7 @@ public class StationaryWeapon : MonoBehaviour
 
     protected bool isActive = true;
 
-    private void Update()
+    protected virtual void Update()
     {
         if (!isActive) return;
 
@@ -61,6 +61,11 @@ public class StationaryWeapon : MonoBehaviour
         }
         myTarget = GameConnection.Instance.getFrontlinePlayer();
     }
+
+    protected bool InSights(Vector3 interceptPoint)
+    {
+        return HelperFunctions.LinedUp(interceptPoint, transform.position, transform.forward, .8f);
+    }
     #endregion
 
     #region attacking
@@ -79,10 +84,10 @@ public class StationaryWeapon : MonoBehaviour
     /// </summary>
     protected virtual void aim()
     {
-        Vector3 InterceptPoint = getInterceptPoint();
-        if (InterceptPoint.magnitude == 0) return;
+        Vector3 interceptPoint = getInterceptPoint();
+        if (interceptPoint.magnitude == 0) return;
 
-        HelperFunctions.LookAt(transform, InterceptPoint, data.turretSpeed, RotationParent.up);
+        HelperFunctions.LookAt(transform, interceptPoint, data.turretSpeed, RotationParent.up);
     }
 
     /// <summary>
@@ -137,7 +142,18 @@ public class StationaryWeapon : MonoBehaviour
             s.sprite = impactMarkersprite;
         }
 
-        impactMarker.transform.position = pos;
+        #region taking own velocity into account
+        Vector3 addedVelocity = Vector3.zero;
+
+        if (Vector3.Magnitude(MyVelocity) > .5f)
+        { 
+            float distance = Vector3.Distance(myTarget.transform.position, transform.position);
+            float time = distance / data.bulletData.speed;
+            addedVelocity = MyVelocity * time;
+        }
+        #endregion
+
+        impactMarker.transform.position = pos + addedVelocity;
     }
     #endregion
 
