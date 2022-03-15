@@ -10,7 +10,7 @@ using UnityEngine;
 public class ManageLoadouts
 {
     //Currently directly edits the saveFile, maybe later embed this funkktionality into the GameInfo file
-    ShipSaveFile_P[] saveFiles { get { return GameConnection.Instance.GameInfo.currentSaveFile.shipFiles; } }
+    List<ShipSaveFile_S> saveFiles { get { return GameConnection.Instance.GameInfo.currentSaveFile.shipFiles; } }
 
     LoadoutList loadoutList;
 
@@ -18,10 +18,48 @@ public class ManageLoadouts
     {
         loadoutList = Resources.Load("LoadoutList") as LoadoutList;
     }
+    #region save
 
-    #region save/load complete file
+    public void SaveCurrentLoadout(int file, int shipchassis, List<TurretModule> turretModules)
+    {
+
+        ShipSaveFile_S saveFile = new ShipSaveFile_S(shipchassis, new List<TurretMount_S>());
+
+        foreach (var module in turretModules)
+        {
+            saveFile.TurretMounts.Add(getTurret(module));
+        }
+
+        saveFiles.Insert(file, saveFile);
+
+        Debug.LogWarning($"SaveFile has been overwritten with current Loadout");
+        GameConnection.Instance.Save();
+    }
+
+    TurretMount_S getTurret(TurretModule module)
+    {
+        TurretClass_P type;
+        int number;
+        loadoutList.GetClassIndexFromTurretData(module.CurrentTurret, out type, out number);
+
+        TurretMount_S turretMount = new TurretMount_S();
+
+        turretMount.TurretType = type;
+        turretMount.TurretIndex = number;
+
+        return turretMount;
+    }
+    #endregion
+
+    #region load
     public void loadLoadoutFromFile(int file, int playerNumber, List<TurretModule> turretModules)
     {
+        if (saveFiles[file].TurretMounts.Count < 2)
+        {
+            Debug.LogWarning($"The file number {file} you are trying to load appears to be empty");
+            return;
+        }
+
         ChangeShip(file, playerNumber, saveFiles[file].ShipChassisIndex);
 
         //TODO: turretModules might have changed here
@@ -29,63 +67,16 @@ public class ManageLoadouts
         changeAllTurretsFromFile(file, turretModules);
     }
 
-    public void SaveCurrentLoadout(int file, int shipchassis, List<TurretModule> turretModules)
+
+    public void changeTurret(TurretModule module, TurretData data)
     {
-        Debug.Log(saveFiles[file].TurretMounts.Count);
-
-        saveFiles[file].ShipChassisIndex = shipchassis;
-
-        //Set the required amount of entries in the ship save file 
-        saveFiles[file].TurretMounts.Clear();
-        saveFiles[file].TurretMounts.AddRange(new List<TurretMount_P>(turretModules.Count));
-
-
-        foreach (var module in turretModules)
-        {
-            saveTurret(file, module, module.CurrentTurret);
-        }
-
-        Debug.LogWarning($"SaveFile has been overwritten with current Loadout");
-        GameConnection.Instance.Save();
+        module.ChangeTurret(data);
     }
-
-    public void SaveCurrentLoadout(int file, List<TurretModule> turretModules)
-    {
-        SaveCurrentLoadout(file, 0, turretModules);
-    }
-    #endregion
-
 
 
     void ChangeShip(int file, int playerNumber, int shiptype)
     {
-        //TODO: change saveFile
-
         //TODO: change ship
-    }
-
-    public void changeTurret(int file, TurretModule module, TurretData data)
-    {
-        saveTurret(file, module, data);
-
-        module.ChangeTurret(data);
-    }
-
-    void saveTurret(int file, TurretModule module, TurretData data)
-    {
-        TurretClass_P type;
-        int number;
-        loadoutList.GetClassIndexFromTurretData(data, out type, out number);
-        try
-        {
-            saveFiles[file].TurretMounts[module.ModuleNumber].TurretType =  type;
-            saveFiles[file].TurretMounts[module.ModuleNumber].TurretIndex =  number;
-        }
-        catch (System.Exception)
-        {
-            Debug.LogError($"Can't save changes to Loadout:\nFileNo: {file}, Module: {module.ModuleNumber}, Turret: {data.turretType}");
-            throw;
-        }
     }
 
     void changeAllTurretsFromFile(int file, List<TurretModule> turretModules)
@@ -93,7 +84,7 @@ public class ManageLoadouts
         //checking if there are as many Modules on the ship as are mentioned in the savefile.
         if (turretModules.Count == saveFiles[file].TurretMounts.Count)
         {
-            TurretMount_P[] turrets = new TurretMount_P[saveFiles[file].TurretMounts.Count];
+            TurretMount_S[] turrets = new TurretMount_S[saveFiles[file].TurretMounts.Count];
             saveFiles[file].TurretMounts.CopyTo(turrets, 0);
 
             for (int i = 0; i < turretModules.Count; i++)
@@ -111,4 +102,5 @@ public class ManageLoadouts
             //SaveCurrentLoadout(file, turretModules);
         }
     }
+    #endregion
 }

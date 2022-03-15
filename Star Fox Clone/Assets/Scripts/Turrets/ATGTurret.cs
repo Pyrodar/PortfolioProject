@@ -64,11 +64,6 @@ public class ATGTurret : Turret
     bool checkSights()
     {
         return HelperFunctions.LinedUp(interceptPoint, transform.position, transform.forward);
-        //Collider objInSights = HelperFunctions.GetObjectInSights(transform.position, transform.forward, data.turretRange);
-
-        //if(objInSights == null) return false;
-        //if (objInSights.tag == "Enemy") return true;
-        //return false;
     }
 
     public override void Fire()

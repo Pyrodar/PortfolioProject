@@ -5,14 +5,18 @@ using UnityEngine;
 public class SaveManagement
 {
     #region JsonFormatter
-    //Important for later
     JsonParser parser = new JsonParser(JsonParser.Settings.Default);
     JsonFormatter formatter = new JsonFormatter(JsonFormatter.Settings.Default);
 
 
-    public static void Save(object objectToSave, string fileName)
+    public static void Save(SaveFile objectToSave, string fileName)
     {
+
         var json = JsonUtility.ToJson(objectToSave);
+
+        Debug.Log("Shipfiles: " + objectToSave.shipFiles[0].ToString());
+        Debug.Log(json);
+
         System.IO.File.WriteAllText($"Assets/SaveData/{fileName}.sav", json);
     }
 
@@ -34,8 +38,12 @@ public class SaveManagement
     #region CreateSaveFiles
     public void SaveGame(string fileName, GameInfo state)
     {
-        Debug.Log("saved: " + state.currentSaveFile);
+
         SaveFile file = state.currentSaveFile;
+        if (file == null) return;
+
+        Debug.Log("saving to File: " + fileName);
+        
         Save(file, fileName);
     }
 

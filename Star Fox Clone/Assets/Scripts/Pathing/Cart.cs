@@ -4,6 +4,7 @@ using UnityEngine;
 using PathCreation;
 /// <summary>
 /// Might be unnessesary since only the carts position is important and that can be calculated in the Pathfollow script
+/// This script is no longer in use
 /// </summary>
 public class Cart : MonoBehaviour
 {

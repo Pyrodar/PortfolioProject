@@ -25,8 +25,12 @@ public class StationaryWeapon : MonoBehaviour
 
     protected float timeWhenReloaded;
 
+    protected bool isActive = true;
+
     private void Update()
     {
+        if (!isActive) return;
+
         if (isInRange())
         {
             aim();
@@ -149,5 +153,10 @@ public class StationaryWeapon : MonoBehaviour
     public void SetParent(Target parent)
     {
         myHost = parent;
+    }
+
+    public void AllowFire(bool isAllowed)
+    {
+        isActive = isAllowed;
     }
 }

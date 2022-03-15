@@ -537,7 +537,6 @@ public class GameConnection : MonoBehaviour
     #region SaveFiles
     public void Save()
     {
-        Debug.Log("saving: " + gameInfo);
         saveManagement.SaveGame("File_01", gameInfo);
     }
 

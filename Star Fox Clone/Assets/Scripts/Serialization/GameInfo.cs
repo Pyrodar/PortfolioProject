@@ -108,11 +108,11 @@ public class SaveFile
     public int ATGTurretsUnlocked;
     public int MSLTurretsUnlocked;
 
-    public ShipSaveFile_P[] shipFiles;
+    public List<ShipSaveFile_S> shipFiles;
 
     /// <summary>
     /// For creating default SaveFile
-    /// unlocks the first three turrets of each type and saves 2 default ships.
+    /// unlocks the first three turrets of each type and saves 1 default ship.
     /// </summary>
     public SaveFile()
     {
@@ -121,48 +121,48 @@ public class SaveFile
         ATGTurretsUnlocked = 3;
         MSLTurretsUnlocked = 3;
 
-        shipFiles = new ShipSaveFile_P[2];
-        shipFiles[0] = new ShipSaveFile_P() {   ShipChassisIndex = 0,
-                                                TurretMounts = { 
-                                                new TurretMount_P() { TurretType = TurretClass_P.Ams , TurretIndex = 0}, 
-                                                new TurretMount_P() { TurretType = TurretClass_P.Ams, TurretIndex = 0 }, 
-                                                new TurretMount_P() { TurretType = TurretClass_P.Atg, TurretIndex = 0 }, 
-                                                new TurretMount_P() { TurretType = TurretClass_P.Atg, TurretIndex = 0 }, 
-                                                new TurretMount_P() { TurretType = TurretClass_P.Msl, TurretIndex = 0 }, 
-                                                new TurretMount_P() { TurretType = TurretClass_P.Msl, TurretIndex = 0 } }
-        };
-
-        shipFiles[1] = new ShipSaveFile_P() {   ShipChassisIndex = 0,
-                                                TurretMounts = { 
-                                                new TurretMount_P() { TurretType = TurretClass_P.Ams , TurretIndex = 0},
-                                                new TurretMount_P() { TurretType = TurretClass_P.Ams, TurretIndex = 0 },
-                                                new TurretMount_P() { TurretType = TurretClass_P.Atg, TurretIndex = 0 },
-                                                new TurretMount_P() { TurretType = TurretClass_P.Atg, TurretIndex = 0 },
-                                                new TurretMount_P() { TurretType = TurretClass_P.Msl, TurretIndex = 0 },
-                                                new TurretMount_P() { TurretType = TurretClass_P.Msl, TurretIndex = 0 } }
-        };
+        shipFiles = new List<ShipSaveFile_S>();
+        shipFiles.Add(new ShipSaveFile_S(0,
+                                         new List<TurretMount_S>() {
+                                         new TurretMount_S() { TurretType = TurretClass_P.Ams , TurretIndex = 0},
+                                         new TurretMount_S() { TurretType = TurretClass_P.Ams, TurretIndex = 0 },
+                                         new TurretMount_S() { TurretType = TurretClass_P.Msl, TurretIndex = 0 },
+                                         new TurretMount_S() { TurretType = TurretClass_P.Msl, TurretIndex = 0 },
+                                         new TurretMount_S() { TurretType = TurretClass_P.Atg, TurretIndex = 0 },
+                                         new TurretMount_S() { TurretType = TurretClass_P.Atg, TurretIndex = 1 },
+                                         new TurretMount_S() { TurretType = TurretClass_P.Atg, TurretIndex = 1 },
+                                         new TurretMount_S() { TurretType = TurretClass_P.Atg, TurretIndex = 0 }}
+                                         ));
     }
+
     //TODO: add funktions to unlock stuff 
+
 }
 
 /// <summary>
-/// DEPRECATED: now as Protoc file available
 /// saving ship loadouts.
 /// edited directly in the ManageLoadouts script
 /// </summary>
-//[System.Serializable]
-//public struct ShipSaveFile
-//{
-//    public int ShipChassis;
+[System.Serializable]
+public struct ShipSaveFile_S
+{
+    public int ShipChassisIndex;
 
-//    public int[,] TurretDatas;
+    public List<TurretMount_S> TurretMounts;
 
-//    public ShipSaveFile(int ship, int[,] turrets)
-//    {
-//        ShipChassis = ship;
-//        TurretDatas = turrets;
-//    }
-//}
+    public ShipSaveFile_S(int ship, List<TurretMount_S> turrets)
+    {
+        ShipChassisIndex = ship;
+        TurretMounts = turrets;
+    }
+}
+
+[System.Serializable]
+public struct TurretMount_S
+{
+    public TurretClass_P TurretType;
+    public int TurretIndex;
+}
 
 public enum ConnectionType
 {

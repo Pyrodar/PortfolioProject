@@ -52,6 +52,7 @@ namespace ProtocFiles {
   #endregion
 
   #region Messages
+  [System.Serializable]
   public sealed partial class ShipSaveFile_P : pb::IMessage<ShipSaveFile_P>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage

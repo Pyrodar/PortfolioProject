@@ -40,6 +40,18 @@ public class GameplayPlane : MonoBehaviour
                 return Vector3.zero; 
             }
     }
+    
+    public FollowTrack Track
+    {
+        get {
+                FollowTrack followTrack = gameObject.GetComponent<FollowTrack>();
+                if (followTrack)
+                {
+                    return followTrack;
+                }
+                return null; 
+            }
+    }
 
     private void Start()
     {

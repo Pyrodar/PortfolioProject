@@ -236,32 +236,60 @@ public class Player : MonoBehaviour , IVehicle
 
         //Input is set relative to framerate
         input *= Time.deltaTime;
-        myRigid.AddRelativeForce(input * shipData.moveSpeed);
+
+        //Input moves the ships focus point (basically changes its forward vector)
         updateFokusPoint(input);
+        clampFokusPointPosition();
+
+        //movement based on the direction the ship is facing
+        Vector2 vel = shipFokusPoint.localPosition;
+        myRigid.AddRelativeForce(vel * Time.deltaTime * shipData.moveSpeed);
 
         checkBoundaries();
-        clampFokusPointPosition();
     }
 
     void checkBoundaries()
     {
 
         //setting velocity to 0 slowly when hitting boundries so enemy Missles and AA don't get confused
+        //moving focus point back towards local (0,0):
         float x = cam.transform.localPosition.x;
-        if (transform.localPosition.x >= Plane.MaxWidth + x) myRigid.velocity = new Vector3(myRigid.velocity.x - (myRigid.velocity.x * Time.deltaTime), myRigid.velocity.y, myRigid.velocity.z);
-        if (transform.localPosition.x <= -Plane.MaxWidth + x) myRigid.velocity = new Vector3(myRigid.velocity.x - (myRigid.velocity.x * Time.deltaTime), myRigid.velocity.y, myRigid.velocity.z);
+        if (transform.localPosition.x >= Plane.MaxWidth + x)
+        {
+            myRigid.velocity = new Vector3(myRigid.velocity.x - (myRigid.velocity.x * Time.deltaTime), myRigid.velocity.y, myRigid.velocity.z);
+            shipFokusPoint.localPosition = new Vector3(shipFokusPoint.localPosition.x - ((shipFokusPoint.localPosition.x * shipData.fokusPointCenteringSpeed) * Time.deltaTime),
+                                                       shipFokusPoint.localPosition.y, 
+                                                       shipFokusPoint.localPosition.z);
+        }
+
+        if (transform.localPosition.x <= -Plane.MaxWidth + x)
+        {
+            myRigid.velocity = new Vector3(myRigid.velocity.x - (myRigid.velocity.x * Time.deltaTime), myRigid.velocity.y, myRigid.velocity.z);
+            shipFokusPoint.localPosition = new Vector3(shipFokusPoint.localPosition.x - ((shipFokusPoint.localPosition.x * shipData.fokusPointCenteringSpeed) * Time.deltaTime),
+                                                       shipFokusPoint.localPosition.y,
+                                                       shipFokusPoint.localPosition.z);
+        }
+
+
+
         float y = cam.transform.localPosition.y;
-        if (transform.localPosition.y >= Plane.MaxHeight + y) myRigid.velocity = new Vector3(myRigid.velocity.x, myRigid.velocity.y - (myRigid.velocity.y * Time.deltaTime), myRigid.velocity.z);
-        if (transform.localPosition.y <= -Plane.MaxHeight + y) myRigid.velocity = new Vector3(myRigid.velocity.x, myRigid.velocity.y - (myRigid.velocity.y * Time.deltaTime), myRigid.velocity.z);
+        if (transform.localPosition.y >= Plane.MaxHeight + y)
+        {
+            myRigid.velocity = new Vector3(myRigid.velocity.x, myRigid.velocity.y - (myRigid.velocity.y * Time.deltaTime), myRigid.velocity.z);
+            shipFokusPoint.localPosition = new Vector3(shipFokusPoint.localPosition.x,
+                                           shipFokusPoint.localPosition.y - ((shipFokusPoint.localPosition.y * shipData.fokusPointCenteringSpeed) * Time.deltaTime),
+                                           shipFokusPoint.localPosition.z);
+        }
+        if (transform.localPosition.y <= -Plane.MaxHeight + y)
+        {
+            myRigid.velocity = new Vector3(myRigid.velocity.x, myRigid.velocity.y - (myRigid.velocity.y * Time.deltaTime), myRigid.velocity.z);
+            shipFokusPoint.localPosition = new Vector3(shipFokusPoint.localPosition.x,
+                                           shipFokusPoint.localPosition.y - ((shipFokusPoint.localPosition.y * shipData.fokusPointCenteringSpeed) * Time.deltaTime),
+                                           shipFokusPoint.localPosition.z);
+        }
 
         //clamping position
         transform.localPosition = new Vector3(Mathf.Clamp(transform.localPosition.x, -Plane.MaxWidth * 2, Plane.MaxWidth * 2), Mathf.Clamp(transform.localPosition.y, -Plane.MaxHeight * 2, Plane.MaxHeight * 2));
-
-
-        //if (transform.localPosition.z != 0)
-        //{
-        //    transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, plane.Playerpositions[0].position.z);
-        //}
     }
 
     public void ApplyRotation(float addedRotation)
@@ -283,20 +311,20 @@ public class Player : MonoBehaviour , IVehicle
 
         //moving focus point back towards local (0,0):
 
-        if (Mathf.Abs(shipFokusPoint.localPosition.x) > shipData.fokusPointCenteringTolerance && Mathf.Abs(input.x) < .1f)
-        {
-            shipFokusPoint.localPosition = new Vector3( shipFokusPoint.localPosition.x - ((shipFokusPoint.localPosition.x * shipData.fokusPointCenteringSpeed) * Time.deltaTime), 
-                                                        shipFokusPoint.localPosition.y, 
-                                                        shipFokusPoint.localPosition.z);
-        }
+        //if (Mathf.Abs(shipFokusPoint.localPosition.x) > shipData.fokusPointCenteringTolerance && Mathf.Abs(input.x) < .1f)
+        //{
+        //    shipFokusPoint.localPosition = new Vector3( shipFokusPoint.localPosition.x - ((shipFokusPoint.localPosition.x * shipData.fokusPointCenteringSpeed) * Time.deltaTime), 
+        //                                                shipFokusPoint.localPosition.y, 
+        //                                                shipFokusPoint.localPosition.z);
+        //}
 
 
-        if (Mathf.Abs(shipFokusPoint.localPosition.y) > shipData.fokusPointCenteringTolerance && Mathf.Abs(input.y) < .1f)
-        {
-            shipFokusPoint.localPosition = new Vector3( shipFokusPoint.localPosition.x, 
-                                                        shipFokusPoint.localPosition.y - ((shipFokusPoint.localPosition.y * shipData.fokusPointCenteringSpeed) * Time.deltaTime), 
-                                                        shipFokusPoint.localPosition.z);
-        }
+        //if (Mathf.Abs(shipFokusPoint.localPosition.y) > shipData.fokusPointCenteringTolerance && Mathf.Abs(input.y) < .1f)
+        //{
+        //    shipFokusPoint.localPosition = new Vector3( shipFokusPoint.localPosition.x, 
+        //                                                shipFokusPoint.localPosition.y - ((shipFokusPoint.localPosition.y * shipData.fokusPointCenteringSpeed) * Time.deltaTime), 
+        //                                                shipFokusPoint.localPosition.z);
+        //}
 
         updateCrosshairPositions();
     }
@@ -315,10 +343,11 @@ public class Player : MonoBehaviour , IVehicle
     void gravityAndLiftEffect()
     {
         Vector3 gravity = Vector3.down * shipData.gravityAndLift * Time.deltaTime;
-        ApplyMovement(gravity);
-
         Vector3 lift = playerRotationVisuals.TransformDirection(Vector3.up) * shipData.gravityAndLift * Time.deltaTime;
-        ApplyMovement(lift);
+
+
+        ApplyMovement(gravity + lift);  //Maybe only apply this if other input is zero?
+        myRigid.AddRelativeForce(gravity + lift);
     }
 
     #endregion
@@ -755,20 +784,6 @@ public class Player : MonoBehaviour , IVehicle
         BulletFactory factory = MapLayoutInfo.Instance.BulletFactory;
 
         factory.CmdSpawnBullet(BulletOrigin.AMS, data.bulletData, position, rotation, data.bulletSpread, flakDelay, Velocity);
-
-        //GameObject b = GameObject.Instantiate(data.bulletData.visuals);
-        //b.transform.position = position;
-        //b.transform.rotation = rotation;
-
-        //Bullet bullet = b.AddComponent<Bullet>();
-        //bullet.tag = "AMSBullet";
-
-        //if (data.bulletData.damageType == DamageType.flak)                                                          //TODO: add player Velocity to bullet
-        //{
-        //    bullet.Initialize(data.bulletData, data.bulletSpread, BulletOrigin.Player, Vector3.zero, flakDelay);    //setting bullet timer manually for flak ammunition
-        //}
-        //else bullet.Initialize(data.bulletData, data.bulletSpread, BulletOrigin.Player, Vector3.zero);              //using regular bullet timer
-
     }
 
     void RpcSpawnBullet(SmallTurretData data, Vector3 position, Quaternion rotation, float flakDelay)

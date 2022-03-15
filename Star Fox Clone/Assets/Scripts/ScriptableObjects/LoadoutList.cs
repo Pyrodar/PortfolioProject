@@ -90,7 +90,7 @@ public class LoadoutList : ScriptableObject
                     if (data == AMS_Turrets[i])
                     {
                         number = i;
-                        continue;
+                        break;
                     }
                 }
                 break;
@@ -102,7 +102,7 @@ public class LoadoutList : ScriptableObject
                     if (data == ATG_Turrets[i])
                     {
                         number = i;
-                        continue;
+                        break;
                     }
                 }
                 break;
@@ -114,7 +114,7 @@ public class LoadoutList : ScriptableObject
                     if (data == MSL_Turrets[i])
                     {
                         number = i;
-                        continue;
+                        break;
                     }
                 }
                 break;

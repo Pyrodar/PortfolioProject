@@ -38,7 +38,7 @@ public class AMSTurret : Turret
         if (M != prevTarget)
         {
             prevTarget = M;
-            addCooldown(data.cooldown);
+            addCooldown(data.cooldown * 1.5f);
         }
 
         //aquire target
@@ -78,7 +78,6 @@ public class AMSTurret : Turret
     {
         if (Time.time > cooldownEnd && !overheated)
         {
-
             addCooldown(data.cooldown);
 
             //Networking/////////////////////////

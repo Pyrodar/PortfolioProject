@@ -4,7 +4,10 @@ using UnityEngine;
 public class EnemyPlane : Target
 {
     [SerializeField] int startShootingAfterWaypoint;
-    int currentWaypoint;
+    int currentWaypoint
+    {
+        get { return track.getCurrentWaypoint(); }
+    }
 
     List<StationaryWeapon> stationaryWeapons;
 
@@ -29,27 +32,41 @@ public class EnemyPlane : Target
         {
             stationaryWeapons.Add(sw);
         }
-
         track = GetComponent<FollowTrack>();
+
         base.Start();
+        
         type = TargetType.plane;
         gameObject.SetActive(false);    //hiding plane until it starts moving
+
+        if (startShootingAfterWaypoint > 0)
+        {
+            foreach (var sw in stationaryWeapons) sw.AllowFire(false);
+        }
     }
 
-    void getCurrentWaypoint()
+
+    void Update()
     {
-        currentWaypoint = track.getCurrentWaypoint();
-        Debug.Log("currentWaypoint: " + currentWaypoint);
+        if (currentWaypoint >= startShootingAfterWaypoint)
+        {
+            foreach(var sw in stationaryWeapons) sw.AllowFire(true);
+            enabled = false;
+        }
+
+        //Debug.Log("currentWaypoint: " + currentWaypoint);
+        //Debug.Log("Allowing Fire: " + (currentWaypoint >= startShootingAfterWaypoint).ToString());
     }
 
     public override void destroySelf()
     {
         track.StopFollow();
+
+        rigid.AddRelativeForce(Vector3.forward * track.Speed * 1.6f, ForceMode.Impulse);
         rigid.useGravity = true;
         rigid.drag = 0f;
 
-        float hurlRange = 1f;
-
+        float hurlRange = .7f;
         rigid.angularVelocity = new Vector3(Random.Range(-hurlRange, hurlRange), Random.Range(-hurlRange, hurlRange), Random.Range(-hurlRange, hurlRange));
 
         foreach (StationaryWeapon sw in stationaryWeapons)

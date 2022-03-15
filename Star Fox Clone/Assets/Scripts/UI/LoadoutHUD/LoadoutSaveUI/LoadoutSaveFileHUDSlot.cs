@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class LoadoutSaveSlot : MonoBehaviour
+public class LoadoutSaveFileHUDSlot : MonoBehaviour
 {
     public UnityAction<int> LoadFile;
     public UnityAction<int> SaveFile;
@@ -17,13 +17,20 @@ public class LoadoutSaveSlot : MonoBehaviour
 
     public void Initialize(int slotNo)
     {
+        //Debug.Log("Initialize SaveSlot No: " + slotNo);
         slotNumber = slotNo;
         LoadButton.onClick.AddListener(LoadThisFile);
         SaveButton.onClick.AddListener(SaveThisFile);
     }
 
-    public void SetLoadout(ShipSaveFile_P saveData)
+    public void SetLoadout(ShipSaveFile_S saveData)
     {
+        if (saveData.TurretMounts.Count < 2)
+        {
+            ClearLoadout();
+            return;
+        }
+
         string description = "";
         
         foreach (var mount in saveData.TurretMounts)

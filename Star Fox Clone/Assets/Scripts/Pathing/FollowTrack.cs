@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using PathCreation;
+using System.Collections.Generic;
 
 /// <summary>
 /// This script used a rigidbodys velocity to move so the velocity could be added to the gameobject for targeting purposes.
@@ -9,12 +10,21 @@ using PathCreation;
 /// </summary>
 public class FollowTrack : MonoBehaviour
 {
+    [SerializeField] PathCreator path;
+    public PathCreator Path
+    {
+        get { return path; }
+    }
+
+
     [SerializeField] float speed;
     public float Speed
     {
         get { return speed; }
     }
-    [SerializeField] PathCreator Path;
+    bool go = false;
+
+    #region specificPoints
     float pathPosition = 0;
     Vector3 PathPosition
     {
@@ -24,7 +34,6 @@ public class FollowTrack : MonoBehaviour
             return Path.path.GetPointAtDistance(pathPosition); 
         }
     }
-
     Vector3 PathNormal
     {
         get
@@ -34,12 +43,10 @@ public class FollowTrack : MonoBehaviour
             return Path.path.GetNormal(pathPosition);
         }
     }
-    bool go = false;
+    List<float> triggerPoints = new List<float>();
+    #endregion
 
-    //Rigidbody rigid;
-
-    public UnityEvent trackEnded;
-
+    #region Velocity
     Vector3 lastPosition = Vector3.zero;
     Vector3 velocity = Vector3.zero;
     public Vector3 Velocity
@@ -47,12 +54,11 @@ public class FollowTrack : MonoBehaviour
         get
         {   return velocity; }
     }
+    #endregion
 
 
-    private void Awake()
-    {
-        //rigid = GetComponent<Rigidbody>();
-    }
+    public UnityEvent OnTrackEnded;
+    public UnityEvent<float> OnTrackTriggerPointPassed;
 
     private void Update()
     {
@@ -74,13 +80,10 @@ public class FollowTrack : MonoBehaviour
 
         calculateVelocity();
 
-        if (IsEndReached())
-        {
-            StopFollow();
-            trackEnded.Invoke();
-        }
+        checkForTriggerPoints(pathPosition);
     }
 
+    #region movement
     void calculateVelocity()
     {
         velocity = (transform.position - lastPosition) / Time.deltaTime;
@@ -99,7 +102,9 @@ public class FollowTrack : MonoBehaviour
         //transform.LookAt(transform.position + PathNormal);
 
     }
+    #endregion
 
+    #region StartAndStop
     public void StartFollow()
     {
         pathPosition = 8;
@@ -113,21 +118,49 @@ public class FollowTrack : MonoBehaviour
     public void StopFollow()
     {
         go = false;
-        //rigid.drag = 1f;
     }
+    #endregion
 
+    #region Way- and Triggerpoints
     internal int getCurrentWaypoint()
     {
         //TODO: find out how to access last waypoint
-        return 0;
+        float percentageDistance = (pathPosition / path.path.length) * 100;
+        return (int) percentageDistance;
     }
 
-    bool IsEndReached()
+    void checkForTriggerPoints(float pathPos)
     {
-        return pathPosition >= Path.path.length - 1;
+        #region End
+        if (pathPosition >= path.path.length - 1)
+        {
+            StopFollow();
+            OnTrackEnded.Invoke();
+        }
+        #endregion
+
+        #region Triggers
+        for (int i = 0; i < triggerPoints.Count; i++)
+        {
+            if (triggerPoints[i] <= pathPos)
+            {
+                OnTrackTriggerPointPassed.Invoke(triggerPoints[i]);
+                triggerPoints.RemoveAt(i);
+                break;
+            }
+        }
+        #endregion
     }
 
-    
+    public void AddTriggerPoint(Vector3 TriggerPosition, out float pathPosition)
+    {
+        pathPosition = Path.path.GetClosestDistanceAlongPath(TriggerPosition);
+        triggerPoints.Add(pathPosition);
+    }
+
+    #endregion
+
+
     public void debugSpeed(float i)
     {
         speed = i;

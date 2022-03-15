@@ -1124,6 +1124,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3574777004027965271, guid: 7d699e50146de3e44ab279b9b2905df4,
+        type: 3}
+      propertyPath: startShootingAfterWaypoint
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7d699e50146de3e44ab279b9b2905df4, type: 3}
 --- !u!4 &106471242 stripped
@@ -1476,7 +1481,7 @@ MonoBehaviour:
       - 0
       globalNormalsAngle: 173
       flipNormals: 0
-    vertexPathUpToDate: 0
+    vertexPathUpToDate: 1
     vertexPathMaxAngleError: 0.3
     vertexPathMinVertexSpacing: 0.01
     showTransformTool: 1
@@ -2540,6 +2545,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3574777004027965271, guid: 7d699e50146de3e44ab279b9b2905df4,
+        type: 3}
+      propertyPath: startShootingAfterWaypoint
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7d699e50146de3e44ab279b9b2905df4, type: 3}
@@ -5666,7 +5676,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  relativeZStartingDistance: 0
 --- !u!1 &913821663
 GameObject:
   m_ObjectHideFlags: 0
@@ -6389,6 +6398,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3574777004027965271, guid: 7d699e50146de3e44ab279b9b2905df4,
+        type: 3}
+      propertyPath: startShootingAfterWaypoint
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7d699e50146de3e44ab279b9b2905df4, type: 3}
 --- !u!4 &1034792055 stripped
@@ -6998,11 +7012,21 @@ PrefabInstance:
       propertyPath: Path
       value: 
       objectReference: {fileID: 170089495}
+    - target: {fileID: 3805657879823596275, guid: bf46a4256dc68f64d8a3b54d795fdb19,
+        type: 3}
+      propertyPath: path
+      value: 
+      objectReference: {fileID: 170089495}
     - target: {fileID: 5094483135677587273, guid: bf46a4256dc68f64d8a3b54d795fdb19,
         type: 3}
       propertyPath: m_Name
       value: MapLayoutObject (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5094483135677587278, guid: bf46a4256dc68f64d8a3b54d795fdb19,
+        type: 3}
+      propertyPath: mainPath
+      value: 
+      objectReference: {fileID: 170089495}
     - target: {fileID: 5094483135677587279, guid: bf46a4256dc68f64d8a3b54d795fdb19,
         type: 3}
       propertyPath: m_RootOrder
@@ -8188,6 +8212,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3574777004027965271, guid: 7d699e50146de3e44ab279b9b2905df4,
+        type: 3}
+      propertyPath: startShootingAfterWaypoint
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7d699e50146de3e44ab279b9b2905df4, type: 3}

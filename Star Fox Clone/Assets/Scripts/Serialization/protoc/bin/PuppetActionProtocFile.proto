@@ -8,6 +8,17 @@ message Float3{
     float z = 3;
 }
 
+message Shot{
+    Float3 origin = 1;
+    Float3 direction = 2;
+    int32 turretType = 3;
+    int32 turretIndex = 4;
+}
+
 message Action{
-    
+    Float3 position = 1;
+    float rotation = 2;
+    float currentHealth = 3;
+
+    repeated Shot shots = 4;
 }

@@ -10,7 +10,7 @@ public class LoadoutHUD : UIBaseClass
 {
     private void Awake() { uiType = UIType.Loadout; }
 
-    [SerializeField]LoadoutSaveFileMenu LoadoutSaveFileMenu;
+    [SerializeField]LoadoutSaveFileHUD LoadoutSaveFileMenu;
 
     #region ListingTurrets
 
@@ -38,7 +38,7 @@ public class LoadoutHUD : UIBaseClass
 
     void clearList()
     {
-        Debug.Log("clearing List");
+        //Debug.Log("clearing List");
         foreach (Transform child in turretListParent)
         {
             GameObject.Destroy(child.gameObject);
@@ -49,7 +49,7 @@ public class LoadoutHUD : UIBaseClass
 
     void fillListAll()
     {
-        Debug.Log("Listing All");
+        //Debug.Log("Listing All");
 
         fillList(TurretClass_P.Ams);
         fillList(TurretClass_P.Atg);
@@ -58,7 +58,7 @@ public class LoadoutHUD : UIBaseClass
 
     void fillList(TurretClass_P type)
     {
-        Debug.Log($"Listing {type}");
+        //Debug.Log($"Listing {type}");
 
         switch (type)
         {
@@ -418,7 +418,7 @@ public class LoadoutHUD : UIBaseClass
     
     public void SwitchTurret(TurretData data)
     {
-        changeTurretAndSaveFile(data);
+        changeTurret(data);
         CurrentTurret.SetDescription(selectedModule.CurrentTurret);
     }
 
@@ -427,20 +427,24 @@ public class LoadoutHUD : UIBaseClass
     #region saveFile
 
     ManageLoadouts manageLoadouts = new ManageLoadouts();
-    void changeTurretAndSaveFile(TurretData data)
+    void changeTurret(TurretData data)
     {
-        manageLoadouts.changeTurret(playerNumber, selectedModule, data);
+        manageLoadouts.changeTurret(selectedModule, data);
     }
 
 
     public void LoadSaveFile(int saveSlot)
     {
         manageLoadouts.loadLoadoutFromFile(saveSlot, playerNumber, modules);
+        LoadoutSaveFileMenu.ShowSavedLoadouts();
+        LoadoutSaveFileMenu.ToggleMenu();
     }
 
     public void SaveCurrentLoadout(int saveSlot)
     {
-        manageLoadouts.SaveCurrentLoadout(saveSlot, modules);
+        manageLoadouts.SaveCurrentLoadout(saveSlot, 0, modules);
+        LoadoutSaveFileMenu.ShowSavedLoadouts();
+        LoadoutSaveFileMenu.ToggleMenu();
     }
     #endregion
 }

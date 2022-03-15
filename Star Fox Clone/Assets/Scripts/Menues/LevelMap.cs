@@ -69,7 +69,7 @@ public class LevelMap : MonoBehaviour
             {
                 foreach (var obj in results)
                 {
-                    Debug.Log("Hit " + obj.gameObject.name);
+                    //Debug.Log("Hit " + obj.gameObject.name);
                     Button button = obj.gameObject.GetComponent<Button>();
                     if (button != null)
                     {

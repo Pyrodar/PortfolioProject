@@ -31,18 +31,6 @@ public class AntiAirGun : StationaryWeapon
         {
             factory.CmdSpawnBullet(BulletOrigin.Enemy, data.bulletData, transform.position, transform.rotation, data.bulletspread, flakDelay, MyVelocity);
 
-            //GameObject b = GameObject.Instantiate(data.bulletData.visuals);
-            //b.transform.position = transform.position;
-            //b.transform.rotation = transform.rotation;
-            //b.layer = 11;
-
-            //Bullet bullet = b.AddComponent<Bullet>();
-
-            //if(data.bulletData.damageType == DamageType.flak) bullet.Initialize(data.bulletData, data.bulletspread, BulletOrigin.Enemy, MyVelocity, flakDelay);
-            //else bullet.Initialize(data.bulletData, data.bulletspread, BulletOrigin.Enemy, MyVelocity);
-
-            //spawnProjectile(bullet.gameObject);
-
             yield return new WaitForSeconds(data.ejectSpeed);
         }
     }

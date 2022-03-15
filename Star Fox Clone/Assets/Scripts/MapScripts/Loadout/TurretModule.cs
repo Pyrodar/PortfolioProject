@@ -154,14 +154,14 @@ public class TurretModule : MonoBehaviour, IManeuverableListEntry
 
     public void SelectEntry()
     {
-        Debug.Log($"Selected turret: {name}");
+        //Debug.Log($"Selected turret: {name}");
         selected = true;
         areaMarker.GetComponent<MeshRenderer>().material = SelectedAM;
     }
 
     public void DeselectEntry()
     {
-        Debug.Log($"Deselected turret: {name}");
+        //Debug.Log($"Deselected turret: {name}");
         selected = false;
         areaMarker.GetComponent<MeshRenderer>().material = RegularAM;
     }

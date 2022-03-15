@@ -5,7 +5,7 @@ using UnityEngine.Events;
 public class TrackTrigger : MonoBehaviour
 {
     [SerializeField] UnityEvent OnTrigger;
-    [SerializeField] float relativeZStartingDistance;
+    float PathTriggerPoint;
 
     GameplayPlane plane;
     bool active = false;
@@ -13,21 +13,24 @@ public class TrackTrigger : MonoBehaviour
     void Start()
     {
         plane = GameConnection.Instance.Plane;
-    }
-
-    void Update()
-    {
-        if (plane == null) { Start(); return; }
-
-        if (!active)
+        if (plane)
         {
-            if (inPositionToStart()) activate();
+            plane.Track.AddTriggerPoint(transform.position, out PathTriggerPoint);
+            plane.Track.OnTrackTriggerPointPassed.AddListener(OnTriggerPoint);
+        }
+        else
+        {
+            Debug.LogWarning("Not able to set Triggerpoint on path");
+            Invoke("Start", 1f);
         }
     }
 
-    bool inPositionToStart()
+    void OnTriggerPoint(float pathPosition)
     {
-        return relativeZStartingDistance > plane.relativeZposition(transform.position) && plane.relativeZposition(transform.position) > (relativeZStartingDistance - 5);
+        if (!active)
+        {
+            if (PathTriggerPoint <= pathPosition) activate();
+        }
     }
 
     void activate()

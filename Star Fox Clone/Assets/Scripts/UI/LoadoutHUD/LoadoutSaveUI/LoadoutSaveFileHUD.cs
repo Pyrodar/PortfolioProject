@@ -4,10 +4,11 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class LoadoutSaveFileMenu : MonoBehaviour
+public class LoadoutSaveFileHUD : MonoBehaviour
 {
     [SerializeField]Transform MenuObject;
-    [SerializeField]List<LoadoutSaveSlot> slots;
+    [SerializeField]Transform ListObject;
+    [SerializeField]List<LoadoutSaveFileHUDSlot> slots;
     LoadoutHUD HUD;
     SaveFile saveFile;
 
@@ -34,7 +35,9 @@ public class LoadoutSaveFileMenu : MonoBehaviour
     {
         int i = 0;
 
-        foreach (var slot in GetComponentsInChildren<LoadoutSaveSlot>())
+        Debug.Log("Initializing SaveSlots!");
+
+        foreach (var slot in ListObject.GetComponentsInChildren<LoadoutSaveFileHUDSlot>())
         {
             slots.Add(slot);
             slot.Initialize(i);
@@ -45,7 +48,7 @@ public class LoadoutSaveFileMenu : MonoBehaviour
 
             //Show current save file
             slot.ClearLoadout();
-            if (saveFile.shipFiles.Length >= i)
+            if (saveFile.shipFiles.Count > i)
             {
                 slot.SetLoadout(saveFile.shipFiles[i]);
             }
