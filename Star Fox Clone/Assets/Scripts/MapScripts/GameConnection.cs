@@ -355,6 +355,8 @@ public class GameConnection : MonoBehaviour
                 }
                 break;
         }
+
+        //TODO: Load first saved Loadout
     }
 
     public void AddPlayerToLoadoutScene(Player player, int playerNumber)

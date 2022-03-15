@@ -1,14 +1,9 @@
-﻿using Google.Protobuf;
-using System.IO;
+﻿using System.IO;
 using UnityEngine;
 
 public class SaveManagement
 {
-    #region JsonFormatter
-    JsonParser parser = new JsonParser(JsonParser.Settings.Default);
-    JsonFormatter formatter = new JsonFormatter(JsonFormatter.Settings.Default);
-
-
+    #region Json
     public static void Save(SaveFile objectToSave, string fileName)
     {
 
@@ -24,7 +19,7 @@ public class SaveManagement
     {
         try
         {
-            object result = File.ReadAllText($"Assets/SaveData/{fileName}.sav");
+            object result = JsonUtility.FromJson(File.ReadAllText($"Assets/SaveData/{fileName}.sav"),typeof(SaveFile));
             return result;
         }
         catch (System.Exception)

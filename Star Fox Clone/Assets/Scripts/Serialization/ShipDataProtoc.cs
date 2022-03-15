@@ -267,8 +267,9 @@ namespace ProtocFiles {
     #endif
 
   }
-
-  public sealed partial class TurretMount_P : pb::IMessage<TurretMount_P>
+  
+    [System.Serializable]
+    public sealed partial class TurretMount_P : pb::IMessage<TurretMount_P>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif

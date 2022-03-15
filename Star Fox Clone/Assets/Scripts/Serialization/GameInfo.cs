@@ -136,6 +136,32 @@ public class SaveFile
     }
 
     //TODO: add funktions to unlock stuff 
+    public void UnlockUpTo(int levels)
+    {
+        LevelsUnlocked = levels;
+    }
+    
+    public void UnlockUpTo(TurretClass_P turretClass, int turretIndex)
+    {
+        switch (turretClass)
+        {
+            case TurretClass_P.Ams:
+                AMSTurretsUnlocked = turretIndex;
+                break;
+            case TurretClass_P.Atg:
+                ATGTurretsUnlocked = turretIndex;
+                break;
+            case TurretClass_P.Msl:
+                MSLTurretsUnlocked = turretIndex;
+                break;
+            case TurretClass_P.Other:
+                break;
+            default:
+                break;
+        }
+    }
+
+
 
 }
 

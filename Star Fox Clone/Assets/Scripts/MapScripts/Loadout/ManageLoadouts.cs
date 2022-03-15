@@ -30,6 +30,7 @@ public class ManageLoadouts
             saveFile.TurretMounts.Add(getTurret(module));
         }
 
+        saveFiles.RemoveAt(file);
         saveFiles.Insert(file, saveFile);
 
         Debug.LogWarning($"SaveFile has been overwritten with current Loadout");
