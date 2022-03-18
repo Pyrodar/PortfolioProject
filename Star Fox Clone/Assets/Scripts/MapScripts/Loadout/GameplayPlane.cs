@@ -53,6 +53,13 @@ public class GameplayPlane : MonoBehaviour
             }
     }
 
+
+    [SerializeField] GameplayBoundaries gameplayBoundaries;
+    public GameplayBoundaries GameplayBoundaries
+    {
+        get { return gameplayBoundaries; }
+    }
+
     private void Start()
     {
         //Debugging############

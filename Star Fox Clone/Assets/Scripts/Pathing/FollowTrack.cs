@@ -34,13 +34,21 @@ public class FollowTrack : MonoBehaviour
             return Path.path.GetPointAtDistance(pathPosition); 
         }
     }
+    Vector3 CameraViewpointPosition
+    {
+        get {
+            if (!go) return Vector3.zero;
+            
+            return Path.path.GetPointAtDistance(pathPosition + 5); 
+        }
+    }
     Vector3 PathNormal
     {
         get
         {
             if (!go) return Vector3.zero;
 
-            return Path.path.GetNormal(pathPosition);
+            return Path.path.GetNormalAtDistance(pathPosition);
         }
     }
     List<float> triggerPoints = new List<float>();
@@ -99,7 +107,7 @@ public class FollowTrack : MonoBehaviour
 
         //Debug.Log("Normal : " + PathNormal);
 
-        //transform.LookAt(transform.position + PathNormal);
+        HelperFunctions.LookAt(transform, CameraViewpointPosition, 1f);
 
     }
     #endregion
@@ -132,7 +140,7 @@ public class FollowTrack : MonoBehaviour
     void checkForTriggerPoints(float pathPos)
     {
         #region End
-        if (pathPosition >= path.path.length - 1)
+        if (pathPosition >= path.path.length - 6)
         {
             StopFollow();
             OnTrackEnded.Invoke();

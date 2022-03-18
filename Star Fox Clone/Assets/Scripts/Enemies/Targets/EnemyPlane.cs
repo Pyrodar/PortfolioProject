@@ -74,6 +74,12 @@ public class EnemyPlane : Target
             sw.destroySelf();
         }
 
+        //removes this object as target
+        foreach (var player in Players)
+        {
+            player.removeMarkedTarget(this);
+        }
+
         Invoke("crash", 2f);
     }
 

@@ -21,7 +21,7 @@ public class CameraScript : MonoBehaviour
     {
         if (player == null) return;
         followPlayer();
-        ClampPosition();
+        //ClampPosition();
     }
 
     public void setPlayer(Player p)

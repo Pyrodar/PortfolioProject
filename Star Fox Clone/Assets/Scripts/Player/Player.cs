@@ -119,6 +119,7 @@ public class Player : MonoBehaviour , IVehicle
     #region HUD
     UnityEvent<float> OnHealthUpdated =  new UnityEvent<float>();
     UnityEvent<Quaternion, Vector3> OnRotationUpdated = new UnityEvent<Quaternion, Vector3>();
+    UnityEvent<GameplayBoundaries.GameplayBorder, float> OnCloseToBoundaries= new UnityEvent<GameplayBoundaries.GameplayBorder, float>();
 
 
     [SerializeField] RectTransform[] TargetMarker;
@@ -154,6 +155,7 @@ public class Player : MonoBehaviour , IVehicle
         }
 
         OnRotationUpdated.AddListener(hud.GyroHorizon.displayRotation);
+        OnCloseToBoundaries.AddListener(plane.GameplayBoundaries.SetBorderOpacity);
 
 
         TurretIconList list = hud.TurretIconList;
@@ -270,9 +272,24 @@ public class Player : MonoBehaviour , IVehicle
         //setting velocity to 0 slowly when hitting boundries so enemy Missles and AA don't get confused
         //moving focus point back towards local (0,0):
 
+        if (transform.localPosition.x >= Plane.MaxWidth * .5f) OnCloseToBoundaries?.Invoke(GameplayBoundaries.GameplayBorder.RIGHT, (transform.localPosition.x - (Plane.MaxWidth * .5f)) / Plane.MaxWidth);
+        else if (transform.localPosition.x <= -Plane.MaxWidth * .5f) OnCloseToBoundaries?.Invoke(GameplayBoundaries.GameplayBorder.LEFT, (transform.localPosition.x + (Plane.MaxWidth * .5f)) / -Plane.MaxWidth);
+        else
+        {
+            OnCloseToBoundaries?.Invoke(GameplayBoundaries.GameplayBorder.RIGHT, 0);
+            OnCloseToBoundaries?.Invoke(GameplayBoundaries.GameplayBorder.LEFT, 0);
+        }
 
-        float x = cam.transform.localPosition.x;
-        if (transform.localPosition.x >= Plane.MaxWidth + x)
+        if (transform.localPosition.y >= Plane.MaxHeight * .5f) OnCloseToBoundaries?.Invoke(GameplayBoundaries.GameplayBorder.TOP, (transform.localPosition.y - (Plane.MaxHeight * .5f)) / Plane.MaxHeight);
+        else if (transform.localPosition.y <= -Plane.MaxHeight * .5f) OnCloseToBoundaries?.Invoke(GameplayBoundaries.GameplayBorder.BOTTOM, (transform.localPosition.y + (Plane.MaxHeight * .5f)) / Plane.MaxHeight);
+        else
+        {
+            OnCloseToBoundaries?.Invoke(GameplayBoundaries.GameplayBorder.TOP, 0);
+            OnCloseToBoundaries?.Invoke(GameplayBoundaries.GameplayBorder.BOTTOM, 0);
+        }
+
+        //float x = cam.transform.localPosition.x;
+        if (transform.localPosition.x >= Plane.MaxWidth)
         {
             myRigid.velocity = new Vector3(myRigid.velocity.x - (myRigid.velocity.x * Time.deltaTime), myRigid.velocity.y, myRigid.velocity.z);
 
@@ -282,7 +299,7 @@ public class Player : MonoBehaviour , IVehicle
             outOfBoundsX = true;
         }
 
-        else if (transform.localPosition.x <= -Plane.MaxWidth + x)
+        else if (transform.localPosition.x <= -Plane.MaxWidth)
         {
             myRigid.velocity = new Vector3(myRigid.velocity.x - (myRigid.velocity.x * Time.deltaTime), myRigid.velocity.y, myRigid.velocity.z);
 
@@ -298,8 +315,8 @@ public class Player : MonoBehaviour , IVehicle
         }
 
 
-        float y = cam.transform.localPosition.y;
-        if (transform.localPosition.y >= Plane.MaxHeight + y)
+        //float y = cam.transform.localPosition.y;
+        if (transform.localPosition.y >= Plane.MaxHeight)
         {
             myRigid.velocity = new Vector3(myRigid.velocity.x, myRigid.velocity.y - (myRigid.velocity.y * Time.deltaTime), myRigid.velocity.z);
             shipFokusPoint.localPosition = new Vector3(shipFokusPoint.localPosition.x,
@@ -308,7 +325,7 @@ public class Player : MonoBehaviour , IVehicle
             outOfBoundsY = true;
         }
 
-        else if (transform.localPosition.y <= -Plane.MaxHeight + y)
+        else if (transform.localPosition.y <= -Plane.MaxHeight)
         {
             myRigid.velocity = new Vector3(myRigid.velocity.x, myRigid.velocity.y - (myRigid.velocity.y * Time.deltaTime), myRigid.velocity.z);
             shipFokusPoint.localPosition = new Vector3(shipFokusPoint.localPosition.x,
