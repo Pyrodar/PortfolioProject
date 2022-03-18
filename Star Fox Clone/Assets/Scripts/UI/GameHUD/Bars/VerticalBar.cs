@@ -30,6 +30,12 @@ public class VerticalBar : MonoBehaviour
         currentValue = max;
     }
 
+    public void SetCurrentValue(float newValue)
+    {
+        currentValue = Mathf.Clamp(newValue, 0, maxValue);
+        UpdateView();
+    }
+
     private void UpdateView()
     {
         fill.fillAmount = (originalHeight / maxValue) * currentValue;

@@ -15,10 +15,10 @@ MonoBehaviour:
   MissleIcon: {fileID: 0}
   damage: 250
   hitpoints: 4
-  speed: 1300
+  speed: 8
   turnSpeed: 60
-  drag: 1.2
-  timeBeforeArmed: 0.3
+  drag: 0.3
+  timeBeforeArmed: 0.6
   detectionRange: 200
   armingRange: 75
   missleSize: 3

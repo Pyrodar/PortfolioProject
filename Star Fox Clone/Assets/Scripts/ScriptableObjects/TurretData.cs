@@ -28,19 +28,19 @@ public class TurretData : ScriptableObject
 
     public SmallTurretData GetSmallData()
     {
-        SmallTurretData data = new SmallTurretData();
-        data.turretType = this.turretType;
-        data.turretRange = this.turretRange;
-        data.bulletSpread = this.bulletSpread;
-        data.ejectSpeed = this.ejectSpeed;
-        data.missleData = this.missleData;
-        data.bulletData = this.bulletData;
+        SmallTurretData data = new SmallTurretData() { 
+        turretType = this.turretType,
+        turretRange = this.turretRange,
+        bulletSpread = this.bulletSpread,
+        ejectSpeed = this.ejectSpeed,
+        missleData = this.missleData,
+        bulletData = this.bulletData };
 
         return data;
     }
 }
 /// <summary>
-/// used for mirror, since it can't process Sprites and doesn't need all information anyway
+/// waqs used for mirror, since it can't process Sprites and doesn't need all information anyway
 /// </summary>
 public class SmallTurretData
 {
@@ -52,7 +52,7 @@ public class SmallTurretData
     public BulletData bulletData;
 }
 
-//public enum TurretType
+//public enum TurretType -> moved to using the enum TurretClass_P from the Protobuf files
 //{
 //    AMS
 //    , ATG
@@ -83,7 +83,7 @@ public class TurretDataEditor : Editor
         {
             t.bulletData = EditorGUILayout.ObjectField("BulletData", t.bulletData, typeof(BulletData), true) as BulletData;
             t.bulletSpread = EditorGUILayout.Slider("Bullet Spread", t.bulletSpread, 0f, 1f);
-            t.turretSpeed = EditorGUILayout.Slider("Turret Speed", t.turretSpeed, 1f, 24f);
+            t.turretSpeed = EditorGUILayout.Slider("Turret Speed", t.turretSpeed, 1f, 36f);
             t.cooldown = EditorGUILayout.Slider("Reload Time", t.cooldown, 0f, 3f);
             t.firingDiscipline = EditorGUILayout.Toggle("Firing Discipline", t.firingDiscipline);
             if (t.firingDiscipline)
@@ -96,7 +96,7 @@ public class TurretDataEditor : Editor
             t.bulletData = EditorGUILayout.ObjectField("BulletData", t.bulletData, typeof(BulletData), true) as BulletData;
             t.turretRange = EditorGUILayout.FloatField("Turret Range", t.turretRange);
             t.bulletSpread = EditorGUILayout.Slider("Bullet Spread", t.bulletSpread, 0f, 1f);
-            t.turretSpeed = EditorGUILayout.Slider("Turret Speed", t.turretSpeed, 1f, 24f);
+            t.turretSpeed = EditorGUILayout.Slider("Turret Speed", t.turretSpeed, 1f, 36f);
             t.cooldown = EditorGUILayout.Slider("Reload Time", t.cooldown, 0f, 3f);
             t.heatBuildup = EditorGUILayout.Slider("Heat Buildup", t.heatBuildup, 0.01f, 5f);
             t.heatDissipation = EditorGUILayout.Slider("Heat Dissipation", t.heatDissipation, 1f, 10f);

@@ -13,8 +13,8 @@ public class ShipData : ScriptableObject
     public float fokusPointSpeed = 0.04f;
     public float fokusPointDamping = 3f;
 
-    [Tooltip("how fast the ship returns to looking straight forward again. fastest: 0.0 slowest: 1.0")]
-    [Range(0f, 1f)]
+    [Tooltip("how fast the ship returns to looking straight forward again")]
+    [Range(0f, 2f)]
     public float fokusPointCenteringSpeed = 0.9f;
     public float fokusPointCenteringDelay = 3f;
 

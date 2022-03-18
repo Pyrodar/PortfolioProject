@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
+using UnityEngine.Events;
 
 //Maybe rename to chassis and remove Input stuff
 public class Player : MonoBehaviour , IVehicle
@@ -68,6 +69,7 @@ public class Player : MonoBehaviour , IVehicle
     [SerializeField] Transform smallCrossHair;
     [SerializeField] Transform largeCrossHair;
     public Transform LargeCrosshair { get { return largeCrossHair; } }
+    public Transform SmallCrosshair { get { return smallCrossHair; } }
     [SerializeField] GameObject crashExplosion;
     #endregion
 
@@ -115,12 +117,17 @@ public class Player : MonoBehaviour , IVehicle
 
 
     #region HUD
-    VerticalBar[] healthbars;
+    UnityEvent<float> OnHealthUpdated =  new UnityEvent<float>();
+    UnityEvent<Quaternion, Vector3> OnRotationUpdated = new UnityEvent<Quaternion, Vector3>();
+
+
     [SerializeField] RectTransform[] TargetMarker;
     #endregion
 
     #region InputFunktionBools
     bool DPadBool = true;
+    bool outOfBoundsX = false;
+    bool outOfBoundsY = false;
     #endregion 
 
     #region Debugging
@@ -138,13 +145,15 @@ public class Player : MonoBehaviour , IVehicle
     public void StartGame()
     {
         #region HUD Setup
-        currentHealth = shipData.maxHealth;
-        healthbars = hud.Healthbars;
+        currentHealth = shipData.maxHealth;        
 
-        foreach (VerticalBar item in healthbars)
+        foreach (VerticalBar item in hud.Healthbars)
         {
             item.Initialize(shipData.maxHealth);
+            OnHealthUpdated.AddListener(item.SetCurrentValue);
         }
+
+        OnRotationUpdated.AddListener(hud.GyroHorizon.displayRotation);
 
 
         TurretIconList list = hud.TurretIconList;
@@ -215,6 +224,8 @@ public class Player : MonoBehaviour , IVehicle
 
         HelperFunctions.LookAt(playerVisuals, shipFokusPoint.position, shipData.fokusPointDamping);
 
+        OnRotationUpdated?.Invoke(playerRotationVisuals.transform.rotation, shipFokusPoint.localPosition);    //TODO: this does not technically need to be called every single frame
+
         gravityAndLiftEffect();
 
         applyTargetMarkers();
@@ -238,6 +249,10 @@ public class Player : MonoBehaviour , IVehicle
         input *= Time.deltaTime;
 
         //Input moves the ships focus point (basically changes its forward vector)
+        //only applied if the ship is not currently on one of the screens borders
+        if (outOfBoundsX) input = new Vector3(0, input.y, input.z);
+        if (outOfBoundsY) input = new Vector3(input.x, 0, input.z);
+        
         updateFokusPoint(input);
         clampFokusPointPosition();
 
@@ -246,6 +261,7 @@ public class Player : MonoBehaviour , IVehicle
         myRigid.AddRelativeForce(vel * Time.deltaTime * shipData.moveSpeed);
 
         checkBoundaries();
+        updateCrosshairPositions();
     }
 
     void checkBoundaries()
@@ -253,23 +269,33 @@ public class Player : MonoBehaviour , IVehicle
 
         //setting velocity to 0 slowly when hitting boundries so enemy Missles and AA don't get confused
         //moving focus point back towards local (0,0):
+
+
         float x = cam.transform.localPosition.x;
         if (transform.localPosition.x >= Plane.MaxWidth + x)
         {
             myRigid.velocity = new Vector3(myRigid.velocity.x - (myRigid.velocity.x * Time.deltaTime), myRigid.velocity.y, myRigid.velocity.z);
-            shipFokusPoint.localPosition = new Vector3(shipFokusPoint.localPosition.x - ((shipFokusPoint.localPosition.x * shipData.fokusPointCenteringSpeed) * Time.deltaTime),
+
+            shipFokusPoint.localPosition = new Vector3(shipFokusPoint.localPosition.x - (shipData.fokusPointCenteringSpeed * Time.deltaTime),
                                                        shipFokusPoint.localPosition.y, 
                                                        shipFokusPoint.localPosition.z);
+            outOfBoundsX = true;
         }
 
-        if (transform.localPosition.x <= -Plane.MaxWidth + x)
+        else if (transform.localPosition.x <= -Plane.MaxWidth + x)
         {
             myRigid.velocity = new Vector3(myRigid.velocity.x - (myRigid.velocity.x * Time.deltaTime), myRigid.velocity.y, myRigid.velocity.z);
-            shipFokusPoint.localPosition = new Vector3(shipFokusPoint.localPosition.x - ((shipFokusPoint.localPosition.x * shipData.fokusPointCenteringSpeed) * Time.deltaTime),
+
+            shipFokusPoint.localPosition = new Vector3(shipFokusPoint.localPosition.x + (shipData.fokusPointCenteringSpeed * Time.deltaTime),
                                                        shipFokusPoint.localPosition.y,
                                                        shipFokusPoint.localPosition.z);
+            outOfBoundsX = true;
         }
 
+        else
+        {
+            outOfBoundsX = false;
+        }
 
 
         float y = cam.transform.localPosition.y;
@@ -277,15 +303,23 @@ public class Player : MonoBehaviour , IVehicle
         {
             myRigid.velocity = new Vector3(myRigid.velocity.x, myRigid.velocity.y - (myRigid.velocity.y * Time.deltaTime), myRigid.velocity.z);
             shipFokusPoint.localPosition = new Vector3(shipFokusPoint.localPosition.x,
-                                           shipFokusPoint.localPosition.y - ((shipFokusPoint.localPosition.y * shipData.fokusPointCenteringSpeed) * Time.deltaTime),
+                                           shipFokusPoint.localPosition.y - (shipData.fokusPointCenteringSpeed * Time.deltaTime),
                                            shipFokusPoint.localPosition.z);
+            outOfBoundsY = true;
         }
-        if (transform.localPosition.y <= -Plane.MaxHeight + y)
+
+        else if (transform.localPosition.y <= -Plane.MaxHeight + y)
         {
             myRigid.velocity = new Vector3(myRigid.velocity.x, myRigid.velocity.y - (myRigid.velocity.y * Time.deltaTime), myRigid.velocity.z);
             shipFokusPoint.localPosition = new Vector3(shipFokusPoint.localPosition.x,
-                                           shipFokusPoint.localPosition.y - ((shipFokusPoint.localPosition.y * shipData.fokusPointCenteringSpeed) * Time.deltaTime),
+                                           shipFokusPoint.localPosition.y + (shipData.fokusPointCenteringSpeed * Time.deltaTime),
                                            shipFokusPoint.localPosition.z);
+            outOfBoundsY = true;
+        }
+
+        else
+        {
+            outOfBoundsY = false;
         }
 
         //clamping position
@@ -307,26 +341,15 @@ public class Player : MonoBehaviour , IVehicle
     {
         input.z = 0;
         shipFokusPoint.localPosition += input * shipData.fokusPointSpeed;
+    }
 
+    void centreFocusPoint()
+    {
+        //moving focus point back towards local(0,0):
 
-        //moving focus point back towards local (0,0):
-
-        //if (Mathf.Abs(shipFokusPoint.localPosition.x) > shipData.fokusPointCenteringTolerance && Mathf.Abs(input.x) < .1f)
-        //{
-        //    shipFokusPoint.localPosition = new Vector3( shipFokusPoint.localPosition.x - ((shipFokusPoint.localPosition.x * shipData.fokusPointCenteringSpeed) * Time.deltaTime), 
-        //                                                shipFokusPoint.localPosition.y, 
-        //                                                shipFokusPoint.localPosition.z);
-        //}
-
-
-        //if (Mathf.Abs(shipFokusPoint.localPosition.y) > shipData.fokusPointCenteringTolerance && Mathf.Abs(input.y) < .1f)
-        //{
-        //    shipFokusPoint.localPosition = new Vector3( shipFokusPoint.localPosition.x, 
-        //                                                shipFokusPoint.localPosition.y - ((shipFokusPoint.localPosition.y * shipData.fokusPointCenteringSpeed) * Time.deltaTime), 
-        //                                                shipFokusPoint.localPosition.z);
-        //}
-
-        updateCrosshairPositions();
+        shipFokusPoint.localPosition = new Vector3(shipFokusPoint.localPosition.x - ((shipFokusPoint.localPosition.x * shipData.fokusPointCenteringSpeed) * Time.deltaTime),
+                                                    shipFokusPoint.localPosition.y - ((shipFokusPoint.localPosition.y * shipData.fokusPointCenteringSpeed) * Time.deltaTime),
+                                                    shipFokusPoint.localPosition.z);
     }
 
     void updateCrosshairPositions()
@@ -360,7 +383,7 @@ public class Player : MonoBehaviour , IVehicle
 
     #region Inputs
 
-    public void applyCombatInputs(INPUTS input)
+    public void applyButtonInputs(INPUTS input)
     {
         if (isPuppet) return;
 
@@ -374,6 +397,9 @@ public class Player : MonoBehaviour , IVehicle
                 break;
             case INPUTS.SwitchMissle:
                 switchSelectedMissle();
+                break;
+            case INPUTS.CentreFocus:
+                centreFocusPoint();
                 break;
         }
     }
@@ -763,10 +789,7 @@ public class Player : MonoBehaviour , IVehicle
 
     void UpdateHealthbar()
     {
-        foreach (VerticalBar item in hud.Healthbars)
-        {
-            item.CurrentValue = currentHealth;
-        }
+        OnHealthUpdated?.Invoke(currentHealth);
     }
 
     void UpdateSelectedMissle()

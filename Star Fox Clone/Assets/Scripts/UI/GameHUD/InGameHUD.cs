@@ -32,6 +32,12 @@ public class InGameHUD : UIBaseClass
         get { return missleIcon; }
     }
 
+    [SerializeField] GyroHorizon gyroHorizon;
+    public GyroHorizon GyroHorizon
+    {
+        get { return gyroHorizon; }
+    }
+
     #endregion
 
     #region GameOver

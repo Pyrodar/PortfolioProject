@@ -16,7 +16,7 @@ MonoBehaviour:
   turretRange: 400
   bulletspread: 1
   turretSpeed: 12
-  cooldown: 11
+  cooldown: 6
   bulletsPerSalvo: 2
   ejectSpeed: 12
   missleData: {fileID: 11400000, guid: 3b7a97015d11eea499ed07942e056b31, type: 2}

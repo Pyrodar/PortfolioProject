@@ -14,6 +14,7 @@ public class StationaryWeapon : MonoBehaviour
     }
 
     [SerializeField] protected HostileTurretData data;
+    [SerializeField] protected float alternativeRange = -1;
 
     [SerializeField] protected Sprite impactMarkersprite;
     protected GameObject impactMarker;
@@ -128,9 +129,18 @@ public class StationaryWeapon : MonoBehaviour
         }
 
         float distance = Vector3.Distance(myTarget.transform.position, transform.position);
-        if (distance > data.turretRange || myTarget.Plane.relativeZposition(transform.position) < 20) return false;
 
-        return true;
+        //checks if target is too close
+        if (myTarget.Plane.relativeZposition(transform.position) < 20) return false;
+
+        //checks if alternative range will be used
+        if (alternativeRange > 0 && distance <= alternativeRange) return true;
+
+        //checks if in turret range
+        if (distance <= data.turretRange) return true;
+
+        //not in range
+        return false;
     }
 
     protected virtual void placeMarker(Vector3 pos)

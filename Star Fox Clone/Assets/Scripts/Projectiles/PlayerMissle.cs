@@ -52,14 +52,14 @@ public class PlayerMissle : MonoBehaviour, IVehicle
     {
         if (Time.time < timeWhenArmed) 
         {
-            HelperFunctions.LookAt(transform, target.transform.position, (data.turnSpeed / 5) * Time.deltaTime);                                                               //Starts slowly homing in on the Target
+            HelperFunctions.LookAt(transform, target.transform.position, data.turnSpeed / 10);                                                               //Starts slowly homing in on the Target
             return;
         }
 
         Vector3 IntercepCourse = HelperFunctions.Intercept(transform.position, myRigid.velocity, data.speed, target.transform.position, target.Velocity);   //Starts homing in on the Target with regular speed
-        HelperFunctions.LookAt(transform, IntercepCourse, data.turnSpeed * Time.deltaTime);
+        HelperFunctions.LookAt(transform, IntercepCourse, data.turnSpeed);
 
-        myRigid.AddForce(transform.TransformDirection(Vector3.forward) * data.speed * Time.deltaTime);                                                                       //Constant forward Momentum
+        myRigid.AddForce(transform.TransformDirection(Vector3.forward) * data.speed);                                                                       //Constant forward Momentum
     }
 
     private void LooseTarget()                                                                           //Looses Target after missing it

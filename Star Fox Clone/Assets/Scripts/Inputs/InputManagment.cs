@@ -67,13 +67,13 @@ public class InputManagment : MonoBehaviour
         //DEBUGGING: Later set Events based on playerNumber
         Movement.AddListener(state.Players[0].ApplyMovement);
         Rotation.AddListener(state.Players[0].ApplyRotation);
-        CombatInputs.AddListener(state.Players[0].applyCombatInputs);
+        CombatInputs.AddListener(state.Players[0].applyButtonInputs);
         FireMissle.AddListener(state.Players[0].FireMissle);
         //#####################################
         if (state.NumberOfPlayers < 2) return;
         Movement2.AddListener(state.Players[1].ApplyMovement);
         Rotation2.AddListener(state.Players[1].ApplyRotation);
-        CombatInputs2.AddListener(state.Players[1].applyCombatInputs);
+        CombatInputs2.AddListener(state.Players[1].applyButtonInputs);
         FireMissle2.AddListener(state.Players[1].FireMissle);
         //#####################################
     }
@@ -114,7 +114,7 @@ public class InputManagment : MonoBehaviour
                 if (inputMovementKeyboard().magnitude > 0) Movement?.Invoke(inputMovementKeyboard());
                 if (inputRotationKeyboard() != 0) Rotation?.Invoke(inputRotationKeyboard());
 
-                combatInputsKeyboard();
+                buttonInputsKeyboard();
             }
 
             if (state.Players.Length > 1 && state.Players[1].IsInGame)
@@ -122,12 +122,12 @@ public class InputManagment : MonoBehaviour
                 if (inputMovementController().magnitude > 0) Movement2?.Invoke(inputMovementController());
                 if (inputRotationController() != 0) Rotation2?.Invoke(inputRotationController());
 
-                combatInputsController();
+                buttonInputsController();
             }
         }
     }
 
-    #region movement
+    #region axis
     Vector3 inputMovementKeyboard()
     {
         Vector3 retVal = Vector3.zero;
@@ -187,11 +187,12 @@ public class InputManagment : MonoBehaviour
     }
     #endregion
 
-    #region CombatInputs
+    #region ButtonInputs
 
-    void combatInputsKeyboard()
+    void buttonInputsKeyboard()
     {
         if (Input.GetButton("Mark")) CombatInputs?.Invoke(INPUTS.Scan);
+        if (Input.GetButton("CentreFocus")) CombatInputs?.Invoke(INPUTS.CentreFocus);
 
         if (Input.GetButtonDown("SwitchTargets")) CombatInputs?.Invoke(INPUTS.SwitchTargets);
         if (Input.GetButtonDown("SwitchMissles")) CombatInputs?.Invoke(INPUTS.SwitchMissle);
@@ -204,9 +205,10 @@ public class InputManagment : MonoBehaviour
         if (Input.GetButtonDown("Missle3")) FireMissle?.Invoke(2);
     }
 
-    void combatInputsController()
+    void buttonInputsController()
     {
         if (Input.GetButton("Mark-2")) CombatInputs2?.Invoke(INPUTS.Scan);
+        if (Input.GetButton("CentreFocus-2")) CombatInputs2?.Invoke(INPUTS.CentreFocus);
 
         if (Input.GetButtonDown("SwitchTargets-2")) CombatInputs2?.Invoke(INPUTS.SwitchTargets);
         if (Input.GetButtonDown("SwitchMissles-2")) CombatInputs2?.Invoke(INPUTS.SwitchMissle);
@@ -289,5 +291,6 @@ public enum INPUTS
     , Missle
     , Movement
     , Rotation
+    , CentreFocus
     , None
 }

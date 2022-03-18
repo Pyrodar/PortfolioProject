@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb048df9b3f67cb44b634cd7550f8e10, type: 3}
   m_Name: Basic Ship
   m_EditorClassIdentifier: 
-  moveSpeed: 129
+  moveSpeed: 98
   rotationSpeed: 58
-  fokusPointRange: 2
-  fokusPointSpeed: 2.5
-  fokusPointDamping: 4
-  fokusPointCenteringSpeed: 0.8
+  fokusPointRange: 2.5
+  fokusPointSpeed: 2.4
+  fokusPointDamping: 1.3
+  fokusPointCenteringSpeed: 1.5
   fokusPointCenteringDelay: 3
   fokusPointCenteringTolerance: 0.2
-  gravityAndLift: 98
+  gravityAndLift: 148
   crosshairOffset: {x: 0, y: 0, z: 0}
   maxHealth: 100
   invulnTime: 1

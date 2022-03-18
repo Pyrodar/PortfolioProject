@@ -15,7 +15,7 @@ public class CameraScript : MonoBehaviour
     public Vector2 offset = new Vector2(0, 3);
 
     private Vector3 velocity = Vector3.zero;
-    public float smoothTime = 1f;
+    public float smoothTime = 3f;
 
     private void FixedUpdate()
     {
@@ -35,7 +35,7 @@ public class CameraScript : MonoBehaviour
         Vector3 localPos = transform.localPosition;
         Vector3 playerPos = player.transform.localPosition;
         Vector3 targetPos = playerPos / 2;
-        transform.localPosition = Vector3.SmoothDamp(localPos,new Vector3(playerPos.x + offset.x, playerPos.y + offset.y, localPos.z), ref velocity, smoothTime);
+        transform.localPosition = Vector3.SmoothDamp(localPos,new Vector3(targetPos.x + offset.x, targetPos.y + offset.y, localPos.z), ref velocity, smoothTime);
     }
 
     void ClampPosition()
