@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AMS Turret02
   m_EditorClassIdentifier: 
   turretType: 0
-  TurretMesh: {fileID: 8347921153622649651, guid: 35738fafe129bbe40a583e84c2751b27,
+  TurretMesh: {fileID: 8347921153622649651, guid: d2e6ff5ca0e2b3c439c613a8dda346c4,
     type: 3}
   turretRange: 60
   bulletSpread: 0.8

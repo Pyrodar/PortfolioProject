@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ATG Turret03
   m_EditorClassIdentifier: 
   turretType: 1
-  TurretMesh: {fileID: 5529101393252604927, guid: b4a4635a800667d4e80eb137e73aebcc,
+  TurretMesh: {fileID: 5529101393252604927, guid: df2fcab8e505e26428358cc878cde3f6,
     type: 3}
   turretRange: 200
   bulletSpread: 0.13

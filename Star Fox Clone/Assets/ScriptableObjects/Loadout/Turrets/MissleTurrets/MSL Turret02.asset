@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MSL Turret02
   m_EditorClassIdentifier: 
   turretType: 2
-  TurretMesh: {fileID: 2988620085212833097, guid: 2efdcb00e08dfc144acc3a02fab76e3e,
+  TurretMesh: {fileID: 2988620085212833097, guid: 2ba8dcc5359288e4aa4ee781f050c7fb,
     type: 3}
   turretRange: 0
   bulletSpread: 0

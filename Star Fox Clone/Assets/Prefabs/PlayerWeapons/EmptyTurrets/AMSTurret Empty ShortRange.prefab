@@ -27,8 +27,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2030328967871895462}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.039, y: 0.0839, z: 0.1793}
-  m_LocalScale: {x: 0.06389773, y: 0.04848346, z: 0.26535022}
+  m_LocalPosition: {x: 0.039, y: 0.0839, z: 0.1341}
+  m_LocalScale: {x: 0.06389773, y: 0.05513054, z: 0.14985389}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8347921153622649648}
@@ -124,8 +124,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8347921152472321417}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.04, y: 0.0839, z: 0.1793}
-  m_LocalScale: {x: 0.06389773, y: 0.04848346, z: 0.26535022}
+  m_LocalPosition: {x: -0.04, y: 0.0839, z: 0.1341}
+  m_LocalScale: {x: 0.06389773, y: 0.05513054, z: 0.14985389}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8347921153622649648}
@@ -204,7 +204,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8347921153622649648}
   m_Layer: 2
-  m_Name: AMSTurret Empty
+  m_Name: AMSTurret Empty ShortRange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
