@@ -28,12 +28,14 @@ public class MissleLauncher : StationaryWeapon
     {
         startReloading();       //Has to be set to reload immidiately to avoid calling 2 or more instances of this Coroutine
 
-        Vector3 ic = getInterceptPoint();
 
         //checking for free LOS
+
+        Vector3 ic = getInterceptPoint();
         float dist = Vector3.Distance(transform.position, ic) * 0.75f;  //Reducing range to avoid being blocked by objects around the plane
         Collider c = HelperFunctions.GetObjectInSights(transform.position, ic, dist);
-        if (c != null)
+
+        if (c == null)
         {
             skipLoading();      //Immidiately ready to fire again
             yield return null;
@@ -42,24 +44,13 @@ public class MissleLauncher : StationaryWeapon
         {
             //waiting for the turret to turn. randomizing it to desynchronize enemies
             if (synchronized) yield return new WaitForSeconds(2f);
+
             else yield return new WaitForSeconds(Random.Range(1.5f, 3f));
 
             for (int i = 0; i < data.bulletsPerSalvo; i++)
             {
                 BulletFactory factory = MapLayoutInfo.Instance.BulletFactory;
                 factory.CmdSpawnEnemyMissle(data.missleData, transform.position, transform.rotation, MyVelocity, data.ejectSpeed);
-
-                //GameObject M = GameObject.Instantiate(data.missleData.visuals);
-                //EnemyMissle MC = M.AddComponent<EnemyMissle>();
-                //MC.Initialize(data.missleData);
-
-                //M.transform.position = transform.position;
-                //M.transform.rotation = transform.rotation;
-
-                //Vector3 spread = new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f));
-                //M.GetComponent<Rigidbody>().AddForce(transform.forward * data.ejectSpeed + spread, ForceMode.Impulse);
-
-                //spawnProjectile(M.gameObject);
 
                 yield return new WaitForSeconds(0.5f);
             }

@@ -117,7 +117,7 @@ public class StationaryWeapon : MonoBehaviour
 
     protected bool isLoaded()
     {
-        return Time.time > timeWhenReloaded;
+        return Time.time >= timeWhenReloaded;
     }
 
     protected bool isInRange()

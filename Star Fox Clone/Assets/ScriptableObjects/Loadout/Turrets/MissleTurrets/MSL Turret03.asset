@@ -27,4 +27,9 @@ MonoBehaviour:
   missleData: {fileID: 11400000, guid: ad2bdfea758848243843d326f8a02804, type: 2}
   bulletData: {fileID: 0}
   Icon: {fileID: 0}
-  Description: No description currently available
+  Description: After abolishing the use of traditional bombs the airforce found itself
+    lacking in large area of effect weaponry. Not eager to return to the increasingly
+    fatal maneuver of moving directly over heavily defended targets a new type of
+    missle was developed. While undeniably effective these new missles are far larger
+    than even the most massive of bombs, resulting in planes being outfitted with
+    only a very limited amount each.

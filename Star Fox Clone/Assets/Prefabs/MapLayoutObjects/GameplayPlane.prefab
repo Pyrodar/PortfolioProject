@@ -610,7 +610,7 @@ MonoBehaviour:
   gamePrefab: {fileID: 6189026944260776685, guid: 6c115fcc8523f00459b2cc79d5fa6ebd,
     type: 3}
   maxWidth: 25
-  maxHeight: 12
+  maxHeight: 15
   playerpositions:
   - {fileID: 5698227413144915147}
   - {fileID: 3035778665887780469}
@@ -701,7 +701,7 @@ Transform:
   m_GameObject: {fileID: 269898189596074392}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 3}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 269898189931383706}

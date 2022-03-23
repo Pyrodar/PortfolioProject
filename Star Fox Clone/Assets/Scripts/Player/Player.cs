@@ -281,7 +281,7 @@ public class Player : MonoBehaviour , IVehicle
         }
 
         if (transform.localPosition.y >= Plane.MaxHeight * .5f) OnCloseToBoundaries?.Invoke(GameplayBoundaries.GameplayBorder.TOP, (transform.localPosition.y - (Plane.MaxHeight * .5f)) / Plane.MaxHeight);
-        else if (transform.localPosition.y <= -Plane.MaxHeight * .5f) OnCloseToBoundaries?.Invoke(GameplayBoundaries.GameplayBorder.BOTTOM, (transform.localPosition.y + (Plane.MaxHeight * .5f)) / Plane.MaxHeight);
+        else if (transform.localPosition.y <= -Plane.MaxHeight * .5f) OnCloseToBoundaries?.Invoke(GameplayBoundaries.GameplayBorder.BOTTOM, -(transform.localPosition.y + (Plane.MaxHeight * .5f)) / Plane.MaxHeight);
         else
         {
             OnCloseToBoundaries?.Invoke(GameplayBoundaries.GameplayBorder.TOP, 0);

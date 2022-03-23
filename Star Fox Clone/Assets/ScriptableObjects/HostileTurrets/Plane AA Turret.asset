@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   turretType: 1
   turretRange: 75
-  bulletspread: 1
+  bulletspread: 0.75
   turretSpeed: 12
   cooldown: 7
   bulletsPerSalvo: 1

@@ -20,7 +20,7 @@ MonoBehaviour:
   fokusPointCenteringSpeed: 1.5
   fokusPointCenteringDelay: 3
   fokusPointCenteringTolerance: 0.2
-  gravityAndLift: 148
+  gravityAndLift: 98
   crosshairOffset: {x: 0, y: 0, z: 0}
   maxHealth: 100
   invulnTime: 1
