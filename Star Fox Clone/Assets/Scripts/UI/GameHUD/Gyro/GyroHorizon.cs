@@ -17,8 +17,8 @@ public class GyroHorizon : MonoBehaviour
         ZRotator.eulerAngles = new Vector3(ZRotator.eulerAngles.x, ZRotator.eulerAngles.y, playerZRotation.eulerAngles.z);
         RotationXContent.anchoredPosition = new Vector3(-playerXYOffset.x, -playerXYOffset.y, 0) * 10;
 
-        float relativeYOffset = Mathf.Cos(playerZRotation.eulerAngles.z * Mathf.Deg2Rad) * playerXYOffset.y;
+        float relativeYOffset = (Mathf.Cos(playerZRotation.eulerAngles.z * Mathf.Deg2Rad) * playerXYOffset.y) - (Mathf.Sin(playerZRotation.eulerAngles.z * Mathf.Deg2Rad) * playerXYOffset.x);
 
-        RotationXNumbers.anchoredPosition = (new Vector3(0, -relativeYOffset, 0) * 10);    //is in relation to current UI rotation so 0 points at GameplayPlane horizon, not quite in line with the XY rotation cross, since that is only based on the shipfocus point and not the actual rotation
+        RotationXNumbers.anchoredPosition = (new Vector3(0, -relativeYOffset, 0) * 10);    //is in relation to current UI rotation so 0 points at GameplayPlane horizon and gameplay plane forward vector
     }
 }
