@@ -12,7 +12,7 @@ public class GameplayBoundaries : MonoBehaviour
 
     public void SetBorderOpacity(GameplayBorder border, float opacity)
     {
-        Debug.Log($"Setting {border.ToString()} Border to: {opacity}");
+        //Debug.Log($"Setting {border.ToString()} Border to: {opacity}");
 
         switch (border)
         {

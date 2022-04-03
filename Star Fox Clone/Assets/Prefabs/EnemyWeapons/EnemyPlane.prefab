@@ -165,8 +165,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RotationParent: {fileID: 2702344784734378621}
   data: {fileID: 11400000, guid: a88778103516b564d9299245193fc8dc, type: 2}
+  alternativeRange: -1
   impactMarkersprite: {fileID: 21300000, guid: 0993bb797b95dad4098c1a7ee2ec4c7c, type: 3}
   synchronized: 0
+  interceptPoint: {x: 0, y: 0, z: 0}
 --- !u!1 &2702344785142053717
 GameObject:
   m_ObjectHideFlags: 0
@@ -598,6 +600,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  ActivateEnemy:
+    m_PersistentCalls:
+      m_Calls: []
   Other:
     m_PersistentCalls:
       m_Calls: []
@@ -703,7 +708,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2702344786318462528
 Transform:
   m_ObjectHideFlags: 0

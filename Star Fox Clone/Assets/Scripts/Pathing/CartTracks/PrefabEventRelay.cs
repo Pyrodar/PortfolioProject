@@ -7,12 +7,18 @@ using UnityEngine.Events;
 public class PrefabEventRelay : MonoBehaviour
 {
     [SerializeField] UnityEvent StartPathFollow;
+    [SerializeField] UnityEvent ActivateEnemy;
     [SerializeField] UnityEvent Other;
 
 
     public void OnStartFollow()
     {
         StartPathFollow?.Invoke();
+    }
+
+    public void OnActivateEnemy()
+    {
+        ActivateEnemy?.Invoke();
     }
 
     public void OnOtherEvent()

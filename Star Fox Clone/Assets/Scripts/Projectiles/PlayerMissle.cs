@@ -69,7 +69,7 @@ public class PlayerMissle : MonoBehaviour, IVehicle
 
         if (currentDistance > 20) return;                                                               //Ignore if target is still far away
 
-        if (currentDistance > lastDistance) looseTarget();
+        if (currentDistance > lastDistance +.1f) looseTarget();
         else lastDistance = currentDistance;
     }
 

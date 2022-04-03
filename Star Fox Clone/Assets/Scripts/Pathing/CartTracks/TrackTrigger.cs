@@ -30,6 +30,7 @@ public class TrackTrigger : MonoBehaviour
         if (!active)
         {
             if (PathTriggerPoint <= pathPosition) activate();
+            if (PathTriggerPoint <= pathPosition) Debug.Log("Activated Trigger!");
         }
     }
 

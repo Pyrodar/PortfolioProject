@@ -164,6 +164,7 @@ public class StationaryWeapon : MonoBehaviour
         #endregion
 
         impactMarker.transform.position = pos + addedVelocity;
+        impactMarker.transform.rotation = myTarget.Plane.transform.rotation;
     }
     #endregion
 

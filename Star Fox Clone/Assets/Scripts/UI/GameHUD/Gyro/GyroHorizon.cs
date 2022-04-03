@@ -19,6 +19,6 @@ public class GyroHorizon : MonoBehaviour
 
         float relativeYOffset = (Mathf.Cos(playerZRotation.eulerAngles.z * Mathf.Deg2Rad) * playerXYOffset.y) - (Mathf.Sin(playerZRotation.eulerAngles.z * Mathf.Deg2Rad) * playerXYOffset.x);
 
-        RotationXNumbers.anchoredPosition = (new Vector3(0, -relativeYOffset, 0) * 10);    //is in relation to current UI rotation so 0 points at GameplayPlane horizon and gameplay plane forward vector
+        RotationXNumbers.anchoredPosition = (new Vector3(0, -relativeYOffset, 0) * 10);    //is in relation to current UI rotation so 0 point at GameplayPlane horizon and gameplay plane forward vector
     }
 }
