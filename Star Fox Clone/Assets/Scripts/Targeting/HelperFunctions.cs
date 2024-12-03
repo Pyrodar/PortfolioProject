@@ -76,6 +76,27 @@ public  class HelperFunctions
 			return Mathf.Max(-b / (2f * a), 0f); //don't shoot back in time
 	}
 
+	public static Vector3 InterceptWithGravity
+		(
+			Vector3 shooterPosition,
+			Vector3 shooterVelocity,
+			float shotSpeed,
+			Vector3 gravity,
+			Vector3 targetPosition,
+			Vector3 targetVelocity
+		)
+		{
+			Vector3 targetRelativePosition = targetPosition - shooterPosition;
+			Vector3 targetRelativeVelocity = targetVelocity - shooterVelocity;
+			float t = FirstOrderInterceptTime
+			(
+				shotSpeed,
+				targetRelativePosition,
+				targetRelativeVelocity
+			);
+			return (targetPosition + t * (targetRelativeVelocity) - (.5 * gravity + (t * t))) / (shotspeed * t);
+		}
+
     #endregion
 
     #region LookAt
